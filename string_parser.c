@@ -38,7 +38,7 @@ int count_token (char* buf, const char* delim)
 
 	strcpy(copy_buf, buf);
 
-	copybuf[strlen(buf)] = '\0';
+	copy_buf[strlen(buf)] = '\0';
 
 	token = strtok_r(copy_buf, delim, &ptr);
 
