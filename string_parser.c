@@ -68,7 +68,7 @@ command_line str_filler (char* buf, const char* delim)
 	command_line cl;
 
 	// remove newline if applicable
-	char *new_string = strtok_r(buf, "\n", NULL);
+	strtok_r(buf, "\n", NULL);
 
 	int j = 0;
 	while (buf[j] != '\0')
@@ -88,10 +88,11 @@ command_line str_filler (char* buf, const char* delim)
 	// fill in cmd list array
 	char* saveptr;
 	char* token = strtok_r(buf, delim, &saveptr);
+	int i = 0;
 
 	while (token != NULL && i < num_tok)
 	{
-		cl.command_list[i] = (char*)malloc(strlen(token) + 1)
+		cl.command_list[i] = (char*)malloc(strlen(token) + 1);
 		strcpy(cl.command_list[i], token);
 		i++;
 		token = strtok_r(NULL, delim, &saveptr);
