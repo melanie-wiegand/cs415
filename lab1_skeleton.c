@@ -17,7 +17,7 @@ int main(int argc, char const *argv[])
 	//checking for command line argument
 	if (argc != 2)
 	{
-		printf ("Usage ./lab1.exe intput.txt\n");
+		printf ("Usage ./lab1.exe input.txt\n");
 	}
 	//opening file to read
 	FILE *inFPtr;

@@ -65,7 +65,42 @@ command_line str_filler (char* buf, const char* delim)
 	*			fill command_list array with tokens, and fill last spot with NULL.
 	*	#6. return the variable.
 	*/
+	command_line cl;
+
+	// remove newline if applicable
+	char *new_string = strtok_r(buf, "\n", NULL);
+
+	int j = 0;
+	while (buf[j] != '\0')
+	{
+		if (buf[j] == '\n')
+			buf[j] = '\0';
+		j++;
+	}
+	
+	// count tokens and assign to cl var
+	int num_tok = count_token(buf, delim);
+	cl.num_token = num_tok;
+	
+	// malloc for cmd list
+	cl.command_list = (char**)malloc(sizeof(char*)*(num_tok+1));
+
+	// fill in cmd list array
+	char* saveptr;
+	char* token = strtok_r(buf, delim, &saveptr);
+
+	while (token != NULL && i < num_tok)
+	{
+		cl.command_list[i] = (char*)malloc(strlen(token) + 1)
+		strcpy(cl.command_list[i], token);
+		i++;
+		token = strtok_r(NULL, delim, &saveptr);
+	}
+
+	return cl;
 }
+
+
 
 
 void free_command_line(command_line* command)
