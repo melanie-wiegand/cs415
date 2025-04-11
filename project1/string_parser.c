@@ -110,4 +110,9 @@ void free_command_line(command_line* command)
 	/*
 	*	#1.	free the array base num_token
 	*/
+	for (int i = 0; i < len(command.command_list); i++)
+	{
+		free(command_list[i]);
+	}
+	free(command.command_list);
 }
