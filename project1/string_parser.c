@@ -48,6 +48,8 @@ int count_token (char* buf, const char* delim)
 
 	}
 
+	free(copy_buf);
+
 	return count;
 }
 
@@ -98,6 +100,8 @@ command_line str_filler (char* buf, const char* delim)
 		token = strtok_r(NULL, delim, &saveptr);
 	}
 
+	cl.command_list[num_tok] = NULL;
+
 	return cl;
 }
 
@@ -110,9 +114,9 @@ void free_command_line(command_line* command)
 	/*
 	*	#1.	free the array base num_token
 	*/
-	for (int i = 0; i < len(command.command_list); i++)
+	for (int i = 0; i < command->num_token; i++)
 	{
-		free(command_list[i]);
+		free(command->command_list[i]);
 	}
-	free(command.command_list);
+	free(command->command_list);
 }
