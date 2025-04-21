@@ -1,13 +1,23 @@
-all: pseudoshell
+EXEC = pseudoshell
+FLAGS = -g -o
+CC = gcc
 
-pseudoshell: main.o string_parser.o command.o
-	gcc main.o string_parser.o command.o
+all: $(EXEC)
+
+$(EXEC): main.o string_parser.o command.o
+	$(CC) -o $@ $^
 
 main.o: main.c
-	gcc -c main.c
+	$(CC) -c $^
 
-string_parser.o: string_parser.c
-	gcc -c string_parser.c
+%.o: %.c %.h
+	$(CC) -c $< 
 
-command.o: command.c
-	gcc -c command.c
+string_parser.o: string_parser.c string_parser.h
+	$(CC) -c $<
+
+command.o: command.c command.h
+	$(CC) -c $<
+
+clean:
+	rm -f *.o $(EXEC)
