@@ -5,6 +5,8 @@
 
 int main(int argc, char* argv[])
 {
+    FILE *input = NULL;
+    FILE *output = NULL;
     int filemode = 0;
 
     // if -f flag is used, start file mode
@@ -15,14 +17,14 @@ int main(int argc, char* argv[])
         printf("File mode:\n");
 
         // open provided file
-        FILE *input = fopen(argv[2], "r");
+        input = fopen(argv[2], "r");
         if (input == NULL)
         {
             perror("Could not open input file");
             return 1;
         }
 
-        FILE *output = fopen("output.txt", "w");
+        output = fopen("output.txt", "w");
         if (!output) {
             perror("Error opening output.txt");
             fclose(input);
@@ -37,8 +39,8 @@ int main(int argc, char* argv[])
         printf("Interactive mode:\n");
 
         // collect input from user
-        FILE *input = stdin;  
-        FILE *output = stdout;
+        input = stdin;  
+        output = stdout;
     }
 
     // otherwise, give error message
