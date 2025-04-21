@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include "string_parser.h" 
 
 int main(int argc, char* argv[])
 {
@@ -16,7 +18,7 @@ int main(int argc, char* argv[])
         FILE *file = fopen(argv[2], "r");
         if (file == NULL)
         {
-            perror("Could not open file: %s\n", argv[2]);
+            perror("Could not open file");
             return 1;
         }
     }
@@ -28,7 +30,7 @@ int main(int argc, char* argv[])
         printf("Interactive mode:\n");
 
         // collect input from user
-        input = stdin;  
+        FILE *input = stdin;  
     }
 
     // otherwise, give error message
@@ -46,7 +48,7 @@ int main(int argc, char* argv[])
     size_t len = 0;
 
     while (1) {
-        if (!file_mode) {
+        if (!filemode) {
             fprintf(output, "pseudo-shell> ");
             fflush(output); // ensure prompt appears
         }
