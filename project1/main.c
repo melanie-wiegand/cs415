@@ -15,10 +15,17 @@ int main(int argc, char* argv[])
         printf("File mode:\n");
 
         // open provided file
-        FILE *file = fopen(argv[2], "r");
-        if (file == NULL)
+        FILE *input = fopen(argv[2], "r");
+        if (input == NULL)
         {
-            perror("Could not open file");
+            perror("Could not open input file");
+            return 1;
+        }
+
+        FILE *output = fopen("output.txt", "w");
+        if (!output) {
+            perror("Error opening output.txt");
+            fclose(input);
             return 1;
         }
     }
@@ -31,6 +38,7 @@ int main(int argc, char* argv[])
 
         // collect input from user
         FILE *input = stdin;  
+        FILE *output = stdout;
     }
 
     // otherwise, give error message
@@ -48,10 +56,10 @@ int main(int argc, char* argv[])
     size_t len = 0;
 
     while (1) {
-        if (!filemode) {
-            fprintf(output, "pseudo-shell> ");
-            fflush(output); // ensure prompt appears
-        }
+        // if (!filemode) {
+        //     fprintf(output, "pseudo-shell> ");
+        //     fflush(output); // ensure prompt appears
+        // }
 
         if (getline(&line, &len, input) == -1) {
             break; // EOF or error
@@ -83,7 +91,7 @@ int main(int argc, char* argv[])
 
     if (filemode)
     {
-        fclose(file);
+        fclose(input);
     }
 
     return 0;
