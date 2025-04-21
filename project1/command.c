@@ -35,8 +35,8 @@ void listDir()
         return;
     }
 
-    entry = readdir(curdir);
-    while (entry != NULl)
+    char *entry = readdir(curdir);
+    while (entry != NULL)
     {
         printf("%s\t", entry->d_name);
         entry = readdir(curdir);
