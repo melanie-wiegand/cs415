@@ -35,7 +35,7 @@ void listDir()
         return;
     }
 
-    char *entry = readdir(curdir);
+    struct dirent *entry = readdir(curdir);
     while (entry != NULL)
     {
         printf("%s\t", entry->d_name);
