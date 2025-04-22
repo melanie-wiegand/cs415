@@ -108,7 +108,7 @@ int main(int argc, char* argv[])
             else
             {
                 fprintf(stderr, "Usage:\n");
-                fprintf(stderr, "mkdir <dirName>\n");
+                fprintf(stderr, "\tmkdir <dirName>\n");
             }
             
         }
@@ -121,7 +121,7 @@ int main(int argc, char* argv[])
             else
             {
                 fprintf(stderr, "Usage:\n");
-                fprintf(stderr, "cd <dirName>\n");
+                fprintf(stderr, "\tcd <dirName>\n");
             }
         }
 
@@ -133,7 +133,7 @@ int main(int argc, char* argv[])
             else
             {
                 fprintf(stderr, "Usage:\n");
-                fprintf(stderr, "cp <src> <dst>\n");
+                fprintf(stderr, "\tcp <src> <dst>\n");
             }
         }
 
@@ -145,7 +145,7 @@ int main(int argc, char* argv[])
             else
             {
                 fprintf(stderr, "Usage:\n");
-                fprintf(stderr, "mv <src> <dst>\n");
+                fprintf(stderr, "\tmv <src> <dst>\n");
             }
         }
 
@@ -157,7 +157,7 @@ int main(int argc, char* argv[])
             else
             {
                 fprintf(stderr, "Usage:\n");
-                fprintf(stderr, "rm <file>\n");
+                fprintf(stderr, "\trm <file>\n");
             }
         }
 
@@ -169,7 +169,7 @@ int main(int argc, char* argv[])
             else
             {
                 fprintf(stderr, "Usage:\n");
-                fprintf(stderr, "cat <file>\n");
+                fprintf(stderr, "\tcat <file>\n");
             }
         }
 
