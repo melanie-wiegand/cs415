@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "string_parser.h" 
+#include "command.c"
 
 int main(int argc, char* argv[])
 {
@@ -58,13 +59,14 @@ int main(int argc, char* argv[])
     size_t len = 0;
 
     while (1) {
-        // if (!filemode) {
-        //     fprintf(output, "pseudo-shell> ");
-        //     fflush(output); // ensure prompt appears
-        // }
+
+        if (!filemode) {
+            fprintf(output, "pseudo-shell> ");
+            fflush(output); // ensure prompt appears
+        }
 
         if (getline(&line, &len, input) == -1) {
-            break; // EOF or error
+            break; 
         }
 
         // Parse the input into tokens
@@ -84,6 +86,10 @@ int main(int argc, char* argv[])
             fprintf(output, "\n");
         } else {
             fprintf(output, "Unknown command: %s\n", cmd.command_list[0]);
+        }
+
+        if (strcmp(cmd.command_list[0], "ls") == 0) {
+            listDir();
         }
 
         free_command_line(&cmd);
