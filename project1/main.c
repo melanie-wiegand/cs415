@@ -92,6 +92,30 @@ int main(int argc, char* argv[])
             listDir();
         }
 
+        else if (strcmp(cmd.command_list[0], "pwd") == 0) {
+            showCurrentDir();
+        }
+
+        // if (strcmp(cmd.command_list[0], "ls") == 0) {
+        //     listDir();
+        // }
+
+        // if (strcmp(cmd.command_list[0], "ls") == 0) {
+        //     listDir();
+        // }
+
+        // if (strcmp(cmd.command_list[0], "ls") == 0) {
+        //     listDir();
+        // }
+
+        // if (strcmp(cmd.command_list[0], "ls") == 0) {
+        //     listDir();
+        // }
+
+        // if (strcmp(cmd.command_list[0], "ls") == 0) {
+        //     listDir();
+        // }
+
         free_command_line(&cmd);
     }
 
