@@ -96,9 +96,9 @@ int main(int argc, char* argv[])
             showCurrentDir();
         }
 
-        // if (strcmp(cmd.command_list[0], "ls") == 0) {
-        //     listDir();
-        // }
+        if (strcmp(cmd.command_list[0], "mkdir") == 0) {
+            makeDir();
+        }
 
         // if (strcmp(cmd.command_list[0], "ls") == 0) {
         //     listDir();

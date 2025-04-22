@@ -56,10 +56,12 @@ void showCurrentDir()
 {
     /*for the pwd command*/
 
+    char *msg = "Current working directory: ";
+
     char buffer[1000];
     if (getcwd(buffer, sizeof(buffer)) != NULL)
     {  
-        write(STDOUT_FILENO, "Current working directory: ", 28);
+        write(STDOUT_FILENO, msg, strlen(msg));
         write(STDOUT_FILENO, buffer, strlen(buffer));
         write(STDOUT_FILENO, "\n", 1);
     } else
@@ -71,6 +73,17 @@ void showCurrentDir()
 void makeDir(char *dirName)
 {
     /*for the mkdir command*/
+
+    char *msg = "Directory created successfully\n";
+
+    // standard perms
+    if (mkdir(stdin, 755) == 0)
+    {
+        write(STDOUT_FILENO, msg, strlen(msg));
+    } else
+    {
+        perror("Could not create directory");
+    }
 } 
 
 void changeDir(char *dirName)
