@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
             {
                 fprintf(stderr, "Usage:\n");
                 fprintf(stderr, "mkdir <dirName>\n");
-                return 1;
+                // return 1;
             }
             
         }
@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
             {
                 fprintf(stderr, "Usage:\n");
                 fprintf(stderr, "cd <dirName>\n");
-                return 1;
+                // return 1;
             }
         }
 
