@@ -88,6 +88,10 @@ int main(int argc, char* argv[])
         //     fprintf(output, "Unknown command: %s\n", cmd.command_list[0]);
         // }
 
+        if (strcmp(cmd.command_list[0], "exit") == 0) {
+            break;
+        }
+
         if (strcmp(cmd.command_list[0], "ls") == 0) {
             listDir();
         }
@@ -105,7 +109,6 @@ int main(int argc, char* argv[])
             {
                 fprintf(stderr, "Usage:\n");
                 fprintf(stderr, "mkdir <dirName>\n");
-                // return 1;
             }
             
         }
@@ -119,7 +122,6 @@ int main(int argc, char* argv[])
             {
                 fprintf(stderr, "Usage:\n");
                 fprintf(stderr, "cd <dirName>\n");
-                // return 1;
             }
         }
 
@@ -132,7 +134,6 @@ int main(int argc, char* argv[])
             {
                 fprintf(stderr, "Usage:\n");
                 fprintf(stderr, "cp <src> <dst>\n");
-                // return 1;
             }
         }
 
@@ -145,7 +146,6 @@ int main(int argc, char* argv[])
             {
                 fprintf(stderr, "Usage:\n");
                 fprintf(stderr, "mv <src> <dst>\n");
-                // return 1;
             }
         }
 
@@ -161,9 +161,17 @@ int main(int argc, char* argv[])
             }
         }
 
-        // if (strcmp(cmd.command_list[0], "ls") == 0) {
-        //     listDir();
-        // }
+        if (strcmp(cmd.command_list[0], "cat") == 0) {
+            if (cmd.num_token == 2)
+            {
+                displayFile(cmd.command_list[1]);
+            }
+            else
+            {
+                fprintf(stderr, "Usage:\n");
+                fprintf(stderr, "cat <file>\n");
+            }
+        }
 
         free_command_line(&cmd);
     }

@@ -126,7 +126,7 @@ void moveFile(char *sourcePath, char *destinationPath)
 void deleteFile(char *filename)
 {
     /*for the rm command*/
-    char *msg = "Removed file \"\n";
+    char *msg = "Removed file \"";
 
     // standard perms
     if (unlink(filename) == 0)
