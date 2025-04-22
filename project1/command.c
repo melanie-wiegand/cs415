@@ -92,6 +92,15 @@ void makeDir(char *dirName)
 void changeDir(char *dirName)
 {
     /*for the cd command*/
+    char *msg = "Changed to directory ";
+    if (chdir(dirName) == 0)
+    {
+        write(STDOUT_FILENO, msg, strlen(msg));
+        write(STDOUT_FILENO, dirName, strlen(dirName));
+    } else
+    {
+        perror("Could not create directory");
+    }
 } 
 
 void copyFile(char *sourcePath, char *destinationPath)

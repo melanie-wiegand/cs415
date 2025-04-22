@@ -110,9 +110,18 @@ int main(int argc, char* argv[])
             
         }
 
-        // if (strcmp(cmd.command_list[0], "ls") == 0) {
-        //     listDir();
-        // }
+        if (strcmp(cmd.command_list[0], "cd") == 0) {
+            if (cmd.num_token == 2)
+            {
+                changeDir(cmd.command_list[1]);
+            }
+            else
+            {
+                fprintf(stderr, "Usage:\n");
+                fprintf(stderr, "cd <dirName>\n");
+                return 1;
+            }
+        }
 
         // if (strcmp(cmd.command_list[0], "ls") == 0) {
         //     listDir();
