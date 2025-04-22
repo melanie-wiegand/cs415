@@ -93,11 +93,27 @@ int main(int argc, char* argv[])
         }
 
         if (strcmp(cmd.command_list[0], "ls") == 0) {
-            listDir();
+            if (cmd.num_token == 1)
+            {
+                listDir();
+            }
+            else
+            {
+                fprintf(stderr, "Unrecognized parameter for command \"ls\"\n");
+            }
+            
         }
 
         else if (strcmp(cmd.command_list[0], "pwd") == 0) {
-            showCurrentDir();
+            if (cmd.num_token == 1)
+            {
+                showCurrentDir();
+            }
+            else
+            {
+                fprintf(stderr, "Unrecognized parameter for command \"pwd\"\n");
+            }
+            
         }
 
         if (strcmp(cmd.command_list[0], "mkdir") == 0) {
