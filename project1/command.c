@@ -129,7 +129,7 @@ void deleteFile(char *filename)
     char *msg = "Removed file \"\n";
 
     // standard perms
-    if (mkdir(dirName, 0755) == 0)
+    if (unlink(filename) == 0)
     {
         write(STDOUT_FILENO, msg, strlen(msg));
         write(STDOUT_FILENO, filename, strlen(filename));
