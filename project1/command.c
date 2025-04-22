@@ -65,7 +65,6 @@ void showCurrentDir()
     {
         perror("Error retrieving current path");
     }
-    return 0;
 } 
 
 void makeDir(char *dirName)
