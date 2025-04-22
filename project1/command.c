@@ -39,9 +39,13 @@ void listDir()
     struct dirent *entry = readdir(curdir);
     while (entry != NULL)
     {
-        printf("%s\t", entry->d_name);
+        // printf("%s\t", entry->d_name);
+        size_t len = strlen(entry->d_name);
+        write(STDOUT_FILENO, entry->d_name, len);
+        write(STDOUT_FILENO, "\t", 1);
         entry = readdir(curdir);
     }
+    write(STDOUT_FILENO, "\n", 1);
 
     closedir(curdir);
 } 
