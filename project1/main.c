@@ -124,7 +124,7 @@ int main(int argc, char* argv[])
         }
 
         if (strcmp(cmd.command_list[0], "cp") == 0) {
-            if (cmd.num_token == 2)
+            if (cmd.num_token == 3)
             {
                 copyFile(cmd.command_list[1], cmd.command_list[2]);
             }
@@ -137,7 +137,7 @@ int main(int argc, char* argv[])
         }
 
         if (strcmp(cmd.command_list[0], "mv") == 0) {
-            if (cmd.num_token == 2)
+            if (cmd.num_token == 3)
             {
                 moveFile(cmd.command_list[1], cmd.command_list[2]);
             }
