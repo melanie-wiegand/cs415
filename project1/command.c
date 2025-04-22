@@ -20,6 +20,7 @@ files (e.g. ".", "..", "main.c", "lab2.exe", "output.txt" */
 #include <stdlib.h>
 #include <dirent.h>
 #include <errno.h>
+#include "command.h"
 
 void listDir()
 {
