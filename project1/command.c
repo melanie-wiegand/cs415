@@ -22,6 +22,9 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #include "command.h"
 
 void listDir()
@@ -77,7 +80,7 @@ void makeDir(char *dirName)
     char *msg = "Directory created successfully\n";
 
     // standard perms
-    if (mkdir(dirName, 755) == 0)
+    if (mkdir(dirName, 0755) == 0)
     {
         write(STDOUT_FILENO, msg, strlen(msg));
     } else
