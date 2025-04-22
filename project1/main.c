@@ -97,7 +97,7 @@ int main(int argc, char* argv[])
         }
 
         if (strcmp(cmd.command_list[0], "mkdir") == 0) {
-            if (len(cmd.command_list) == 2)
+            if (cmd.num_token == 2)
             {
                 makeDir(cmd.command_list[1]);
             }
