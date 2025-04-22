@@ -37,7 +37,7 @@ void listDir()
 
     if (curdir == NULL) 
     {
-        perror("Error opening directory");
+        perror("Error opening directory\n");
         return;
     }
 
@@ -69,7 +69,7 @@ void showCurrentDir()
         write(STDOUT_FILENO, "\n", 1);
     } else
     {
-        perror("Error retrieving current path");
+        perror("Error retrieving current path\n");
     }
 } 
 
@@ -85,7 +85,7 @@ void makeDir(char *dirName)
         write(STDOUT_FILENO, msg, strlen(msg));
     } else
     {
-        perror("Could not create directory");
+        perror("Could not create directory\n");
     }
 } 
 
@@ -100,7 +100,7 @@ void changeDir(char *dirName)
         write(STDOUT_FILENO, "\"\n", 2);
     } else
     {
-        perror("Directory not found");
+        perror("Directory not found\n");
     }
 } 
 
@@ -119,13 +119,25 @@ void moveFile(char *sourcePath, char *destinationPath)
     } 
     else
     {
-        perror("Could not move/rename file");
+        perror("Could not move/rename file\n");
     }
 } 
 
 void deleteFile(char *filename)
 {
     /*for the rm command*/
+    char *msg = "Removed file \"\n";
+
+    // standard perms
+    if (mkdir(dirName, 0755) == 0)
+    {
+        write(STDOUT_FILENO, msg, strlen(msg));
+        write(STDOUT_FILENO, filename, strlen(filename));
+        write(STDOUT_FILENO, "\"\n", 2);
+    } else
+    {
+        perror("Could not remove file\n");
+    }
 } 
 
 void displayFile(char *filename)

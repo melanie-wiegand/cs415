@@ -149,6 +149,17 @@ int main(int argc, char* argv[])
             }
         }
 
+        if (strcmp(cmd.command_list[0], "rm") == 0) {
+            if (cmd.num_token == 2)
+            {
+                deleteFile(cmd.command_list[1]);
+            }
+            else
+            {
+                fprintf(stderr, "Usage:\n");
+                fprintf(stderr, "rm <file>\n");
+        }
+
         // if (strcmp(cmd.command_list[0], "ls") == 0) {
         //     listDir();
         // }
