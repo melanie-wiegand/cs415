@@ -61,6 +61,7 @@ void showCurrentDir()
     {  
         write(STDOUT_FILENO, "Current working directory: ", 28);
         write(STDOUT_FILENO, buffer, strlen(buffer));
+        write(STDOUT_FILENO, "\n", 1);
     } else
     {
         perror("Error retrieving current path");
