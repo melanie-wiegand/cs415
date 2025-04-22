@@ -158,6 +158,7 @@ int main(int argc, char* argv[])
             {
                 fprintf(stderr, "Usage:\n");
                 fprintf(stderr, "rm <file>\n");
+            }
         }
 
         // if (strcmp(cmd.command_list[0], "ls") == 0) {
