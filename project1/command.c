@@ -77,7 +77,7 @@ void makeDir(char *dirName)
     char *msg = "Directory created successfully\n";
 
     // standard perms
-    if (mkdir(stdin, 755) == 0)
+    if (mkdir(dirName, 755) == 0)
     {
         write(STDOUT_FILENO, msg, strlen(msg));
     } else

@@ -97,7 +97,17 @@ int main(int argc, char* argv[])
         }
 
         if (strcmp(cmd.command_list[0], "mkdir") == 0) {
-            makeDir();
+            if (len(cmd.command_list) == 2)
+            {
+                makeDir(cmd.command_list[1]);
+            }
+            else
+            {
+                fprintf(stderr, "Usage:\n");
+                fprintf(stderr, "mkdir <dirName>\n");
+                return 1;
+            }
+            
         }
 
         // if (strcmp(cmd.command_list[0], "ls") == 0) {
