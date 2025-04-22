@@ -112,11 +112,12 @@ void copyFile(char *sourcePath, char *destinationPath)
 void moveFile(char *sourcePath, char *destinationPath)
 {
     /*for the mv command*/
-    char *msg = "File moved successfully\n"
+    char *msg = "File moved successfully\n";
     if (rename(sourcePath, destinationPath) == 0)
     {
         write(STDOUT_FILENO, msg, strlen(msg));
-    } else
+    } 
+    else
     {
         perror("Could not move/rename file");
     }
