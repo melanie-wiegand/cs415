@@ -92,14 +92,15 @@ void makeDir(char *dirName)
 void changeDir(char *dirName)
 {
     /*for the cd command*/
-    char *msg = "Changed to directory ";
+    char *msg = "Changed to directory \"";
     if (chdir(dirName) == 0)
     {
         write(STDOUT_FILENO, msg, strlen(msg));
         write(STDOUT_FILENO, dirName, strlen(dirName));
+        write(STDOUT_FILENO, "\"\n", 2);
     } else
     {
-        perror("Could not create directory");
+        perror("Directory not found");
     }
 } 
 
@@ -111,6 +112,14 @@ void copyFile(char *sourcePath, char *destinationPath)
 void moveFile(char *sourcePath, char *destinationPath)
 {
     /*for the mv command*/
+    char *msg = "File moved successfully\n"
+    if (rename(sourcePath, destinationPath) == 0)
+    {
+        write(STDOUT_FILENO, msg, strlen(msg));
+    } else
+    {
+        perror("Could not move/rename file");
+    }
 } 
 
 void deleteFile(char *filename)

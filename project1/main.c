@@ -123,13 +123,31 @@ int main(int argc, char* argv[])
             }
         }
 
-        // if (strcmp(cmd.command_list[0], "ls") == 0) {
-        //     listDir();
-        // }
+        if (strcmp(cmd.command_list[0], "cp") == 0) {
+            if (cmd.num_token == 2)
+            {
+                copyFile(cmd.command_list[1], cmd.command_list[2]);
+            }
+            else
+            {
+                fprintf(stderr, "Usage:\n");
+                fprintf(stderr, "cp <src> <dst>\n");
+                // return 1;
+            }
+        }
 
-        // if (strcmp(cmd.command_list[0], "ls") == 0) {
-        //     listDir();
-        // }
+        if (strcmp(cmd.command_list[0], "mv") == 0) {
+            if (cmd.num_token == 2)
+            {
+                moveFile(cmd.command_list[1], cmd.command_list[2]);
+            }
+            else
+            {
+                fprintf(stderr, "Usage:\n");
+                fprintf(stderr, "mv <src> <dst>\n");
+                // return 1;
+            }
+        }
 
         // if (strcmp(cmd.command_list[0], "ls") == 0) {
         //     listDir();
