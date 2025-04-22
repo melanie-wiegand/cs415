@@ -77,16 +77,16 @@ int main(int argc, char* argv[])
             continue;
         }
 
-        // STUB: Handle "lfcat" as a test
-        if (strcmp(cmd.command_list[0], "lfcat") == 0) {
-            fprintf(output, "Calling lfcat with arguments: ");
-            for (int i = 1; i < cmd.num_token; i++) {
-                fprintf(output, "%s ", cmd.command_list[i]);
-            }
-            fprintf(output, "\n");
-        } else {
-            fprintf(output, "Unknown command: %s\n", cmd.command_list[0]);
-        }
+        // // STUB: Handle "lfcat" as a test
+        // if (strcmp(cmd.command_list[0], "lfcat") == 0) {
+        //     fprintf(output, "Calling lfcat with arguments: ");
+        //     for (int i = 1; i < cmd.num_token; i++) {
+        //         fprintf(output, "%s ", cmd.command_list[i]);
+        //     }
+        //     fprintf(output, "\n");
+        // } else {
+        //     fprintf(output, "Unknown command: %s\n", cmd.command_list[0]);
+        // }
 
         if (strcmp(cmd.command_list[0], "ls") == 0) {
             listDir();
