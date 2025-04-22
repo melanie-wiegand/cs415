@@ -34,7 +34,7 @@ void listDir()
 
     if (curdir == NULL) 
     {
-        perror("opendir");
+        perror("Error opening directory");
         return;
     }
 
@@ -55,6 +55,17 @@ void listDir()
 void showCurrentDir()
 {
     /*for the pwd command*/
+
+    char buffer[1000];
+    if (getcwd(buffer, sizeof(buffer)) != NULL)
+    {  
+        write(STDOUT_FILENO, "Current working directory: ", 28);
+        write(STDOUT_FILENO, buffer, sizeof(buffer));
+    } else
+    {
+        perror("Error retrieving current path");
+    }
+    return 0;
 } 
 
 void makeDir(char *dirName)
