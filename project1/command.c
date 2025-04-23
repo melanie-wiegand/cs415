@@ -60,12 +60,12 @@ void showCurrentDir()
 {
     /*for the pwd command*/
 
-    char *msg = "Current working directory: ";
+    // char *msg = "Current working directory: ";
 
     char buffer[1000];
     if (getcwd(buffer, sizeof(buffer)) != NULL)
     {  
-        write(STDOUT_FILENO, msg, strlen(msg));
+        // write(STDOUT_FILENO, msg, strlen(msg));
         write(STDOUT_FILENO, buffer, strlen(buffer));
         write(STDOUT_FILENO, "\n", 1);
     } else
@@ -208,7 +208,7 @@ void displayFile(char *filename)
         textsize = read(src, buffer, 100000);
     }
     write(STDOUT_FILENO, "\n", 1);
-    
+
     close(src);
 } 
 

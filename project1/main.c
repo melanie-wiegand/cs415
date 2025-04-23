@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
     if (argc == 3 && strcmp(argv[1], "-f") == 0)
     {
         // update file mode bool
-        filemode = 1;  
+        // filemode = 1;  
         printf("File mode:\n");
 
         // open provided file
@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
     else if (argc == 1) 
     {
         // keep filemode bool at 0
-        printf("Interactive mode:\n");
+        // printf("Interactive mode:\n");
 
         // collect input from user
         input = stdin;  
@@ -150,6 +150,7 @@ int main(int argc, char* argv[])
             else if (strcmp(cmd.command_list[0], "cp") == 0) {
                 if (cmd.num_token == 3)
                 {
+                    //use basename
                     copyFile(cmd.command_list[1], cmd.command_list[2]);
                 }
                 else
