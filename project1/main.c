@@ -204,8 +204,7 @@ int main(int argc, char* argv[])
             else
             {
                 fprintf(stderr, "Error! Unrecognized command: ");
-                printf(cmd.command_list[0]);
-                printf("\n");
+                printf("%s\n", cmd.command_list[0]);
                 break;
             }
 
