@@ -181,5 +181,32 @@ void deleteFile(char *filename)
 void displayFile(char *filename)
 {
     /*for the cat command*/
+    int src = open(sourcePath, O_RDONLY);
+    if (src == -1)
+    {
+        perror("Could not open source file\n");
+        return;
+    }
+
+    char buffer[100000];
+    ssize_t textsize = read(src, buffer, 100000);
+
+    if (textsize == -1)
+    {
+        perror("Error reading from source file\n");
+        return;
+    }
+
+    while (textsize > 0)
+    {
+        ssize_t checksize = write(STDOUT_FILENO, buffer, textsize);
+        if (checksize != textsize)
+        {
+            perror("Error writing to terminal\n"); 
+            return;
+        }
+        textsize = read(src, buffer, 100000);
+    }
+    close(src);
 } 
 
