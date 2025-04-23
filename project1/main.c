@@ -85,11 +85,13 @@ int main(int argc, char* argv[])
             }
 
         
-
+            // quit out of pseudoshell
             if (strcmp(cmd.command_list[0], "exit") == 0) {
-                break;
+                return 1;
             }
 
+
+            // list items in current dir
             if (strcmp(cmd.command_list[0], "ls") == 0) {
                 if (cmd.num_token == 1)
                 {
@@ -102,6 +104,8 @@ int main(int argc, char* argv[])
                 
             }
 
+
+            // show current path
             else if (strcmp(cmd.command_list[0], "pwd") == 0) {
                 if (cmd.num_token == 1)
                 {
@@ -114,6 +118,7 @@ int main(int argc, char* argv[])
                 
             }
 
+            // create directory
             if (strcmp(cmd.command_list[0], "mkdir") == 0) {
                 if (cmd.num_token == 2)
                 {
@@ -127,6 +132,8 @@ int main(int argc, char* argv[])
                 
             }
 
+
+            // change to specified directory
             if (strcmp(cmd.command_list[0], "cd") == 0) {
                 if (cmd.num_token == 2)
                 {
@@ -139,6 +146,7 @@ int main(int argc, char* argv[])
                 }
             }
 
+            // copy file to new path
             if (strcmp(cmd.command_list[0], "cp") == 0) {
                 if (cmd.num_token == 3)
                 {
@@ -151,6 +159,8 @@ int main(int argc, char* argv[])
                 }
             }
 
+            
+            // move or rename file
             if (strcmp(cmd.command_list[0], "mv") == 0) {
                 if (cmd.num_token == 3)
                 {
@@ -163,6 +173,8 @@ int main(int argc, char* argv[])
                 }
             }
 
+
+            // delete file
             if (strcmp(cmd.command_list[0], "rm") == 0) {
                 if (cmd.num_token == 2)
                 {
@@ -175,6 +187,8 @@ int main(int argc, char* argv[])
                 }
             }
 
+
+            // display file contents
             if (strcmp(cmd.command_list[0], "cat") == 0) {
                 if (cmd.num_token == 2)
                 {
