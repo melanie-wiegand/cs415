@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
     while (1) {
 
         if (!filemode) {
-            fprintf(output, "pseudo-shell> ");
+            fprintf(output, ">>> ");
             fflush(output); // ensure prompt appears
         }
 
