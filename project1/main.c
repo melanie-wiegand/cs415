@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
                 }
                 else
                 {
-                    fprintf(stderr, "Unrecognized parameter for command \"ls\"\n");
+                    fprintf(stderr, "Error! Unsupported parameters for command: ls\n");
                 }
                 
             }
@@ -113,7 +113,7 @@ int main(int argc, char* argv[])
                 }
                 else
                 {
-                    fprintf(stderr, "Unrecognized parameter for command \"pwd\"\n");
+                    fprintf(stderr, "Error! Unsupported parameters for command: pwd\n");
                 }
                 
             }
