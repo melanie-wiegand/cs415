@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
             if (cmd.num_token == 0) 
             {
                 free_command_line(&cmd);
-                curcmd = strtok_r(NULL< ";", &split);
+                curcmd = strtok_r(NULL, ";", &split);
                 continue;
             }
 
