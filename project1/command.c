@@ -207,6 +207,8 @@ void displayFile(char *filename)
         }
         textsize = read(src, buffer, 100000);
     }
+    write(STDOUT_FILENO, "\n", 1);
+    
     close(src);
 } 
 
