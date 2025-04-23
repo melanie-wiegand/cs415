@@ -181,7 +181,7 @@ void deleteFile(char *filename)
 void displayFile(char *filename)
 {
     /*for the cat command*/
-    int src = open(sourcePath, O_RDONLY);
+    int src = open(filename, O_RDONLY);
     if (src == -1)
     {
         perror("Could not open source file\n");
