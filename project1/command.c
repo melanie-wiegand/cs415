@@ -107,6 +107,36 @@ void changeDir(char *dirName)
 void copyFile(char *sourcePath, char *destinationPath)
 {
     /*for the cp command*/
+    int src = open(sourcePath, O_RDONLY);
+    if (src == -1)
+    {
+        perror("Could not open source file\n");
+    }
+
+    int dst = open(destinationPath, O_WRONLY | O_CREAT | O_TRUNC, 0755);
+    if (dst == -1)
+    {
+        perror("Could not open/create destination file\n");
+    }
+
+    char buffer[100000];
+    ssize_t textsize = read(src, buffer, 100000);
+    if (textsize == -1)
+    {
+        perror("Error reading from source file\n");
+    }
+
+    while (textsize > 0)
+    {
+        ssize_t checksize = write(dst, buffer, textsize);
+        if (checksize != textsize)
+        {
+            perror("Error writing to destination file\n"); 
+        }
+    }
+
+    close(src);
+    close(dst);
 } 
 
 void moveFile(char *sourcePath, char *destinationPath)

@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
     else 
     {
         fprintf(stderr, "Usage:\n");
-        fprintf(stderr, "\t%s\t\t(for interactive mode)\n", argv[0]);
+        fprintf(stderr, "\t%s\t\t\t(for interactive mode)\n", argv[0]);
         fprintf(stderr, "\t%s -f <file>\t(for file mode)\n", argv[0]);
         return 1;
     }
