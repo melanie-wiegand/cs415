@@ -48,8 +48,8 @@ int main(int argc, char* argv[])
     else 
     {
         fprintf(stderr, "Usage:\n");
-        fprintf(stderr, "  %s           (for interactive mode)\n", argv[0]);
-        fprintf(stderr, "  %s -f <file> (for file mode)\n", argv[0]);
+        fprintf(stderr, "\t%s\t\t(for interactive mode)\n", argv[0]);
+        fprintf(stderr, "\t%s -f <file>\t(for file mode)\n", argv[0]);
         return 1;
     }
 
@@ -86,13 +86,13 @@ int main(int argc, char* argv[])
 
         
             // quit out of pseudoshell
-            if (strcmp(cmd.command_list[0], "exit") == 0) {
+            else if (strcmp(cmd.command_list[0], "exit") == 0) {
                 return 1;
             }
 
 
             // list items in current dir
-            if (strcmp(cmd.command_list[0], "ls") == 0) {
+            else if (strcmp(cmd.command_list[0], "ls") == 0) {
                 if (cmd.num_token == 1)
                 {
                     listDir();
@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
             }
 
             // create directory
-            if (strcmp(cmd.command_list[0], "mkdir") == 0) {
+            else if (strcmp(cmd.command_list[0], "mkdir") == 0) {
                 if (cmd.num_token == 2)
                 {
                     makeDir(cmd.command_list[1]);
@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
 
 
             // change to specified directory
-            if (strcmp(cmd.command_list[0], "cd") == 0) {
+            else if (strcmp(cmd.command_list[0], "cd") == 0) {
                 if (cmd.num_token == 2)
                 {
                     changeDir(cmd.command_list[1]);
@@ -147,7 +147,7 @@ int main(int argc, char* argv[])
             }
 
             // copy file to new path
-            if (strcmp(cmd.command_list[0], "cp") == 0) {
+            else if (strcmp(cmd.command_list[0], "cp") == 0) {
                 if (cmd.num_token == 3)
                 {
                     copyFile(cmd.command_list[1], cmd.command_list[2]);
@@ -161,7 +161,7 @@ int main(int argc, char* argv[])
 
             
             // move or rename file
-            if (strcmp(cmd.command_list[0], "mv") == 0) {
+            else if (strcmp(cmd.command_list[0], "mv") == 0) {
                 if (cmd.num_token == 3)
                 {
                     moveFile(cmd.command_list[1], cmd.command_list[2]);
@@ -175,7 +175,7 @@ int main(int argc, char* argv[])
 
 
             // delete file
-            if (strcmp(cmd.command_list[0], "rm") == 0) {
+            else if (strcmp(cmd.command_list[0], "rm") == 0) {
                 if (cmd.num_token == 2)
                 {
                     deleteFile(cmd.command_list[1]);
@@ -189,7 +189,7 @@ int main(int argc, char* argv[])
 
 
             // display file contents
-            if (strcmp(cmd.command_list[0], "cat") == 0) {
+            else if (strcmp(cmd.command_list[0], "cat") == 0) {
                 if (cmd.num_token == 2)
                 {
                     displayFile(cmd.command_list[1]);
@@ -199,6 +199,14 @@ int main(int argc, char* argv[])
                     fprintf(stderr, "Usage:\n");
                     fprintf(stderr, "\tcat <file>\n");
                 }
+            }
+
+            else
+            {
+                fprintf(stderr, "Error! Unrecognized command: ");
+                fprintf(cmd.command_list[0]);
+                fprintf("\n");
+                break;
             }
 
             free_command_line(&cmd);
