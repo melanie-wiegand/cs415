@@ -69,127 +69,128 @@ int main(int argc, char* argv[])
             break; 
         }
 
+        char *split;
+        char *curcmd = strtok_r(line, ";", &split);
+
+        while (curcmd != NULL)
+        {
         // Parse the input into tokens
-        command_line cmd = str_filler(line, " \t\n");
+            command_line cmd = str_filler(curcmd, " \t\n");
 
-        if (cmd.num_token == 0) {
+            if (cmd.num_token == 0) 
+            {
+                free_command_line(&cmd);
+                curcmd = strtok_r(NULL< ";", &split);
+                continue;
+            }
+
+        
+
+            if (strcmp(cmd.command_list[0], "exit") == 0) {
+                break;
+            }
+
+            if (strcmp(cmd.command_list[0], "ls") == 0) {
+                if (cmd.num_token == 1)
+                {
+                    listDir();
+                }
+                else
+                {
+                    fprintf(stderr, "Unrecognized parameter for command \"ls\"\n");
+                }
+                
+            }
+
+            else if (strcmp(cmd.command_list[0], "pwd") == 0) {
+                if (cmd.num_token == 1)
+                {
+                    showCurrentDir();
+                }
+                else
+                {
+                    fprintf(stderr, "Unrecognized parameter for command \"pwd\"\n");
+                }
+                
+            }
+
+            if (strcmp(cmd.command_list[0], "mkdir") == 0) {
+                if (cmd.num_token == 2)
+                {
+                    makeDir(cmd.command_list[1]);
+                }
+                else
+                {
+                    fprintf(stderr, "Usage:\n");
+                    fprintf(stderr, "\tmkdir <dirName>\n");
+                }
+                
+            }
+
+            if (strcmp(cmd.command_list[0], "cd") == 0) {
+                if (cmd.num_token == 2)
+                {
+                    changeDir(cmd.command_list[1]);
+                }
+                else
+                {
+                    fprintf(stderr, "Usage:\n");
+                    fprintf(stderr, "\tcd <dirName>\n");
+                }
+            }
+
+            if (strcmp(cmd.command_list[0], "cp") == 0) {
+                if (cmd.num_token == 3)
+                {
+                    copyFile(cmd.command_list[1], cmd.command_list[2]);
+                }
+                else
+                {
+                    fprintf(stderr, "Usage:\n");
+                    fprintf(stderr, "\tcp <src> <dst>\n");
+                }
+            }
+
+            if (strcmp(cmd.command_list[0], "mv") == 0) {
+                if (cmd.num_token == 3)
+                {
+                    moveFile(cmd.command_list[1], cmd.command_list[2]);
+                }
+                else
+                {
+                    fprintf(stderr, "Usage:\n");
+                    fprintf(stderr, "\tmv <src> <dst>\n");
+                }
+            }
+
+            if (strcmp(cmd.command_list[0], "rm") == 0) {
+                if (cmd.num_token == 2)
+                {
+                    deleteFile(cmd.command_list[1]);
+                }
+                else
+                {
+                    fprintf(stderr, "Usage:\n");
+                    fprintf(stderr, "\trm <file>\n");
+                }
+            }
+
+            if (strcmp(cmd.command_list[0], "cat") == 0) {
+                if (cmd.num_token == 2)
+                {
+                    displayFile(cmd.command_list[1]);
+                }
+                else
+                {
+                    fprintf(stderr, "Usage:\n");
+                    fprintf(stderr, "\tcat <file>\n");
+                }
+            }
+
             free_command_line(&cmd);
-            continue;
+            // go to next cmd
+            curcmd = strtok_r(NULL, ";", &split);
         }
-
-        // // STUB: Handle "lfcat" as a test
-        // if (strcmp(cmd.command_list[0], "lfcat") == 0) {
-        //     fprintf(output, "Calling lfcat with arguments: ");
-        //     for (int i = 1; i < cmd.num_token; i++) {
-        //         fprintf(output, "%s ", cmd.command_list[i]);
-        //     }
-        //     fprintf(output, "\n");
-        // } else {
-        //     fprintf(output, "Unknown command: %s\n", cmd.command_list[0]);
-        // }
-
-        if (strcmp(cmd.command_list[0], "exit") == 0) {
-            break;
-        }
-
-        if (strcmp(cmd.command_list[0], "ls") == 0) {
-            if (cmd.num_token == 1)
-            {
-                listDir();
-            }
-            else
-            {
-                fprintf(stderr, "Unrecognized parameter for command \"ls\"\n");
-            }
-            
-        }
-
-        else if (strcmp(cmd.command_list[0], "pwd") == 0) {
-            if (cmd.num_token == 1)
-            {
-                showCurrentDir();
-            }
-            else
-            {
-                fprintf(stderr, "Unrecognized parameter for command \"pwd\"\n");
-            }
-            
-        }
-
-        if (strcmp(cmd.command_list[0], "mkdir") == 0) {
-            if (cmd.num_token == 2)
-            {
-                makeDir(cmd.command_list[1]);
-            }
-            else
-            {
-                fprintf(stderr, "Usage:\n");
-                fprintf(stderr, "\tmkdir <dirName>\n");
-            }
-            
-        }
-
-        if (strcmp(cmd.command_list[0], "cd") == 0) {
-            if (cmd.num_token == 2)
-            {
-                changeDir(cmd.command_list[1]);
-            }
-            else
-            {
-                fprintf(stderr, "Usage:\n");
-                fprintf(stderr, "\tcd <dirName>\n");
-            }
-        }
-
-        if (strcmp(cmd.command_list[0], "cp") == 0) {
-            if (cmd.num_token == 3)
-            {
-                copyFile(cmd.command_list[1], cmd.command_list[2]);
-            }
-            else
-            {
-                fprintf(stderr, "Usage:\n");
-                fprintf(stderr, "\tcp <src> <dst>\n");
-            }
-        }
-
-        if (strcmp(cmd.command_list[0], "mv") == 0) {
-            if (cmd.num_token == 3)
-            {
-                moveFile(cmd.command_list[1], cmd.command_list[2]);
-            }
-            else
-            {
-                fprintf(stderr, "Usage:\n");
-                fprintf(stderr, "\tmv <src> <dst>\n");
-            }
-        }
-
-        if (strcmp(cmd.command_list[0], "rm") == 0) {
-            if (cmd.num_token == 2)
-            {
-                deleteFile(cmd.command_list[1]);
-            }
-            else
-            {
-                fprintf(stderr, "Usage:\n");
-                fprintf(stderr, "\trm <file>\n");
-            }
-        }
-
-        if (strcmp(cmd.command_list[0], "cat") == 0) {
-            if (cmd.num_token == 2)
-            {
-                displayFile(cmd.command_list[1]);
-            }
-            else
-            {
-                fprintf(stderr, "Usage:\n");
-                fprintf(stderr, "\tcat <file>\n");
-            }
-        }
-
-        free_command_line(&cmd);
     }
 
     free(line);
