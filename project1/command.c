@@ -37,8 +37,9 @@ void listDir()
     struct dirent *entry = readdir(curdir);
     while (entry != NULL)
     {
-        size_t len = strlen(entry->d_name);
-        write(outwrite, entry->d_name, len);
+        // size_t len = strlen(entry->d_name);
+        // write(outwrite, entry->d_name, len);
+        writeToOutput(entry->d_name);
         write(outwrite, "\t", 1);
         entry = readdir(curdir);
     }
@@ -57,11 +58,12 @@ void showCurrentDir()
     if (getcwd(buffer, sizeof(buffer)) != NULL)
     {  
         // write(STDOUT_FILENO, msg, strlen(msg));
-        write(outwrite, buffer, strlen(buffer));
+        // write(outwrite, buffer, strlen(buffer));
+        writeToTOutput(buffer);
         write(outwrite, "\n", 1);
     } else
     {
-        perror("Error retrieving current path");
+        writeToOutput("Error retrieving current path\n");
     }
 } 
 
@@ -79,7 +81,7 @@ void makeDir(char *dirName)
     } else
     {
         // perror("Could not create directory");
-        writeToOutput("Could not create directory");
+        writeToOutput("Could not create directory\n");
     }
 } 
 
@@ -95,7 +97,7 @@ void changeDir(char *dirName)
         ;
     } else
     {
-        perror("Directory not found");
+        writeToOutput("Directory not found\n");
     }
 } 
 
@@ -105,7 +107,7 @@ void copyFile(char *sourcePath, char *destinationPath)
     int src = open(sourcePath, O_RDONLY);
     if (src == -1)
     {
-        perror("Could not open source file");
+        writeToOutput("Could not open source file\n");
         return;
     }
 
@@ -141,7 +143,7 @@ void copyFile(char *sourcePath, char *destinationPath)
 
     if (dst == -1)
     {
-        perror("Could not open/create destination file");
+        writeToOutput("Could not open/create destination file\n");
         close(src);
         return;
     }
@@ -152,7 +154,7 @@ void copyFile(char *sourcePath, char *destinationPath)
 
     if (textsize == -1)
     {
-        perror("Error reading from source file");
+        writeToOutput("Error reading from source file\n");
         close(src);
         return;
     }
@@ -162,7 +164,7 @@ void copyFile(char *sourcePath, char *destinationPath)
         ssize_t checksize = write(dst, buffer, textsize);
         if (checksize != textsize)
         {
-            perror("Error writing to destination file"); 
+            writeToOutput("Error writing to destination file\n"); 
             close(src);
             close(dst);
             return;
@@ -213,7 +215,7 @@ void moveFile(char *sourcePath, char *destinationPath)
     } 
     else
     {
-        perror("Could not move/rename file");
+        writeToOutput("Could not move/rename file\n");
     }
 } 
 
@@ -231,7 +233,7 @@ void deleteFile(char *filename)
         ;
     } else
     {
-        perror("Could not remove file");
+        writeToOutput("Could not remove file\n");
     }
 } 
 
@@ -241,7 +243,7 @@ void displayFile(char *filename)
     int src = open(filename, O_RDONLY);
     if (src == -1)
     {
-        perror("Could not open source file");
+        writeToOutput("Could not open source file\n");
         return;
     }
 
@@ -250,7 +252,7 @@ void displayFile(char *filename)
 
     if (textsize == -1)
     {
-        perror("Error reading from source file");
+        writeToOutput("Error reading from source file\n");
         close(src);
         return;
     }
@@ -260,7 +262,7 @@ void displayFile(char *filename)
         ssize_t checksize = write(outwrite, buffer, textsize);
         if (checksize != textsize)
         {
-            perror("Error writing to terminal"); 
+            writeToOutput("Error writing to terminal\n"); 
             close(src);
             return;
         }
