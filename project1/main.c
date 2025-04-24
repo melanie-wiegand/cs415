@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
     {
         // update file mode bool
         filemode = 1;  
-        printf("File mode:\n");
+        // printf("File mode:\n");
 
         // take input from provided file
         input = fopen(argv[2], "r");
@@ -107,7 +107,8 @@ int main(int argc, char* argv[])
                 }
                 else
                 {
-                    fprintf(stderr, "Error! Unsupported parameters for command: ls\n");
+                    char *msg = "Error! Unsupported parameters for command: ls\n";
+                    write(STDOUT_FILENO, msg, strlen(msg));
                 }
                 
             }
@@ -121,7 +122,8 @@ int main(int argc, char* argv[])
                 }
                 else
                 {
-                    fprintf(stderr, "Error! Unsupported parameters for command: pwd\n");
+                    char *msg = "Error! Unsupported parameters for command: pwd\n";
+                    write(STDOUT_FILENO, msg, strlen(msg));
                 }
                 
             }

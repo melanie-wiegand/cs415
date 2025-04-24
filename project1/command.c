@@ -43,7 +43,7 @@ void listDir()
 
     if (curdir == NULL) 
     {
-        perror("Error opening directory\n");
+        perror("Error opening directory");
         return;
     }
 
@@ -82,12 +82,13 @@ void makeDir(char *dirName)
 {
     /*for the mkdir command*/
 
-    char *msg = "Directory created successfully\n";
+    // char *msg = "Directory created successfully\n";
 
     // standard perms
     if (mkdir(dirName, 0755) == 0)
     {
-        write(outwrite, msg, strlen(msg));
+        // write(outwrite, msg, strlen(msg));
+        continue;
     } else
     {
         perror("Could not create directory");
@@ -97,12 +98,13 @@ void makeDir(char *dirName)
 void changeDir(char *dirName)
 {
     /*for the cd command*/
-    char *msg = "Changed to directory \"";
+    // char *msg = "Changed to directory \"";
     if (chdir(dirName) == 0)
     {
-        write(outwrite, msg, strlen(msg));
-        write(outwrite, dirName, strlen(dirName));
-        write(outwrite, "\"\n", 2);
+        // write(outwrite, msg, strlen(msg));
+        // write(outwrite, dirName, strlen(dirName));
+        // write(outwrite, "\"\n", 2);
+        continue;
     } else
     {
         perror("Directory not found");
@@ -187,7 +189,7 @@ void copyFile(char *sourcePath, char *destinationPath)
 void moveFile(char *sourcePath, char *destinationPath)
 {
     /*for the mv command*/
-    char *msg = "File moved successfully\n";
+    // char *msg = "File moved successfully\n";
 
     int isdir = 0;
     int dir = open(destinationPath, O_RDONLY | O_DIRECTORY);
@@ -218,7 +220,8 @@ void moveFile(char *sourcePath, char *destinationPath)
 
     if (rename(sourcePath, path) == 0)
     {
-        write(outwrite, msg, strlen(msg));
+        // write(outwrite, msg, strlen(msg));
+        continue;
     } 
     else
     {
@@ -229,14 +232,15 @@ void moveFile(char *sourcePath, char *destinationPath)
 void deleteFile(char *filename)
 {
     /*for the rm command*/
-    char *msg = "Removed file \"";
+    // char *msg = "Removed file \"";
 
     // standard perms
     if (unlink(filename) == 0)
     {
-        write(outwrite, msg, strlen(msg));
-        write(outwrite, filename, strlen(filename));
-        write(outwrite, "\"\n", 2);
+        // write(outwrite, msg, strlen(msg));
+        // write(outwrite, filename, strlen(filename));
+        // write(outwrite, "\"\n", 2);
+        continue;
     } else
     {
         perror("Could not remove file");
