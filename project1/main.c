@@ -95,6 +95,7 @@ int main(int argc, char* argv[])
         
             // quit out of pseudoshell
             else if (strcmp(cmd.command_list[0], "exit") == 0) {
+                free_command_line(&cmd);
                 return 1;
             }
 
