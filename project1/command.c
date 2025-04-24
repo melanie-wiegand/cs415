@@ -88,7 +88,7 @@ void makeDir(char *dirName)
     if (mkdir(dirName, 0755) == 0)
     {
         // write(outwrite, msg, strlen(msg));
-        continue;
+        ;
     } else
     {
         perror("Could not create directory");
@@ -104,7 +104,7 @@ void changeDir(char *dirName)
         // write(outwrite, msg, strlen(msg));
         // write(outwrite, dirName, strlen(dirName));
         // write(outwrite, "\"\n", 2);
-        continue;
+        ;
     } else
     {
         perror("Directory not found");
@@ -221,7 +221,7 @@ void moveFile(char *sourcePath, char *destinationPath)
     if (rename(sourcePath, path) == 0)
     {
         // write(outwrite, msg, strlen(msg));
-        continue;
+        ;
     } 
     else
     {
@@ -240,7 +240,7 @@ void deleteFile(char *filename)
         // write(outwrite, msg, strlen(msg));
         // write(outwrite, filename, strlen(filename));
         // write(outwrite, "\"\n", 2);
-        continue;
+        ;
     } else
     {
         perror("Could not remove file");
