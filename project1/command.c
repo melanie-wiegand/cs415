@@ -29,6 +29,8 @@
 
 #include "command.h"
 
+int outwrite = STDOUT_FILENO;
+
 void listDir()
 {
     /*for the ls command*/
@@ -47,11 +49,11 @@ void listDir()
     while (entry != NULL)
     {
         size_t len = strlen(entry->d_name);
-        write(STDOUT_FILENO, entry->d_name, len);
-        write(STDOUT_FILENO, "\t", 1);
+        write(outwrite, entry->d_name, len);
+        write(outwrite, "\t", 1);
         entry = readdir(curdir);
     }
-    write(STDOUT_FILENO, "\n", 1);
+    write(outwrite, "\n", 1);
 
     closedir(curdir);
 } 
@@ -66,11 +68,11 @@ void showCurrentDir()
     if (getcwd(buffer, sizeof(buffer)) != NULL)
     {  
         // write(STDOUT_FILENO, msg, strlen(msg));
-        write(STDOUT_FILENO, buffer, strlen(buffer));
-        write(STDOUT_FILENO, "\n", 1);
+        write(outwrite, buffer, strlen(buffer));
+        write(outwrite, "\n", 1);
     } else
     {
-        perror("Error retrieving current path\n");
+        perror("Error retrieving current path");
     }
 } 
 
@@ -83,10 +85,10 @@ void makeDir(char *dirName)
     // standard perms
     if (mkdir(dirName, 0755) == 0)
     {
-        write(STDOUT_FILENO, msg, strlen(msg));
+        write(outwrite, msg, strlen(msg));
     } else
     {
-        perror("Could not create directory\n");
+        perror("Could not create directory");
     }
 } 
 
@@ -96,12 +98,12 @@ void changeDir(char *dirName)
     char *msg = "Changed to directory \"";
     if (chdir(dirName) == 0)
     {
-        write(STDOUT_FILENO, msg, strlen(msg));
-        write(STDOUT_FILENO, dirName, strlen(dirName));
-        write(STDOUT_FILENO, "\"\n", 2);
+        write(outwrite, msg, strlen(msg));
+        write(outwrite, dirName, strlen(dirName));
+        write(outwrite, "\"\n", 2);
     } else
     {
-        perror("Directory not found\n");
+        perror("Directory not found");
     }
 } 
 
@@ -158,7 +160,7 @@ void copyFile(char *sourcePath, char *destinationPath)
 
     if (textsize == -1)
     {
-        perror("Error reading from source file\n");
+        perror("Error reading from source file");
         close(src);
         return;
     }
@@ -168,7 +170,7 @@ void copyFile(char *sourcePath, char *destinationPath)
         ssize_t checksize = write(dst, buffer, textsize);
         if (checksize != textsize)
         {
-            perror("Error writing to destination file\n"); 
+            perror("Error writing to destination file"); 
             close(src);
             close(dst);
             return;
@@ -214,11 +216,11 @@ void moveFile(char *sourcePath, char *destinationPath)
 
     if (rename(sourcePath, path) == 0)
     {
-        write(STDOUT_FILENO, msg, strlen(msg));
+        write(outwrite, msg, strlen(msg));
     } 
     else
     {
-        perror("Could not move/rename file\n");
+        perror("Could not move/rename file");
     }
 } 
 
@@ -230,12 +232,12 @@ void deleteFile(char *filename)
     // standard perms
     if (unlink(filename) == 0)
     {
-        write(STDOUT_FILENO, msg, strlen(msg));
-        write(STDOUT_FILENO, filename, strlen(filename));
-        write(STDOUT_FILENO, "\"\n", 2);
+        write(outwrite, msg, strlen(msg));
+        write(outwrite, filename, strlen(filename));
+        write(outwrite, "\"\n", 2);
     } else
     {
-        perror("Could not remove file\n");
+        perror("Could not remove file");
     }
 } 
 
@@ -245,7 +247,7 @@ void displayFile(char *filename)
     int src = open(filename, O_RDONLY);
     if (src == -1)
     {
-        perror("Could not open source file\n");
+        perror("Could not open source file");
         return;
     }
 
@@ -254,17 +256,17 @@ void displayFile(char *filename)
 
     if (textsize == -1)
     {
-        perror("Error reading from source file\n");
+        perror("Error reading from source file");
         close(src);
         return;
     }
 
     while (textsize > 0)
     {
-        ssize_t checksize = write(STDOUT_FILENO, buffer, textsize);
+        ssize_t checksize = write(outwrite, buffer, textsize);
         if (checksize != textsize)
         {
-            perror("Error writing to terminal\n"); 
+            perror("Error writing to terminal"); 
             close(src);
             return;
         }
