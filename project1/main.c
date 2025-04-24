@@ -215,6 +215,7 @@ int main(int argc, char* argv[])
                 char *msg = "Error! Unrecognized command: ";
                 write(STDOUT_FILENO, msg, strlen(msg));
                 write(STDOUT_FILENO, cmd.command_list[0], strlen(cmd.command_list[0]));
+                write(STDOUT_FILENO, "\n", 1);
                 break;
             }
 
