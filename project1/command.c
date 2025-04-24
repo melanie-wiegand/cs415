@@ -30,7 +30,7 @@ void listDir()
 
     if (curdir == NULL) 
     {
-        perror("Error opening directory");
+        writeToOutput("Error opening directory\n");
         return;
     }
 
