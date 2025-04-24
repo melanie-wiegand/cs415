@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
     {
         // update file mode bool
         // filemode = 1;  
-        printf("File mode:\n");
+        // printf("File mode:\n");
 
         // take input from provided file
         input = fopen(argv[2], "r");
@@ -62,6 +62,7 @@ int main(int argc, char* argv[])
 
     while (1) {
 
+        // interactive mode prompt
         if (!filemode) {
             fprintf(output, ">>> ");
             fflush(output);
@@ -72,11 +73,12 @@ int main(int argc, char* argv[])
         }
 
         char *split;
+        // separate inputs by semicolon delimeter
         char *curcmd = strtok_r(line, ";", &split);
 
         while (curcmd != NULL)
         {
-        // Parse the input into tokens
+            // tokenize input
             command_line cmd = str_filler(curcmd, " \t\n");
 
             if (cmd.num_token == 0) 
