@@ -59,7 +59,7 @@ void showCurrentDir()
     {  
         // write(STDOUT_FILENO, msg, strlen(msg));
         // write(outwrite, buffer, strlen(buffer));
-        writeToTOutput(buffer);
+        writeToOutput(buffer);
         write(outwrite, "\n", 1);
     } else
     {
