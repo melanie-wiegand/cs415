@@ -191,7 +191,35 @@ void moveFile(char *sourcePath, char *destinationPath)
 {
     /*for the mv command*/
     char *msg = "File moved successfully\n";
-    if (rename(sourcePath, destinationPath) == 0)
+
+    int isdir = 0;
+    int dir = open(destinationPath, O_RDONLY | O_DIRECTORY);
+
+    if (dir != -1)
+    {
+        isdir = 1;
+        close(dir);
+    }
+
+    char path[1024];
+
+    if (isdir)
+    {
+        char* filename = basename(sourcePath);
+        
+        strcpy(path, destinationPath);
+        if (destinationPath[strlen(destinationPath) - 1] != '/')
+        {
+            strcat(path, "/");
+        }
+        strcat(path, filename);
+    }
+    else
+    {
+        strcpy(path, destinationPath);
+    }
+
+    if (rename(sourcePath, path) == 0)
     {
         write(STDOUT_FILENO, msg, strlen(msg));
     } 
