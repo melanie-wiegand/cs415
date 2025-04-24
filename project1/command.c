@@ -1,21 +1,3 @@
-// void lfcat()
-// {
-// /* High level functionality you need to implement: */
-// /* Get the current directory with getcwd() */
-// /* Open the dir using opendir() */
-// /* use a while loop to read the dir with readdir()*/
-// /* You can debug by printing out the filenames here */
-// /* Option: use an if statement to skip any names that are not readable
-// files (e.g. ".", "..", "main.c", "lab2.exe", "output.txt" */
-// /* Open the file */
-// /* Read in each line using getline() */
-// /* Write the line to stdout */
-// /* write 80 "-" characters to stdout */
-// /* close the read file and free/null assign your line buffer */
-// /*close the directory you were reading from using closedir() */
-// }
-
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -32,6 +14,11 @@
 FILE *output = NULL;
 
 int outwrite = STDOUT_FILENO;
+
+void writeToOutput(char* msg)
+{
+    write(outwrite, msg, strlen(msg));
+}
 
 void listDir()
 {
@@ -91,7 +78,8 @@ void makeDir(char *dirName)
         ;
     } else
     {
-        perror("Could not create directory");
+        // perror("Could not create directory");
+        writeToOutput("Could not create directory");
     }
 } 
 
