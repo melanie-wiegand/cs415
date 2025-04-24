@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
     {
         // update file mode bool
         filemode = 1;  
-        // printf("File mode:\n");
+        printf("File mode:\n");
 
         // take input from provided file
         input = fopen(argv[2], "r");
