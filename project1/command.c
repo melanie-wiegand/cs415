@@ -45,7 +45,6 @@ void listDir()
     struct dirent *entry = readdir(curdir);
     while (entry != NULL)
     {
-        // printf("%s\t", entry->d_name);
         size_t len = strlen(entry->d_name);
         write(STDOUT_FILENO, entry->d_name, len);
         write(STDOUT_FILENO, "\t", 1);
@@ -111,17 +110,51 @@ void copyFile(char *sourcePath, char *destinationPath)
     int src = open(sourcePath, O_RDONLY);
     if (src == -1)
     {
-        perror("Could not open source file\n");
+        perror("Could not open source file");
         return;
     }
 
-    int dst = open(destinationPath, O_WRONLY | O_CREAT | O_TRUNC, 0755);
-    if (dst == -1)
+    int isdir = 0;
+
+    if ((dir = open(destinationPath, O_RDONLY | O_DIRECTORY)) != -1)
     {
-        perror("Could not open/create destination file\n");
-        close(src);
-        return;
+        isdir = 1;
+        close(dir);
     }
+
+    int dst;
+    
+    if (isdir)
+    {
+        char* path[1024];
+        char* filename = basename(sourcePath);
+        
+        strcpy(path, destinationPath);
+        if (destinationPath[strlen(destinationPath) - 1] != "/")
+        {
+            strcat(path, "/");
+        }
+        strcat(path, filename);
+
+        dst = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0755);
+        {
+            perror("Could not open/create destination file");
+            close(src);
+            return;
+        }
+    }
+    else
+    {
+        dst = open(destinationPath, O_WRONLY | O_CREAT | O_TRUNC, 0755);
+        if (dst == -1)
+        {
+            perror("Could not open/create destination file\n");
+            close(src);
+            return;
+        }
+    }
+    
+    
 
     char buffer[100000];
     ssize_t textsize = read(src, buffer, 100000);
