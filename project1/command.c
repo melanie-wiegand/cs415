@@ -25,6 +25,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <libgen.h>
 
 #include "command.h"
 
@@ -115,8 +116,9 @@ void copyFile(char *sourcePath, char *destinationPath)
     }
 
     int isdir = 0;
+    int dir = open(destinationPath, O_RDONLY | O_DIRECTORY);
 
-    if ((dir = open(destinationPath, O_RDONLY | O_DIRECTORY)) != -1)
+    if (dir != -1)
     {
         isdir = 1;
         close(dir);
@@ -126,17 +128,19 @@ void copyFile(char *sourcePath, char *destinationPath)
     
     if (isdir)
     {
-        char* path[1024];
+        char path[1024];
         char* filename = basename(sourcePath);
         
         strcpy(path, destinationPath);
-        if (destinationPath[strlen(destinationPath) - 1] != "/")
+        if (destinationPath[strlen(destinationPath) - 1] != '/')
         {
             strcat(path, "/");
         }
         strcat(path, filename);
 
         dst = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0755);
+
+        if (dst == -1)
         {
             perror("Could not open/create destination file");
             close(src);
