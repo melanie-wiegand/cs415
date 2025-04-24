@@ -166,6 +166,7 @@ void copyFile(char *sourcePath, char *destinationPath)
     if (textsize == -1)
     {
         perror("Error reading from source file\n");
+        close(src);
         return;
     }
 
@@ -175,6 +176,8 @@ void copyFile(char *sourcePath, char *destinationPath)
         if (checksize != textsize)
         {
             perror("Error writing to destination file\n"); 
+            close(src);
+            close(dst);
             return;
         }
         textsize = read(src, buffer, 100000);
@@ -231,6 +234,7 @@ void displayFile(char *filename)
     if (textsize == -1)
     {
         perror("Error reading from source file\n");
+        close(src);
         return;
     }
 
@@ -240,6 +244,7 @@ void displayFile(char *filename)
         if (checksize != textsize)
         {
             perror("Error writing to terminal\n"); 
+            close(src);
             return;
         }
         textsize = read(src, buffer, 100000);

@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
     if (argc == 3 && strcmp(argv[1], "-f") == 0)
     {
         // update file mode bool
-        // filemode = 1;  
+        filemode = 1;  
         // printf("File mode:\n");
 
         // take input from provided file
@@ -224,6 +224,7 @@ int main(int argc, char* argv[])
     if (filemode)
     {
         fclose(input);
+        fclose(output);
     }
 
     return 0;
