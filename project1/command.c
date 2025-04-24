@@ -29,6 +29,8 @@
 
 #include "command.h"
 
+FILE *output = NULL;
+
 int outwrite = STDOUT_FILENO;
 
 void listDir()

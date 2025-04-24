@@ -7,7 +7,7 @@
 int main(int argc, char* argv[])
 {
     FILE *input = NULL;
-    // FILE *output = NULL;
+    FILE *output = NULL;
     int filemode = 0;
 
     // if -f flag is used, start file mode
@@ -26,22 +26,12 @@ int main(int argc, char* argv[])
         }
 
         // write output to file
-        // output = fopen("output.txt", "w");
-        // if (!output) {
-        //     perror("Error opening output.txt");
-        //     fclose(input);
-        //     return 1;
-        // }
-
-        int out = fopen("output.txt", "w");
-        if (out == -1)
-        {
+        output = freopen("output.txt", "a+", stdout);
+        if (!output) {
             perror("Error opening output.txt");
             fclose(input);
             return 1;
         }
-
-        extern int outwrite = out;
     }
 
     // if no flags, start interactive mode
@@ -234,8 +224,7 @@ int main(int argc, char* argv[])
     if (filemode)
     {
         fclose(input);
-        // fclose(output);
-        fclose(outwrite);
+        fclose(output);
     }
 
     return 0;
