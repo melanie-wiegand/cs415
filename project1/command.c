@@ -139,25 +139,18 @@ void copyFile(char *sourcePath, char *destinationPath)
         strcat(path, filename);
 
         dst = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0755);
-
-        if (dst == -1)
-        {
-            perror("Could not open/create destination file");
-            close(src);
-            return;
-        }
     }
     else
     {
         dst = open(destinationPath, O_WRONLY | O_CREAT | O_TRUNC, 0755);
-        if (dst == -1)
-        {
-            perror("Could not open/create destination file\n");
-            close(src);
-            return;
-        }
     }
-    
+
+    if (dst == -1)
+    {
+        perror("Could not open/create destination file");
+        close(src);
+        return;
+    }
     
 
     char buffer[100000];
