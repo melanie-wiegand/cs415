@@ -219,6 +219,7 @@ int main(int argc, char* argv[])
                 write(STDOUT_FILENO, msg, strlen(msg));
                 write(STDOUT_FILENO, cmd.command_list[0], strlen(cmd.command_list[0]));
                 write(STDOUT_FILENO, "\n", 1);
+                free_command_line(&cmd);
                 break;
             }
 
