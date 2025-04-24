@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
         // filemode = 1;  
         printf("File mode:\n");
 
-        // open provided file
+        // take input from provided file
         input = fopen(argv[2], "r");
         if (input == NULL)
         {
@@ -25,6 +25,7 @@ int main(int argc, char* argv[])
             return 1;
         }
 
+        // write output to file
         output = fopen("output.txt", "w");
         if (!output) {
             perror("Error opening output.txt");
@@ -41,6 +42,7 @@ int main(int argc, char* argv[])
 
         // collect input from user
         input = stdin;  
+        // write to terminal
         output = stdout;
     }
 
@@ -62,7 +64,7 @@ int main(int argc, char* argv[])
 
         if (!filemode) {
             fprintf(output, ">>> ");
-            fflush(output); // ensure prompt appears
+            fflush(output);
         }
 
         if (getline(&line, &len, input) == -1) {
