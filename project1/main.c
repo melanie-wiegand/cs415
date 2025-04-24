@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
         }
 
         // write output to file
-        output = freopen("output.txt", "a+", stdout);
+        output = freopen("output.txt", "w+", stdout);
         if (!output) {
             perror("Error opening output.txt");
             fclose(input);
