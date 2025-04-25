@@ -35,8 +35,6 @@ void listDir()
     struct dirent *entry = readdir(curdir);
     while (entry != NULL)
     {
-        // size_t len = strlen(entry->d_name);
-        // write(outwrite, entry->d_name, len);
         writeToOutput(entry->d_name);
         write(outwrite, " ", 1);
         entry = readdir(curdir);
@@ -50,13 +48,9 @@ void showCurrentDir()
 {
     /*for the pwd command*/
 
-    // char *msg = "Current working directory: ";
-
-    char buffer[1000];
+    char buffer[1024];
     if (getcwd(buffer, sizeof(buffer)) != NULL)
     {  
-        // write(STDOUT_FILENO, msg, strlen(msg));
-        // write(outwrite, buffer, strlen(buffer));
         writeToOutput(buffer);
         write(outwrite, "\n", 1);
     } else
@@ -69,16 +63,9 @@ void makeDir(char *dirName)
 {
     /*for the mkdir command*/
 
-    // char *msg = "Directory created successfully\n";
-
     // standard perms
-    if (mkdir(dirName, 0755) == 0)
+    if (mkdir(dirName, 0755) != 0)
     {
-        // write(outwrite, msg, strlen(msg));
-        ;
-    } else
-    {
-        // perror("Could not create directory");
         writeToOutput("Could not create directory\n");
     }
 } 
@@ -86,14 +73,8 @@ void makeDir(char *dirName)
 void changeDir(char *dirName)
 {
     /*for the cd command*/
-    // char *msg = "Changed to directory \"";
-    if (chdir(dirName) == 0)
-    {
-        // write(outwrite, msg, strlen(msg));
-        // write(outwrite, dirName, strlen(dirName));
-        // write(outwrite, "\"\n", 2);
-        ;
-    } else
+
+    if (chdir(dirName) != 0)
     {
         writeToOutput("Directory not found\n");
     }
@@ -102,6 +83,7 @@ void changeDir(char *dirName)
 void copyFile(char *sourcePath, char *destinationPath)
 {
     /*for the cp command*/
+
     int src = open(sourcePath, O_RDONLY);
     if (src == -1)
     {
@@ -109,6 +91,7 @@ void copyFile(char *sourcePath, char *destinationPath)
         return;
     }
 
+    // handle directory destination
     int isdir = 0;
     int dir = open(destinationPath, O_RDONLY | O_DIRECTORY);
 
@@ -120,6 +103,7 @@ void copyFile(char *sourcePath, char *destinationPath)
 
     int dst;
     
+    // destination is a directory
     if (isdir)
     {
         char path[1024];
@@ -134,6 +118,8 @@ void copyFile(char *sourcePath, char *destinationPath)
 
         dst = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0755);
     }
+
+    // destination is a file
     else
     {
         dst = open(destinationPath, O_WRONLY | O_CREAT | O_TRUNC, 0755);
@@ -177,7 +163,6 @@ void copyFile(char *sourcePath, char *destinationPath)
 void moveFile(char *sourcePath, char *destinationPath)
 {
     /*for the mv command*/
-    // char *msg = "File moved successfully\n";
 
     int isdir = 0;
     int dir = open(destinationPath, O_RDONLY | O_DIRECTORY);
@@ -190,6 +175,7 @@ void moveFile(char *sourcePath, char *destinationPath)
 
     char path[1024];
 
+    // move to directory
     if (isdir)
     {
         char* filename = basename(sourcePath);
@@ -206,12 +192,8 @@ void moveFile(char *sourcePath, char *destinationPath)
         strcpy(path, destinationPath);
     }
 
-    if (rename(sourcePath, path) == 0)
-    {
-        // write(outwrite, msg, strlen(msg));
-        ;
-    } 
-    else
+    // move (rename) to file
+    if (rename(sourcePath, path) != 0)
     {
         writeToOutput("Could not move/rename file\n");
     }
@@ -220,16 +202,8 @@ void moveFile(char *sourcePath, char *destinationPath)
 void deleteFile(char *filename)
 {
     /*for the rm command*/
-    // char *msg = "Removed file \"";
 
-    // standard perms
-    if (unlink(filename) == 0)
-    {
-        // write(outwrite, msg, strlen(msg));
-        // write(outwrite, filename, strlen(filename));
-        // write(outwrite, "\"\n", 2);
-        ;
-    } else
+    if (unlink(filename) != 0)
     {
         writeToOutput("Could not remove file\n");
     }
@@ -238,6 +212,7 @@ void deleteFile(char *filename)
 void displayFile(char *filename)
 {
     /*for the cat command*/
+    
     int src = open(filename, O_RDONLY);
     if (src == -1)
     {
