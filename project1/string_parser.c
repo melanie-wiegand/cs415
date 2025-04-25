@@ -6,12 +6,11 @@
  *
  */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "string_parser.h"
 
-#define _GUN_SOURCE
+
 
 int count_token (char* buf, const char* delim)
 {
