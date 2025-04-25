@@ -44,7 +44,6 @@ int count_token (char* buf, const char* delim)
 	while (token != NULL) {
 		count++;
 		token = strtok_r(NULL, delim, &ptr);
-
 	}
 
 	free(copy_buf);
@@ -69,8 +68,6 @@ command_line str_filler (char* buf, const char* delim)
 	command_line cl;
 
 	// remove newline if applicable
-	// strtok_r(buf, "\n", NULL);
-
 	int j = 0;
 	while (buf[j] != '\0')
 	{

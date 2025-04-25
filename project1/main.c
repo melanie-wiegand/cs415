@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
             return 1;
         }
 
-        // write output to file
+        // set output to output.txt, create new file if it doesn't exist
         output = freopen("output.txt", "w+", stdout);
         if (!output) {
             perror("Error opening output.txt");
@@ -168,7 +168,6 @@ int main(int argc, char* argv[])
             else if (strcmp(cmd.command_list[0], "cp") == 0) {
                 if (cmd.num_token == 3)
                 {
-                    //use basename
                     copyFile(cmd.command_list[1], cmd.command_list[2]);
                 }
                 else
