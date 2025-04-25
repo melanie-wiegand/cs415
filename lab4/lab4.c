@@ -34,12 +34,14 @@ int main(int argc,char*argv[])
 		pid = fork();
 		if (pid == 0)
 		{
+			printf("I am the child process. My PID: %d\n", pid);
 			char* args[] = {"./hi", NULL};
 			execvp(args[0], args);
 			exit(EXIT_FAILURE);
 		}
 		else if (pid > 0)
 		{
+			printf("I am the parent process. The child has PID: %d\n", pid);
 			pids[i] = pid;
 		}
 		else
