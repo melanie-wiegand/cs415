@@ -40,7 +40,7 @@ void listDir()
         // size_t len = strlen(entry->d_name);
         // write(outwrite, entry->d_name, len);
         writeToOutput(entry->d_name);
-        write(outwrite, "\t", 1);
+        write(outwrite, " ", 1);
         entry = readdir(curdir);
     }
     write(outwrite, "\n", 1);
