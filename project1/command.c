@@ -1,4 +1,4 @@
-
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <dirent.h>
@@ -6,9 +6,10 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <libgen.h>
+
+
 #include "command.h"
 
-FILE *output = NULL;
 
 int outwrite = STDOUT_FILENO;
 
