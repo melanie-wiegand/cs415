@@ -44,11 +44,11 @@ int main(int argc, char* argv[])
 
 		if(pid_ary[i] == 0)
 		{
-			// print: Child Process: <pid> - Waiting for SIGUSR1…
+			print: Child Process: <pid> - Waiting for SIGUSR1…
 
 			// wait for the signal
 			
-			// print: Child Process: <pid> - Received signal: SIGUSR1 - Calling exec().
+			print: Child Process: <pid> - Received signal: SIGUSR1 - Calling exec().
 
 			// call execvp with ./iobound like in lab 4
 
@@ -82,7 +82,7 @@ void signaler(pid_t* pid_ary, int size, int signal)
 
 	for(int i = 0; i < size; i++)
 	{
-		// print: Parent process: <pid> - Sending signal: <signal> to child process: <pid>
+		print: Parent process: <pid> - Sending signal: <signal> to child process: <pid>
 
 		// send the signal
 

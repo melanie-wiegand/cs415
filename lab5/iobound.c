@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
       //check if done
       now = clock();
       duration =  (now - start)/(double) CLOCKS_PER_SEC;
-      //printf("Duration: %f - Seconds: %d - condition: %d\n", duration, seconds, duration>=seconds);
+      printf("Duration: %f - Seconds: %d - condition: %d\n", duration, seconds, duration>=seconds);
       if(duration >= seconds) {condition = 0;}
     }
     fclose(outfile);
