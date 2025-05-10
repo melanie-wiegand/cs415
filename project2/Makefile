@@ -1,20 +1,23 @@
 EXEC = project2
-FLAGS = -g
 CC = gcc
+FLAGS = -g
 
-all: $(EXEC)
+all: $(EXEC) signal iobound
 
-$(EXEC): string_parser.o iobound.o signal.o
+$(EXEC): part1.o string_parser.o
 	$(CC) $(FLAGS) -o $@ $^
+
+part1.o: part1.c string_parser.h
+	$(CC) $(FLAGS) -c $<
 
 string_parser.o: string_parser.c string_parser.h
 	$(CC) $(FLAGS) -c $<
 
 signal: signal.c
-	gcc -o $@ $^
+	$(CC) $(FLAGS) -o signal signal.c
 
 iobound: iobound.c
-	gcc -o $@ $^
+	$(CC) $(FLAGS) -o iobound iobound.c
 
 clean:
-	rm -f *.o $(EXEC)
+	rm -f *.o $(EXEC) signal iobound
