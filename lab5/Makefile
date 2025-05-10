@@ -1,4 +1,4 @@
-all: lab5 signal
+all: lab5 signal iobound
 
 lab5: lab5.c
 	gcc -o $@ $^
@@ -6,5 +6,8 @@ lab5: lab5.c
 signal: signal.c
 	gcc -o $@ $^
 
+iobound: iobound.c
+	gcc -o $@ $^
+
 clean:
-	rm -rf lab5 signal
+	- rm -f lab5 signal iobound
