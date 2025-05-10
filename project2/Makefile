@@ -4,11 +4,8 @@ CC = gcc
 
 all: $(EXEC)
 
-$(EXEC): main.o string_parser.o iobound.o signal.o
+$(EXEC): string_parser.o iobound.o signal.o
 	$(CC) $(FLAGS) -o $@ $^
-
-main.o: main.c
-	$(CC) $(FLAGS) -c $<
 
 string_parser.o: string_parser.c string_parser.h
 	$(CC) $(FLAGS) -c $<
