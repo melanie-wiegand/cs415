@@ -34,9 +34,11 @@ int main(int argc,char*argv[])
 		pid = fork();
 		if (pid == 0)
 		{
-			printf("I am the child process. My PID: %d\n", pid);
-			char* args[] = {"./hi", NULL};
+			printf("I am the child process. My PID: %d\n", getpid());
+			// char* args[] = {"./hi", NULL};
+			char* args[] = {"./iobound", "-seconds", "5", NULL};
 			execvp(args[0], args);
+			perror("execvp failed");
 			exit(EXIT_FAILURE);
 		}
 		else if (pid > 0)
@@ -47,9 +49,13 @@ int main(int argc,char*argv[])
 		else
 		{
 			perror("fork fail");
+			free(pids);
+			exit(EXIT_FAILURE);
 		}
 		
 	}
+
+	script_print(pids, n);
 
 	for(int i = 0; i < n; i++)
 	{
@@ -65,6 +71,11 @@ void script_print (pid_t* pid_ary, int size)
 {
 	FILE* fout;
 	fout = fopen ("top_script.sh", "w");
+	if (!fout) {
+        perror("fopen failed");
+        return;
+    }
+
 	fprintf(fout, "#!/bin/bash\ntop");
 	for (int i = 0; i < size; i++)
 	{
@@ -77,16 +88,16 @@ void script_print (pid_t* pid_ary, int size)
 	pid_t top_pid;
 
 	top_pid = fork();
+
+	if (top_pid == 0)
 	{
-		if (top_pid == 0)
+		if(execvp(top_arg[0], top_arg) == -1)
 		{
-			if(execvp(top_arg[0], top_arg) == -1)
-			{
-				perror ("top command: ");
-			}
-			exit(0);
+			perror ("top command: ");
 		}
+		exit(0);
 	}
+	
 }
 
 
