@@ -31,8 +31,8 @@ int main(int argc, char* argv[])
     size_t len = 0;
 
     ssize_t read;
-    pid_t pid_arr[MAX_PROCESSES];
-    int processes = 0;
+    pid_t pid_array[MAX_PROCESSES];
+    int process_count = 0;
 
     while (1) 
     {
