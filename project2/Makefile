@@ -1,4 +1,4 @@
-EXEC = pseudo-shell
+EXEC = project2
 FLAGS = -g
 CC = gcc
 
