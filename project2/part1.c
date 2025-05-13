@@ -46,9 +46,11 @@ int main(int argc, char* argv[])
 
         while (curcmd != NULL)
         {
+            // same string parsing as in proj1
             // tokenize input
             command_line cmd = str_filler(curcmd, " \t\n");
 
+    
             if (cmd.num_token == 0) 
             {
                 free_command_line(&cmd);
@@ -70,7 +72,7 @@ int main(int argc, char* argv[])
                 if (execvp(cmd.command_list[0], cmd.command_list) == -1) 
                 {
                     perror("execvp failed");
-                    free_command_line(&cmd);
+                    // free_command_line(&cmd);
                     exit(1);
                 }
             }
