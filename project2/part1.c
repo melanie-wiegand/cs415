@@ -30,7 +30,6 @@ int main(int argc, char* argv[])
     char *line = NULL;
     size_t len = 0;
 
-    ssize_t read;
     pid_t pid_array[MAX_PROCESSES];
     int process_count = 0;
 
@@ -58,17 +57,21 @@ int main(int argc, char* argv[])
                 continue;
             }
         
+            printf("Running command: %s\n", cmd.command_list[0]);
+
             pid_t pid = fork();
             
             if (pid < 0)
             {
                 perror("error forking");
                 free_command_line(&cmd);
-                continue;
+                // curcmd = strtok_r(NULL, ";", &split);
+                // continue;
             }
 
             else if (pid == 0)
             {
+                // child process
                 if (execvp(cmd.command_list[0], cmd.command_list) == -1) 
                 {
                     perror("execvp failed");
@@ -93,7 +96,16 @@ int main(int argc, char* argv[])
     //launching processes
     for (int i = 0; i < process_count; i++)
     {
-        waitpid(pid_array[i], NULL, 0);
+        int status;
+        pid_t finished = waitpid(pid_array[i], &status, 0);
+        if (finished == -1)
+        {
+            perror("waitpid failed");
+        }
+        else
+        {
+            printf("Process %d finished with status %d\n", finished, WEXITSTATUS(status));
+        }
     }
 
     return 0;
