@@ -19,5 +19,8 @@ signal: signal.c
 iobound: iobound.c
 	$(CC) $(FLAGS) -o iobound iobound.c
 
+cpubound: cpubound.c
+	$(CC) $(FLAGS) -o cpubound cpubound.c
+
 clean:
 	rm -f *.o $(EXEC) signal iobound
