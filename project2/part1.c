@@ -57,8 +57,6 @@ int main(int argc, char* argv[])
                 continue;
             }
         
-            // printf("Running command: %s\n", cmd.command_list[0]);
-
             pid_t pid = fork();
             
             if (pid < 0)
@@ -75,14 +73,15 @@ int main(int argc, char* argv[])
                 if (execvp(cmd.command_list[0], cmd.command_list) == -1) 
                 {
                     perror("execvp failed");
-                    // free_command_line(&cmd);
+                    // free_command_line(&cmd); #don't need to free here bc could double free mem
                     exit(1);
                 }
             }
             else 
             {
                 // parent process
-                pid_array[process_count++] = pid;
+                pid_array[process_count] = pid;
+                process_count++;
             }
 
             free_command_line(&cmd);
@@ -101,10 +100,6 @@ int main(int argc, char* argv[])
         if (finished == -1)
         {
             perror("waitpid failed");
-        }
-        else
-        {
-            ;// printf("Process %d finished with status %d\n", finished, WEXITSTATUS(status));
         }
     }
 

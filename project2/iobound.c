@@ -40,6 +40,6 @@ int main(int argc, char **argv) {
     }
     fclose(outfile);
 
-    printf("io Process: %d - Finished.\n", getpid());
+    printf("Process: %d - Finished.\n", getpid());
     return 0;
 }

@@ -36,6 +36,6 @@ int main(int argc, char **argv) {
       //printf("Duration: %f - Seconds: %d - condition: %d\n", duration, seconds, duration>=seconds);
       if(duration >= seconds) {condition = 0;}
     }
-    printf("cpu Process: %d - Finished.\n", getpid());
+    printf("Process: %d - Finished.\n", getpid());
     return 0;
 }
