@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
         }
         else
         {
-            printf("Process %d finished with status %d\n", finished, WEXITSTATUS(status));
+            ;// printf("Process %d finished with status %d\n", finished, WEXITSTATUS(status));
         }
     }
 

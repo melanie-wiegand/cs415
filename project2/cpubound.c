@@ -37,6 +37,5 @@ int main(int argc, char **argv) {
       if(duration >= seconds) {condition = 0;}
     }
     printf("cpu Process: %d - Finished.\n", getpid());
-    fflush(stdout);
     return 0;
 }
