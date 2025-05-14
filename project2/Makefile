@@ -1,8 +1,8 @@
-EXEC = project2
+EXEC = part1
 CC = gcc
 FLAGS = -g
 
-all: $(EXEC) signal iobound
+all: $(EXEC) signal iobound cpubound
 
 $(EXEC): part1.o string_parser.o
 	$(CC) $(FLAGS) -o $@ $^
@@ -23,4 +23,4 @@ cpubound: cpubound.c
 	$(CC) $(FLAGS) -o cpubound cpubound.c
 
 clean:
-	rm -f *.o $(EXEC) signal iobound
+	rm -f *.o $(EXEC) signal iobound cpubound

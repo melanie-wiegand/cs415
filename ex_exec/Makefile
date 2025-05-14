@@ -2,7 +2,7 @@ EXEC = project2
 CC = gcc
 FLAGS = -g
 
-all: signal iobound
+all: signal iobound cpubound
 
 # $(EXEC): string_parser.o
 # 	$(CC) $(FLAGS) -o $@ $^
@@ -23,4 +23,4 @@ cpubound: cpubound.c
 	$(CC) $(FLAGS) -o cpubound cpubound.c
 
 clean:
-	rm -f *.o signal iobound
+	rm -f *.o signal iobound cpubound
