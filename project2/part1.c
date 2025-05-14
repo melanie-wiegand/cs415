@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
                 continue;
             }
         
-            printf("Running command: %s\n", cmd.command_list[0]);
+            // printf("Running command: %s\n", cmd.command_list[0]);
 
             pid_t pid = fork();
             
@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
         }
         else
         {
-            printf("Process %d finished with status %d\n", finished, WEXITSTATUS(status));
+            ;// printf("Process %d finished with status %d\n", finished, WEXITSTATUS(status));
         }
     }
 
