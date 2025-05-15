@@ -35,9 +35,10 @@ int main(int argc, char* argv[])
     command_line cmd_array[MAX_PROCESSES];
     int process_count = 0;
 
-
+    // signal set
     sigset_t sigset;
     sigemptyset(&sigset);
+    // add SIGUSR1 to set
     sigaddset(&sigset, SIGUSR1);
     sigprocmask(SIG_BLOCK, &sigset, NULL);
 
@@ -51,23 +52,27 @@ int main(int argc, char* argv[])
         // separate inputs by semicolon delimeter
         char *curcmd = strtok_r(line, ";", &split);
 
+
         while (curcmd != NULL && process_count < MAX_PROCESSES)
         {
             // same string parsing as in proj1
             // tokenize input
             command_line cmd = str_filler(curcmd, " \t\n");
     
+            // if empty line
             if (cmd.num_token == 0) 
             {
                 free_command_line(&cmd);
+                // go to next line
                 curcmd = strtok_r(NULL, ";", &split);
                 continue;
             }
         
             pid_t pid = fork();
-            
+                      
             if (pid < 0)
             {
+                // fork failed
                 perror("error forking");
                 free_command_line(&cmd);
                 continue;
@@ -104,7 +109,8 @@ int main(int argc, char* argv[])
     // sigusr1
     for (int i = 0; i < process_count; i++)
     {
-        printf("[MCP] Sending SIGUSR1 to process %d\n", pid_array[i]);
+        // sigusr1 signal ends waiting for all children (happens after all children ready)
+        printf("Sending SIGUSR1 to process %d\n", pid_array[i]);
         kill(pid_array[i], SIGUSR1);
     }
 
@@ -113,7 +119,7 @@ int main(int argc, char* argv[])
     // sigstop
     for (int i = 0; i < process_count; i++)
     {
-        printf("[MCP] Sending SIGSTOP to process %d\n", pid_array[i]);
+        printf("Sending SIGSTOP to process %d\n", pid_array[i]);
         kill(pid_array[i], SIGSTOP);
     }
 
@@ -122,16 +128,16 @@ int main(int argc, char* argv[])
     // sigcont
     for (int i = 0; i < process_count; i++)
     {
-        printf("[MCP] Sending SIGCONT to process %d\n", pid_array[i]);
+        printf("Sending SIGCONT to process %d\n", pid_array[i]);
         kill(pid_array[i], SIGCONT);
     }
 
     sleep(1);
 
-    // waitpid
+    // waitpid - parent waits for all children to die
     for (int i = 0; i < process_count; i++) {
         waitpid(pid_array[i], NULL, 0);
-        printf("[MCP] Process %d finished.\n", pid_array[i]);
+        printf("Process %d finished.\n", pid_array[i]);
         free_command_line(&cmd_array[i]);
     }
     
