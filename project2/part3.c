@@ -135,11 +135,17 @@ int main(int argc, char* argv[])
     // round robin starts on all child processes
     printf("Beginning round robin\n");
 
-    int index = -1;
+    int index = 0;
     // array to track status of each process
     int done[MAX_PROCESSES] = {0};
     int num_done = 0;
     int current = -1;
+
+    // wake up children
+    for (int i = 0; i < process_count; i++) {
+        kill(pid_array[i], SIGUSR1);
+        kill(pid_array[i], SIGSTOP);
+    }
 
     alarm(QUANTUM);
 
@@ -156,24 +162,27 @@ int main(int argc, char* argv[])
         }
 
         // check if there is another unfinished process
-        int next = 0;
+        int found = 0;
+        int next = index;
         for (int i = 0; i < process_count; i++)
         {
-            index = index++;
-            index = index % process_count;
-            if (done[index] == 0)
+            next++;
+            next = next % process_count;
+            if (done[next] == 0)
             {
                 // found an unfinished process
-                next = 1;
+                found = 1;
                 break;
             }
         }
 
-        if (!next)
+        if (!found)
         {
             // no more unfinished processes
             break;
         }
+
+        index = next;
 
         printf("\tFinding next process to run...\n");
 
