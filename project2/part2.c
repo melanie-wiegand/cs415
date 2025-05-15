@@ -8,7 +8,7 @@
 
 #include "string_parser.h"
 
-#define MAX_LINE 1024
+// #define MAX_LINE 1024
 #define MAX_PROCESSES 100
 
 int main(int argc, char* argv[])
@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
 
     while (1) 
     {
-        if (getline(&line, &len, input) == -1) {
+        if (getline(&line, &len, input) == -1 || process_count >= MAX_PROCESSES) {
             break; 
         }
 
@@ -67,12 +67,12 @@ int main(int argc, char* argv[])
                 continue;
             }
 
-            if (process_count >= MAX_PROCESSES)
-            {
-                fprintf(stderr, "maximum processes reached! (%d processes)\n", MAX_PROCESSES);
-                free_command_line(&cmd);
-                break;
-            }
+            // if (process_count >= MAX_PROCESSES)
+            // {
+            //     fprintf(stderr, "maximum processes reached! (%d processes)\n", MAX_PROCESSES);
+            //     free_command_line(&cmd);
+            //     break;
+            // }
         
             // create new fork
             pid_t pid = fork();
@@ -98,6 +98,7 @@ int main(int argc, char* argv[])
                     exit(1);
                 }
             }
+
             else // pid > 0 
             {
                 // parent process
@@ -114,31 +115,33 @@ int main(int argc, char* argv[])
     fclose(input);
     free(line);
 
-    sleep(1);
+    // sleep(1);
 
     // sigusr1
+    printf("Sending SIGUSR1 signal...\n");
     for (int i = 0; i < process_count; i++)
     {
         // sigusr1 signal ends waiting for all children (happens after all children ready)
-        printf("Sending SIGUSR1 to process %d\n", pid_array[i]);
         kill(pid_array[i], SIGUSR1);
     }
 
     // sleep(1);
 
     // sigstop
+    printf("Sending SIGSTOP signal...\n");
     for (int i = 0; i < process_count; i++)
     {
-        printf("Sending SIGSTOP to process %d\n", pid_array[i]);
+        // printf("Sending SIGSTOP to process %d\n", pid_array[i]);
         kill(pid_array[i], SIGSTOP);
     }
 
     // sleep(1);
 
     // sigcont
+    printf("Sending SIGUSR1 signal...\n");
     for (int i = 0; i < process_count; i++)
     {
-        printf("Sending SIGCONT to process %d\n", pid_array[i]);
+        // printf("Sending SIGCONT to process %d\n", pid_array[i]);
         kill(pid_array[i], SIGCONT);
     }
 
