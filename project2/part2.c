@@ -150,7 +150,7 @@ int main(int argc, char* argv[])
     // waitpid - parent waits for all children to die
     for (int i = 0; i < process_count; i++) {
         waitpid(pid_array[i], NULL, 0);
-        printf("Process %d finished.\n", pid_array[i]);
+        // printf("Process %d finished.\n", pid_array[i]);
         free_command_line(&cmd_array[i]);
     }
     
