@@ -8,7 +8,7 @@
 
 #include "string_parser.h"
 
-// #define MAX_LINE 1024
+
 #define MAX_PROCESSES 100
 
 int main(int argc, char* argv[])
@@ -31,8 +31,11 @@ int main(int argc, char* argv[])
     char *line = NULL;
     size_t len = 0;
 
+    // store pids
     pid_t pid_array[MAX_PROCESSES];
+    // store commands
     command_line cmd_array[MAX_PROCESSES];
+    // num of processes
     int process_count = 0;
 
     // signal set
@@ -44,78 +47,75 @@ int main(int argc, char* argv[])
 
     while (1) 
     {
-        if (getline(&line, &len, input) == -1 || process_count >= MAX_PROCESSES) {
+        if (getline(&line, &len, input) == -1) {
             break; 
         }
 
-        // char *split;
-        // // separate inputs by semicolon delimeter
-        // char *curcmd = strtok_r(line, ";", &split);
-        // removing logic for semicolon since not needed for this proj
+        // removing logic for semicolon parsing since not needed for this proj and i think it was messing up the signaling
 
+        command_line cmd = str_filler(line, " \t\n");
 
-        // while (curcmd != NULL && process_count < MAX_PROCESSES)
-        // {
-            // same string parsing as in proj1
-            // tokenize input
-            command_line cmd = str_filler(line, " \t\n");
+        // check if str_filler returned null
+        if (cmd.command_list == NULL || cmd.command_list[0] == NULL) {
+            fprintf(stderr, "empty line\n");
+            free_command_line(&cmd);
+            continue;
+        }
+
+        // if empty line
+        if (cmd.num_token == 0) 
+        {
+            free_command_line(&cmd);
+            continue;
+        }
+
+        // make sure we didn't hit max processes
+        if (process_count >= MAX_PROCESSES)
+        {
+            fprintf(stderr, "maximum processes reached! (%d processes)\n", MAX_PROCESSES);
+            free_command_line(&cmd);
+            break;
+        }
     
-            // if empty line
-            if (cmd.num_token == 0) 
+        // create new fork
+        pid_t pid = fork();
+                    
+        if (pid < 0)
+        {
+            // fork failed
+            perror("error forking");
+            free_command_line(&cmd);
+            continue;
+        }
+
+        else if (pid == 0)
+        {
+            // child process
+            int signum;
+            sigwait(&sigset, &signum);
+
+            if (execvp(cmd.command_list[0], cmd.command_list) == -1) 
             {
-                free_command_line(&cmd);
-                continue;
+                perror("execvp failed");
+                // free_command_line(&cmd); #don't need to free here bc could double free mem
+                exit(1);
             }
+        }
 
-            // if (process_count >= MAX_PROCESSES)
-            // {
-            //     fprintf(stderr, "maximum processes reached! (%d processes)\n", MAX_PROCESSES);
-            //     free_command_line(&cmd);
-            //     break;
-            // }
-        
-            // create new fork
-            pid_t pid = fork();
-                      
-            if (pid < 0)
-            {
-                // fork failed
-                perror("error forking");
-                free_command_line(&cmd);
-                continue;
-            }
+        else // pid > 0 
+        {
+            // parent process
+            pid_array[process_count] = pid;
+            cmd_array[process_count] = cmd;
+            process_count++;
+        }
 
-            else if (pid == 0)
-            {
-                // child process
-                int signum;
-                sigwait(&sigset, &signum);
-
-                if (execvp(cmd.command_list[0], cmd.command_list) == -1) 
-                {
-                    perror("execvp failed");
-                    // free_command_line(&cmd); #don't need to free here bc could double free mem
-                    exit(1);
-                }
-            }
-
-            else // pid > 0 
-            {
-                // parent process
-                pid_array[process_count] = pid;
-                cmd_array[process_count] = cmd;
-                process_count++;
-            }
-
-            // free_command_line(&cmd);
-            // curcmd = strtok_r(NULL, ";", &split);
-        // }
     }
     
     fclose(input);
     free(line);
 
-    // sleep(1);
+    sleep(1);
 
     // sigusr1
     printf("Sending SIGUSR1 signal...\n");
@@ -138,7 +138,7 @@ int main(int argc, char* argv[])
     // sleep(1);
 
     // sigcont
-    printf("Sending SIGUSR1 signal...\n");
+    printf("Sending SIGCONT signal...\n");
     for (int i = 0; i < process_count; i++)
     {
         // printf("Sending SIGCONT to process %d\n", pid_array[i]);
