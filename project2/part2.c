@@ -68,6 +68,7 @@ int main(int argc, char* argv[])
                 continue;
             }
         
+            // create new fork
             pid_t pid = fork();
                       
             if (pid < 0)
@@ -83,6 +84,7 @@ int main(int argc, char* argv[])
                 // child process
                 int signum;
                 sigwait(&sigset, &signum);
+
                 if (execvp(cmd.command_list[0], cmd.command_list) == -1) 
                 {
                     perror("execvp failed");
@@ -90,7 +92,7 @@ int main(int argc, char* argv[])
                     exit(1);
                 }
             }
-            else 
+            else // pid > 0 
             {
                 // parent process
                 pid_array[process_count] = pid;
@@ -106,6 +108,8 @@ int main(int argc, char* argv[])
     fclose(input);
     free(line);
 
+    sleep(1);
+
     // sigusr1
     for (int i = 0; i < process_count; i++)
     {
@@ -114,7 +118,7 @@ int main(int argc, char* argv[])
         kill(pid_array[i], SIGUSR1);
     }
 
-    sleep(1);
+    // sleep(1);
 
     // sigstop
     for (int i = 0; i < process_count; i++)
@@ -123,7 +127,7 @@ int main(int argc, char* argv[])
         kill(pid_array[i], SIGSTOP);
     }
 
-    sleep(1);
+    // sleep(1);
 
     // sigcont
     for (int i = 0; i < process_count; i++)
@@ -132,7 +136,7 @@ int main(int argc, char* argv[])
         kill(pid_array[i], SIGCONT);
     }
 
-    sleep(1);
+    // sleep(1);
 
     // waitpid - parent waits for all children to die
     for (int i = 0; i < process_count; i++) {
