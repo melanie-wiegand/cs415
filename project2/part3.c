@@ -46,6 +46,7 @@ int main(int argc, char* argv[])
     int process_count = 0;
 
     // signal set
+    int signum;
     sigset_t sigset;
     sigemptyset(&sigset);
 
@@ -107,7 +108,7 @@ int main(int argc, char* argv[])
         else if (pid == 0)
         {
             // child process
-            int signum;
+            // int signum;
             sigwait(&sigset, &signum);
 
             if (execvp(cmd.command_list[0], cmd.command_list) == -1) 
@@ -135,7 +136,7 @@ int main(int argc, char* argv[])
     sleep(1);
 
     alarm(QUANTUM);
-    sigwait(&sigset, &sig)
+    sigwait(&sigset, &signum);
     
 
     // round robin starts on all child processes
@@ -161,7 +162,7 @@ int main(int argc, char* argv[])
         }
 
 
-        if (waitpid(pid_array[index]. &status, WNOHANG) != 0)
+        if (waitpid(pid_array[index], &status, WNOHANG) != 0)
         {
             if (WIFEXITED(status))
             {
