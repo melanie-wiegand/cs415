@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
     sigprocmask(SIG_BLOCK, &sigset, NULL);
 
     // if context switch
-    signal(SIGALRM, alarm_handle);
+    // signal(SIGALRM, alarm_handle);
 
     while (1) 
     {
