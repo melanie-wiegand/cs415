@@ -10,6 +10,13 @@
 
 
 #define MAX_PROCESSES 100
+#define QUANTUM 1
+
+void alarm_handle(int signum)
+{
+    printf("context switch");
+    alarm(QUANTUM);
+}
 
 int main(int argc, char* argv[])
 {
@@ -41,9 +48,18 @@ int main(int argc, char* argv[])
     // signal set
     sigset_t sigset;
     sigemptyset(&sigset);
-    // add SIGUSR1 to set
-    sigaddset(&sigset, SIGUSR1);
+
+    // // add SIGUSR1 to set
+    // sigaddset(&sigset, SIGUSR1);
+
+    // add signals to set
+    sigaddset(&sigset, SIGCONT);
+    sigaddset(&sigset, SIGALRM);
+
     sigprocmask(SIG_BLOCK, &sigset, NULL);
+
+    // if context switch
+    signal(SIGALRM, alarm_handle);
 
     while (1) 
     {
@@ -115,35 +131,94 @@ int main(int argc, char* argv[])
     fclose(input);
     free(line);
 
+    printf("parent waiting\n");
     sleep(1);
 
-    // sigusr1
-    printf("Sending SIGUSR1 signal...\n");
-    for (int i = 0; i < process_count; i++)
+    alarm(QUANTUM);
+    sigwait(&sigset, &sig)
+    
+
+    // round robin starts on all child processes
+    printf("Beginning round robin\n");
+
+    int index = 0;
+    int num_done = 0;
+    int status = 0;
+
+    while(1)
     {
-        // sigusr1 signal ends waiting for all children (happens after all children ready)
-        kill(pid_array[i], SIGUSR1);
+        // 
+        if (index == process_count)
+        {
+            if (num_done == process_count)
+            {
+                // check if all children finished
+                printf("All processes have finished :)\n");
+                break;
+            }
+            // reset for new cycle
+            num_done = 0;
+        }
+
+
+        if (waitpid(pid_array[index]. &status, WNOHANG) != 0)
+        {
+            if (WIFEXITED(status))
+            {
+                // if process already finished
+                index++;
+                index = index % process_count;
+                num_done++;
+                continue;
+            }
+        }
+
+        printf("Process %d running:", pid_array[index]);
+        kill(pid_array[index], SIGCONT);
+
+        alarm(QUANTUM);
+
+        if (sigwait(&sigset, &signum) != 0)
+        {
+            perror("sigwait failed");
+            exit(1);
+        }
+
+        kill(pid_array[index], SIGSTOP);
+
+        // increment index
+        index++;
+        index = index % process_count;
     }
 
-    // sleep(1);
 
-    // sigstop
-    printf("Sending SIGSTOP signal...\n");
-    for (int i = 0; i < process_count; i++)
-    {
-        // printf("Sending SIGSTOP to process %d\n", pid_array[i]);
-        kill(pid_array[i], SIGSTOP);
-    }
+    // // sigusr1
+    // printf("Sending SIGUSR1 signal...\n");
+    // for (int i = 0; i < process_count; i++)
+    // {
+    //     // sigusr1 signal ends waiting for all children (happens after all children ready)
+    //     kill(pid_array[i], SIGUSR1);
+    // }
 
-    // sleep(1);
+    // // sleep(1);
 
-    // sigcont
-    printf("Sending SIGCONT signal...\n");
-    for (int i = 0; i < process_count; i++)
-    {
-        // printf("Sending SIGCONT to process %d\n", pid_array[i]);
-        kill(pid_array[i], SIGCONT);
-    }
+    // // sigstop
+    // printf("Sending SIGSTOP signal...\n");
+    // for (int i = 0; i < process_count; i++)
+    // {
+    //     // printf("Sending SIGSTOP to process %d\n", pid_array[i]);
+    //     kill(pid_array[i], SIGSTOP);
+    // }
+
+    // // sleep(1);
+
+    // // sigcont
+    // printf("Sending SIGCONT signal...\n");
+    // for (int i = 0; i < process_count; i++)
+    // {
+    //     // printf("Sending SIGCONT to process %d\n", pid_array[i]);
+    //     kill(pid_array[i], SIGCONT);
+    // }
 
     // sleep(1);
 
