@@ -48,24 +48,30 @@ int main(int argc, char* argv[])
             break; 
         }
 
-        char *split;
-        // separate inputs by semicolon delimeter
-        char *curcmd = strtok_r(line, ";", &split);
+        // char *split;
+        // // separate inputs by semicolon delimeter
+        // char *curcmd = strtok_r(line, ";", &split);
+        // removing logic for semicolon since not needed for this proj
 
 
-        while (curcmd != NULL && process_count < MAX_PROCESSES)
-        {
+        // while (curcmd != NULL && process_count < MAX_PROCESSES)
+        // {
             // same string parsing as in proj1
             // tokenize input
-            command_line cmd = str_filler(curcmd, " \t\n");
+            command_line cmd = str_filler(line, " \t\n");
     
             // if empty line
             if (cmd.num_token == 0) 
             {
                 free_command_line(&cmd);
-                // go to next line
-                curcmd = strtok_r(NULL, ";", &split);
                 continue;
+            }
+
+            if (process_count >= MAX_PROCESSES)
+            {
+                fprintf(stderr, "maximum processes reached! (%d processes)\n", MAX_PROCESSES);
+                free_command_line(&cmd);
+                break;
             }
         
             // create new fork
@@ -101,8 +107,8 @@ int main(int argc, char* argv[])
             }
 
             // free_command_line(&cmd);
-            curcmd = strtok_r(NULL, ";", &split);
-        }
+            // curcmd = strtok_r(NULL, ";", &split);
+        // }
     }
     
     fclose(input);
