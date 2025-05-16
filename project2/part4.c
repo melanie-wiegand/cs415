@@ -12,101 +12,167 @@
 #define MAX_PROCESSES 100
 #define QUANTUM 1
 
+// void print_stats(pid_t pid)
+// {
+//     char path[128];
+
+//     // "proc/<pid>/stat" is path we want
+//     // print path name into path string
+//     snprintf(path, sizeof(path), "/proc/%d/stat", pid);
+
+//     // open path
+//     FILE *stats = fopen(path, "r");
+//     if (stats == NULL)
+//     {
+//         perror("Could not open input file");
+//         return;
+//     }
+
+//     // from https://stackoverflow.com/questions/39066998/what-are-the-meaning-of-values-at-proc-pid-stat
+//     // https://man7.org/linux/man-pages/man5/proc_pid_stat.5.html
+//     /* desired fields:
+//             state (3) %c
+//             time in user mode (14) %lu
+//             time in kernel mode (15) %lu
+//             priority (18) %ld
+//             # of threads (20) %ld
+//             address of stack (28) %lu
+//     */
+
+//     char state;
+//     unsigned long utime;
+//     unsigned long ktime;
+//     long priority;
+//     long threads;
+//     unsigned long stack_addr;
+
+//     // dummy variables to skip fields we don't need
+//     int skipint;
+//     char skipstring[128];
+//     long skiplong;
+//     unsigned long skipul;    
+
+//     // skip fields 1-2
+//     fscanf(stats, "%d (%[^)])", &skipint, skipstring);
+
+//     // state (3)
+//     fscanf(stats, "%c", &state);
+
+//     // 4-8 are ints
+//     for (int i = 0; i < 5; i++)
+//     {
+//         fscanf(stats, "%d", &skipint);
+//     }
+
+//     // 9-13 are longs
+//     for (int i = 0; i < 5; i++)
+//     {
+//         fscanf(stats, "%lu", &skiplong);
+//     }
+
+//     // user time
+//     fscanf(stats, "%lu", &utime);
+
+//     // kernel time
+//     fscanf(stats, "%lu", &ktime);
+
+//     // 16-17 are longs
+//     for (int i = 0; i < 2; i++)
+//     {
+//         fscanf(stats, "%lu", &skiplong);
+//     }
+
+//     // priority
+//     fscanf(stats, "%ld", &priority);
+
+//     // 19 is long
+//     fscanf(stats, "%lu", &skiplong);
+
+//     // # of threads
+//     fscanf(stats, "%ld", &threads);
+
+//     // 21-27 are longs
+//     for (int i = 0; i < 7; i++)
+//     {
+//         fscanf(stats, "%lu", &skiplong);
+//     }
+
+//     // stack address
+//     fscanf(stats, "%lu", &stack_addr);
+
+//     fclose(stats);
+
+
+//     printf("Process %d:\t| %c\t|\t%lu\t|\t%lu\t|\t%ld\t|\t%ld\t|\t%lu\n", 
+//         pid, state, utime, ktime, priority, threads, stack_addr);
+    
+// }
+
+
 void print_stats(pid_t pid)
 {
     char path[128];
-
-    // "proc/<pid>/stat" is path we want
-    // print path name into path string
     snprintf(path, sizeof(path), "/proc/%d/stat", pid);
 
-    // open path
     FILE *stats = fopen(path, "r");
     if (stats == NULL)
     {
-        perror("Could not open input file");
+        perror("Could not open stat file");
         return;
     }
 
-    // from https://stackoverflow.com/questions/39066998/what-are-the-meaning-of-values-at-proc-pid-stat
-    // https://man7.org/linux/man-pages/man5/proc_pid_stat.5.html
-    /* desired fields:
-            state (3) %c
-            time in user mode (14) %lu
-            time in kernel mode (15) %lu
-            priority (18) %ld
-            # of threads (20) %ld
-            address of stack (28) %lu
-    */
-
-    char state;
-    unsigned long utime;
-    unsigned long ktime;
-    long priority;
-    long threads;
-    unsigned long stack_addr;
-
-    // dummy variables to skip fields we don't need
-    int skipint;
-    char skipstring[128];
-    long skiplong;
-    unsigned long skipul;    
-
-    // skip fields 1-2
-    fscanf(stats, "%d (%[^)])", &skipint, skipstring);
-
-    // state (3)
-    fscanf(stats, "%c", &state);
-
-    // 4-8 are ints
-    for (int i = 0; i < 5; i++)
+    char buffer[2048];
+    if (fgets(buffer, sizeof(buffer), stats) == NULL)
     {
-        fscanf(stats, "%d", &skipint);
+        perror("Failed to read stat file");
+        fclose(stats);
+        return;
     }
-
-    // 9-13 are longs
-    for (int i = 0; i < 5; i++)
-    {
-        fscanf(stats, "%lu", &skiplong);
-    }
-
-    // user time
-    fscanf(stats, "%lu", &utime);
-
-    // kernel time
-    fscanf(stats, "%lu", &ktime);
-
-    // 16-17 are longs
-    for (int i = 0; i < 2; i++)
-    {
-        fscanf(stats, "%lu", &skiplong);
-    }
-
-    // priority
-    fscanf(stats, "%ld", &priority);
-
-    // 19 is long
-    fscanf(stats, "%lu", &skiplong);
-
-    // # of threads
-    fscanf(stats, "%ld", &threads);
-
-    // 21-27 are longs
-    for (int i = 0; i < 7; i++)
-    {
-        fscanf(stats, "%lu", &skiplong);
-    }
-
-    // stack address
-    fscanf(stats, "%lu", &stack_addr);
-
     fclose(stats);
 
+    // Step 1: extract pid, comm, state
+    int pid_read;
+    char comm[256];
+    char state;
 
-    printf("Process %d:\t| %c\t|\t%lu\t|\t%lu\t|\t%ld\t|\t%ld\t|\t%lu\n", 
-        pid, state, utime, ktime, priority, threads, stack_addr);
-    
+    sscanf(buffer, "%d (%[^)]) %c", &pid_read, comm, &state);
 
+    // Step 2: tokenize to get the rest of the fields
+    // After pid (field 1), comm (2), state (3) — we need to skip to fields 14, 15, 18, 20, and 28
+    // We’ll use strtok starting *after* the state field
+    char *ptr = strchr(buffer, ')'); // find closing parenthesis
+    if (!ptr) {
+        fprintf(stderr, "Malformed stat file\n");
+        return;
+    }
+    ptr++; // move past ')'
+    int field = 3;
+
+    // Tokenize from field 4 onward
+    char *token = strtok(ptr, " ");
+    unsigned long utime = 0, ktime = 0, stack_addr = 0;
+    long priority = 0, threads = 0;
+
+    while (token && field <= 28)
+    {
+        field++;
+        if (field == 14)
+            utime = strtoul(token, NULL, 10);
+        else if (field == 15)
+            ktime = strtoul(token, NULL, 10);
+        else if (field == 18)
+            priority = strtol(token, NULL, 10);
+        else if (field == 20)
+            threads = strtol(token, NULL, 10);
+        else if (field == 28)
+            stack_addr = strtoul(token, NULL, 10);
+
+        token = strtok(NULL, " ");
+    }
+
+    // Final formatted output line
+    printf("Process %d:\t| %c\t|\t%lu\t|\t%lu\t|\t%ld\t|\t%ld\t|\t%lu\n",
+           pid, state, utime, ktime, priority, threads, stack_addr);
 }
 
 int main(int argc, char* argv[])
