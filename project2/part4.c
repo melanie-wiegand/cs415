@@ -279,7 +279,7 @@ int main(int argc, char* argv[])
         system("clear");
         printf("\n    %-9s | %-7s | %-15s | %-15s | %-10s | %-13s | %-15s |\n",
             "Process", "State", "User Time", "Kernel Time", "Priority", "# Threads", "Stack Address");
-        printf("-------------------------------------------------------------------------------------------------------------------------------------------\n");
+        printf("-----------------------------------------------------------------------------------------------------------------------\n");
 
         // printf("========= MCP Process Stats =========\n");
         for (int i = 0; i < process_count; i++)
@@ -291,7 +291,7 @@ int main(int argc, char* argv[])
             }
             else
             {
-                printf("Process %d has completed. No information to display\n", pid_array[i]);
+                printf("--Process %d has completed. No information to display--\n", pid_array[i]);
 
             }
         }
