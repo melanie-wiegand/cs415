@@ -53,7 +53,7 @@ void print_stats(pid_t pid)
     unsigned long skipul;    
 
     // skip fields 1-2
-    fscanf(stats, "%d %s", &skipint, skipstring);
+    fscanf(stats, "%d (%[^)])", &skipint, skipstring);
 
     // state (3)
     fscanf(stats, "%c", &state);
@@ -102,12 +102,7 @@ void print_stats(pid_t pid)
 
     fclose(stats);
 
-    // system("clear");
-    // printf("\t\t\tState\t| Time in User Mode\t| Time in Kernel Mode\t| Priority\t|
-    //      Number of Threads\t| Address of Stack\n");
-    // printf("__________________________________________________________________________________________________________");
-    
-    printf("state: %c", state);
+
     printf("Process %d:\t| %c\t|\t%lu\t|\t%lu\t|\t%ld\t|\t%ld\t|\t%lu\n", 
         pid, state, utime, ktime, priority, threads, stack_addr);
     
