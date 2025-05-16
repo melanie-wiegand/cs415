@@ -272,7 +272,7 @@ int main(int argc, char* argv[])
 
         
 
-        printf("\tContinuing Process: [%d]\n", pid_array[index]);
+        // printf("\tContinuing Process: [%d]\n", pid_array[index]);
         kill(pid_array[index], SIGCONT);
         current = index;
 
