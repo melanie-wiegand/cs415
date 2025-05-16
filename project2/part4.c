@@ -277,10 +277,10 @@ int main(int argc, char* argv[])
         current = index;
 
         system("clear");
-        printf("%20s | %17s | %18s | %8s | %18s | %20s\n",
-            "State", "Time in User Mode", "Time in Kernel Mode",
-            "Priority", "Number of Threads", "Address of Stack");
-        printf("---------------------------------------------------------------------------------------------------------------------\n");
+        printf("\n\t\t\t | %-5s | %-20s | %-20s | %-10s | %-18s | %-18s\n",
+            "State", "User Time", "Kernel Time",
+            "Priority", "# Threads", "Stack Address");
+        printf("----------------------------------------------------------------------------------------------------------------------\n");
 
         // printf("========= MCP Process Stats =========\n");
         for (int i = 0; i < process_count; i++)
