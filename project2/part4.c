@@ -96,8 +96,9 @@ void print_stats(pid_t pid)
     fclose(stats);
 
 
-    printf("Process %-7d:   %-5c | %-20lu | %-20lu | %-10ld | %-18ld | %-18lu\n",
+    printf("Process %-6d: |     %c     |   %-18lu   |   %-18lu   |  %-10ld  |   %-16ld   |   %-16lu   |\n",
        pid, state, utime, ktime, priority, threads, stack_addr);
+
 }
 
 
@@ -276,10 +277,9 @@ int main(int argc, char* argv[])
         current = index;
 
         system("clear");
-        printf("\n\t\t | %-5s | %-20s | %-20s | %-10s | %-18s | %-18s\n",
-            "State", "User Time", "Kernel Time",
-            "Priority", "# Threads", "Stack Address");
-        printf("----------------------------------------------------------------------------------------------------------------------\n");
+        printf("\n\t\t   %-7s  |   %-18s   |   %-18s   |  %-10s  |   %-16s   |   %-16s   |\n",
+            "State", "User Time", "Kernel Time", "Priority", "# Threads", "Stack Address");
+        printf("\t\t-----------------------------------------------------------------------------------------------\n");
 
         // printf("========= MCP Process Stats =========\n");
         for (int i = 0; i < process_count; i++)
