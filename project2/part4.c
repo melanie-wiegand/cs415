@@ -96,8 +96,8 @@ void print_stats(pid_t pid)
     fclose(stats);
 
 
-    printf("Process %-6d  |     %c     |     %-16lu     |     %-16lu     |  %-10ld  |     %-14ld     |     %-14lu     |\n",
-       pid, state, utime, ktime, priority, threads, stack_addr);
+    printf("    %-9d | %-7c | %-15lu | %-15lu | %-10ld | %-13ld | %-15lu |\n",
+        pid, state, utime, ktime, priority, threads, stack_addr);
 
 }
 
@@ -277,7 +277,7 @@ int main(int argc, char* argv[])
         current = index;
 
         system("clear");
-        printf("\n    %-9s    |  %-7s  |     %-16s     |     %-16s     |  %-10s  |     %-14s     |     %-14s     |\n",
+        printf("\n    %-9s | %-7s | %-15s | %-15s | %-10s | %-13s | %-15s |\n",
             "Process", "State", "User Time", "Kernel Time", "Priority", "# Threads", "Stack Address");
         printf("-------------------------------------------------------------------------------------------------------------------------------------------\n");
 
