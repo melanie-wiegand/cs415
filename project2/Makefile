@@ -1,4 +1,4 @@
-EXEC = part1 part2 part3 part4 #part5
+EXEC = part1 part2 part3 part4 part5
 CC = gcc
 CFLAGS = -g
 
