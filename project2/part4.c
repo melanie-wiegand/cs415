@@ -107,8 +107,8 @@ void print_stats(pid_t pid)
     //      Number of Threads\t| Address of Stack\n");
     // printf("__________________________________________________________________________________________________________");
     
-    printf("Process %s: \t\t %c\t|\t%lu\t|\t%lu\t|\t%ld\t|\t%ld\t|\t%lu\n", 
-        state, utime, ktime, priority, threads, stack_addr);
+    printf("Process %d: \t\t %c\t|\t%lu\t|\t%lu\t|\t%ld\t|\t%ld\t|\t%lu\n", 
+        pid, state, utime, ktime, priority, threads, stack_addr);
     
 
 }
