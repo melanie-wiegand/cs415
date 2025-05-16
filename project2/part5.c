@@ -314,8 +314,12 @@ int main(int argc, char* argv[])
         kill(parray[index].pid, SIGCONT);
         current = index;
 
-        // run for 1s before getting stats
-        sleep(1);
+        // sleep for one quantum before getting stats
+        sleep(parray[current].quantum);
+        // stop process
+        kill(parray[current].pid, SIGSTOP);
+        // briefly wait for state to update
+        usleep(100000);
         // get stats for current process
         get_stats(&parray[current]);
 
