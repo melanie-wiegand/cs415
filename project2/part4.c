@@ -207,7 +207,7 @@ int main(int argc, char* argv[])
 
 
     // round robin starts on all child processes
-    printf("Beginning round robin\n");
+    // printf("Beginning round robin\n");
 
     int index = 0;
     // array to track status of each process
@@ -222,7 +222,7 @@ int main(int argc, char* argv[])
     while(num_done < process_count)
     {
         sigwait(&sigset, &signum);
-        printf("\nReceived SIGALRM signal...\n");
+        // printf("\nReceived SIGALRM signal...\n");
 
         if (current != -1 && done[current] == 0)
         {
@@ -230,18 +230,18 @@ int main(int argc, char* argv[])
             pid_t result = waitpid(pid_array[current], &status, WNOHANG);
             if (result == 0) 
             {
-                printf("\tStopping Process: [%d]\n", pid_array[current]);
+                // printf("\tStopping Process: [%d]\n", pid_array[current]);
                 kill(pid_array[current], SIGSTOP);
             } 
             else 
             {
                 done[current] = 1;
-                printf("\tProcess [%d] has finished.\n", pid_array[current]);
+                // printf("\tProcess [%d] has finished.\n", pid_array[current]);
                 num_done++;
             }
         }
 
-        printf("\tFinding next process to run...\n");
+        // printf("\tFinding next process to run...\n");
         // check if there is another unfinished process
         int found = 0;
         int next = index;
@@ -279,7 +279,7 @@ int main(int argc, char* argv[])
         printf("\n%-10s | %-5s | %-20s | %-20s | %-10s | %-18s | %-18s\n",
             "PID", "State", "User Time", "Kernel Time",
             "Priority", "# Threads", "Stack Address");
-        printf("-------------------------------------------------------------------------------------------------------------\n");
+        printf("----------------------------------------------------------------------------------------------------------------------\n");
 
         // printf("========= MCP Process Stats =========\n");
         for (int i = 0; i < process_count; i++)
@@ -288,6 +288,11 @@ int main(int argc, char* argv[])
             {
                 // printf("\nProcess [%d]:\n", pid_array[i]);
                 print_stats(pid_array[i]);
+            }
+            else
+            {
+                printf("Process %d has completed. No information to display\n", pid);
+
             }
         }
 
@@ -303,7 +308,7 @@ int main(int argc, char* argv[])
         free_command_line(&cmd_array[i]);
     }
 
-    printf("\n\tAll processes have finished :)\n");
+    printf("\nAll processes have finished :)\n\n");
     
     return 0;
 }
