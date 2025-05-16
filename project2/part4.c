@@ -291,7 +291,7 @@ int main(int argc, char* argv[])
             }
             else
             {
-                printf("Process %d has completed. No information to display\n", pid);
+                printf("Process %d has completed. No information to display\n", pid_array[i]);
 
             }
         }
