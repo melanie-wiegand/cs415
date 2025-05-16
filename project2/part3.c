@@ -174,7 +174,7 @@ int main(int argc, char* argv[])
             next = next % process_count;
             if (done[next] != 0)
             {
-                printf("Process: %d is complete.", pid_array[next]);
+                printf("\tProcess: %d is complete.\n", pid_array[next]);
             }
             else
             {
