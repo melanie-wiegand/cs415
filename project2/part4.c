@@ -96,9 +96,8 @@ void print_stats(pid_t pid)
     fclose(stats);
 
 
-    printf("Process %d:%11c | %17lu | %18lu | %8ld | %18ld | %20lu\n",
-        pid, state, utime, ktime, priority, threads, stack_addr);
-
+    printf("Process %-7d:   %-5c | %-20lu | %-20lu | %-10ld | %-18ld | %-18lu\n",
+       pid, state, utime, ktime, priority, threads, stack_addr);
 }
 
 
