@@ -277,9 +277,9 @@ int main(int argc, char* argv[])
         current = index;
 
         system("clear");
-        printf("\n\t\t   %-7s  |   %-18s   |   %-18s   |  %-10s  |   %-16s   |   %-16s   |\n",
+        printf("\n\t\t    %-7s  |   %-18s   |   %-18s   |  %-10s  |   %-16s   |   %-16s   |\n",
             "State", "User Time", "Kernel Time", "Priority", "# Threads", "Stack Address");
-        printf("\t\t-----------------------------------------------------------------------------------------------\n");
+        printf("-------------------------------------------------------------------------------------------------------------------------------------------\n");
 
         // printf("========= MCP Process Stats =========\n");
         for (int i = 0; i < process_count; i++)
