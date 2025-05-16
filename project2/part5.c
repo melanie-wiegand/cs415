@@ -345,7 +345,7 @@ int main(int argc, char* argv[])
                 // printf("\nProcess [%d]:\n", pid_array[i]);
                 // get stats for current process
                 int isrunning = (i == current);
-                get_stats(&parray[current], isrunning);
+                get_stats(&parray[i], isrunning);
                 print_stats(&parray[i]);
             }
             else
