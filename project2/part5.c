@@ -282,6 +282,7 @@ int main(int argc, char* argv[])
             {
                 // printf("\tStopping Process: [%d]\n", pid_array[current]);
                 kill(parray[current].pid, SIGSTOP);
+                usleep(100000);
             } 
             else 
             {
@@ -316,15 +317,19 @@ int main(int argc, char* argv[])
         index = next;
 
         // printf("\tContinuing Process: [%d]\n", pid_array[index]);
-        kill(parray[index].pid, SIGCONT);
+        
         current = index;
 
+        kill(parray[current].pid, SIGCONT);
+
+        sleep(1);
+
         // sleep for one quantum before getting stats
-        sleep(parray[current].quantum);
+        // sleep(parray[current].quantum);
         // stop process
-        kill(parray[current].pid, SIGSTOP);
+        // kill(parray[current].pid, SIGSTOP);
         // briefly wait for state to update
-        usleep(100000);
+        // usleep(100000);
         
 
         system("clear");
