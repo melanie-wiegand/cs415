@@ -107,7 +107,6 @@ int main(int argc, char* argv[])
             if (execvp(cmd.command_list[0], cmd.command_list) == -1) 
             {
                 perror("execvp failed");
-                // free_command_line(&cmd); #don't need to free here bc could double free mem
                 exit(1);
             }
         }
@@ -125,12 +124,13 @@ int main(int argc, char* argv[])
     fclose(input);
     free(line);
 
-    // printf("parent waiting\n");
-    // sleep(1);
 
-    
-    // sigwait(&sigset, &signum);
-    
+    // wake up children
+    for (int i = 0; i < process_count; i++) {
+        kill(pid_array[i], SIGALRM); // unblock
+        kill(pid_array[i], SIGSTOP); // halt
+    }
+
 
     // round robin starts on all child processes
     printf("Beginning round robin\n");
@@ -141,11 +141,6 @@ int main(int argc, char* argv[])
     int num_done = 0;
     int current = -1;
 
-    // wake up children
-    for (int i = 0; i < process_count; i++) {
-        kill(pid_array[i], SIGUSR1);
-        kill(pid_array[i], SIGSTOP);
-    }
 
     alarm(QUANTUM);
 
@@ -157,10 +152,19 @@ int main(int argc, char* argv[])
 
         if (current != -1 && done[current] == 0)
         {
-            printf("\tStopping Process: %d\n", pid_array[current]);
-            kill(pid_array[current], SIGSTOP);
+            int status;
+            pid_t result = waitpid(pid_array[current], &status, WNOHANG);
+            if (result == 0) {
+                printf("\tStopping Process: [%d]\n", pid_array[current]);
+                kill(pid_array[current], SIGSTOP);
+            } else {
+                done[current] = 1;
+                printf("\tProcess [%d] has finished.\n", pid_array[current]);
+                num_done++;
+            }
         }
 
+        printf("\tFinding next process to run...\n");
         // check if there is another unfinished process
         int found = 0;
         int next = index;
@@ -184,20 +188,20 @@ int main(int argc, char* argv[])
 
         index = next;
 
-        printf("\tFinding next process to run...\n");
+        
 
-        int status;
+        // int status;
 
-        if (waitpid(pid_array[index], &status, WNOHANG) == pid_array[index])
-        {
-            printf("\tProcess: %d has finished.\n", pid_array[index]);
-            done[index] = 1;
-            num_done++;
-            current = -1;
-            alarm(QUANTUM);
-            continue;
+        // if (waitpid(pid_array[index], &status, WNOHANG) == pid_array[index])
+        // {
+        //     printf("\tProcess: %d has finished.\n", pid_array[index]);
+        //     done[index] = 1;
+        //     num_done++;
+        //     current = -1;
+        //     alarm(QUANTUM);
+        //     continue;
 
-        }
+        // }
 
         printf("\tContinuing Process: %d\n", pid_array[index]);
         kill(pid_array[index], SIGCONT);
