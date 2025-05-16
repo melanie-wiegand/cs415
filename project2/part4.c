@@ -96,7 +96,7 @@ void print_stats(pid_t pid)
     fclose(stats);
 
 
-    printf("    %-9d | %-7c | %-15lu | %-15lu | %-10ld | %-13ld | %-15lu |\n",
+    printf("|   %-9d | %-7c | %-15lu | %-15lu | %-10ld | %-13ld | %-15lu |\n",
         pid, state, utime, ktime, priority, threads, stack_addr);
 
 }
@@ -277,9 +277,9 @@ int main(int argc, char* argv[])
         current = index;
 
         system("clear");
-        printf("\n    %-9s | %-7s | %-15s | %-15s | %-10s | %-13s | %-15s |\n",
+        printf("\n|   %-9s | %-7s | %-15s | %-15s | %-10s | %-13s | %-15s |\n",
             "Process", "State", "User Time", "Kernel Time", "Priority", "# Threads", "Stack Address");
-        printf("-----------------------------------------------------------------------------------------------------------------------\n");
+        printf("------------------------------------------------------------------------------------------------------------\n");
 
         // printf("========= MCP Process Stats =========\n");
         for (int i = 0; i < process_count; i++)
@@ -291,7 +291,7 @@ int main(int argc, char* argv[])
             }
             else
             {
-                printf("--Process %d has completed. No information to display--\n", pid_array[i]);
+                printf("-- Process %d has completed; no information to display --\n", pid_array[i]);
 
             }
         }
