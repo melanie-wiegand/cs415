@@ -277,7 +277,7 @@ int main(int argc, char* argv[])
         current = index;
 
         system("clear");
-        printf("\n    %-7s    |  %-7s  |     %-16s     |     %-16s     |  %-10s  |     %-14s     |     %-14s     |\n",
+        printf("\n    %-9s    |  %-7s  |     %-16s     |     %-16s     |  %-10s  |     %-14s     |     %-14s     |\n",
             "Process", "State", "User Time", "Kernel Time", "Priority", "# Threads", "Stack Address");
         printf("-------------------------------------------------------------------------------------------------------------------------------------------\n");
 
