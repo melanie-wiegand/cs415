@@ -37,7 +37,7 @@ typedef struct
 } pinfo;
 
 // separate function to get stats so we can call in loop
-void get_stats(pinfo *pinfo)
+void get_stats(pinfo *pinfo, int isrunning)
 {
     char path[128];
 
@@ -74,6 +74,11 @@ void get_stats(pinfo *pinfo)
 
     // state (3)
     fscanf(stats, " %c", &pinfo->state);
+
+    // manually set state if currently running
+    if (is_running) {
+        pinfo->state = 'R';
+    }
 
     // skip fields 4-13
     for (int i = 0; i < 10; i++)
@@ -320,8 +325,7 @@ int main(int argc, char* argv[])
         kill(parray[current].pid, SIGSTOP);
         // briefly wait for state to update
         usleep(100000);
-        // get stats for current process
-        get_stats(&parray[current]);
+        
 
         system("clear");
         printf("\n|   %-9s | %-7s | %-15s | %-15s | %-10s | %-13s | %-15s | %-10s | %-10s |\n",
@@ -334,6 +338,9 @@ int main(int argc, char* argv[])
             if (parray[i].done == 0)
             {
                 // printf("\nProcess [%d]:\n", pid_array[i]);
+                // get stats for current process
+                int isrunning = (i == current);
+                get_stats(&parray[current], isrunning);
                 print_stats(&parray[i]);
             }
             else
