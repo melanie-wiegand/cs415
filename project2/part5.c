@@ -171,6 +171,7 @@ int main(int argc, char* argv[])
     sigset_t sigset;
     sigemptyset(&sigset);
     sigaddset(&sigset, SIGALRM);
+    sigaddset(&sigset, SIGUSR1);
     sigprocmask(SIG_BLOCK, &sigset, NULL);
 
 
@@ -246,7 +247,8 @@ int main(int argc, char* argv[])
 
     // wake up children
     for (int i = 0; i < process_count; i++) {
-        kill(parray[i].pid, SIGALRM); // unblock
+        kill(parray[i].pid, SIGUSR1); // unblock
+        printf("Started child %d\n", parray[i].pid);
         kill(parray[i].pid, SIGSTOP); // halt
     }
 
