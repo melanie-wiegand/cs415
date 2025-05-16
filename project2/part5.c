@@ -76,7 +76,7 @@ void get_stats(pinfo *pinfo, int isrunning)
     fscanf(stats, " %c", &pinfo->state);
 
     // manually set state if currently running
-    if (is_running) {
+    if (isrunning) {
         pinfo->state = 'R';
     }
 
