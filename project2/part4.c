@@ -176,7 +176,12 @@ int main(int argc, char* argv[])
         {
             // child process
             // int signum;
-            sigwait(&sigset, &signum);
+            int wait = sigwait(&sigset, &signum);
+            if (wait != 0)
+            {
+                perror("sigwait failed");
+                exit(1);
+            }
 
             if (execvp(cmd.command_list[0], cmd.command_list) == -1) 
             {
@@ -281,7 +286,7 @@ int main(int argc, char* argv[])
             "Process", "State", "User Time", "Kernel Time", "Priority", "# Threads", "Stack Address");
         printf(" ----------------------------------------------------------------------------------------------------------\n");
 
-        // printf("========= MCP Process Stats =========\n");
+
         for (int i = 0; i < process_count; i++)
         {
             if (done[i] == 0)
