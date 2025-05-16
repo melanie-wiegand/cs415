@@ -15,69 +15,90 @@
 void print_stats(pid_t pid)
 {
     char path[128];
+
+    // "proc/<pid>/stat" is path we want
+    // print path name into path string
     snprintf(path, sizeof(path), "/proc/%d/stat", pid);
 
+    // open path
     FILE *stats = fopen(path, "r");
-    if (!stats) {
-        perror("Could not open stat file");
+    if (stats == NULL)
+    {
+        perror("Could not open stats file");
         return;
     }
 
-    int pid_read;
-    char comm[256];
+    // from https://stackoverflow.com/questions/39066998/what-are-the-meaning-of-values-at-proc-pid-stat
+    // https://man7.org/linux/man-pages/man5/proc_pid_stat.5.html
+    /* desired fields:
+            state (3) %c
+            time in user mode (14) %lu
+            time in kernel mode (15) %lu
+            priority (18) %ld
+            # of threads (20) %ld
+            address of stack (28) %lu
+    */
+
     char state;
-    unsigned long utime, ktime, stack_addr;
-    long priority, threads;
+    unsigned long utime;
+    unsigned long ktime;
+    long priority;
+    long threads;
+    unsigned long stack_addr;
 
-    // Skip first 2 fields: pid (%d), comm (%s but inside parentheses)
-    // We read comm as a string in parentheses using %[^(] and %*c to skip the closing ')'
-    fscanf(stats, "%d ", &pid_read);
-    fscanf(stats, " (%[^)])", comm); // read everything inside parentheses
-    fscanf(stats, " %c", &state);    // now read the state
+    // dummy variables to skip fields we don't need
+    char skipstring[256];
+    unsigned long skipul;    
 
-    // Now skip fields 4 to 13 (10 fields total)
-    for (int i = 0; i < 10; ++i) {
-        unsigned long dummy;
-        fscanf(stats, " %lu", &dummy);
+    // skip fields 1-2
+    fscanf(stats, "%d (%[^)])", &skipint, skipstring);
+
+    // state (3)
+    fscanf(stats, " %c", &state);
+
+    // skip fields 4-13
+    for (int i = 0; i < 10; i++)
+    {
+        fscanf(stats, " %lu", &skipul);
     }
 
-    // Field 14: user mode time
+    // user time
     fscanf(stats, " %lu", &utime);
 
-    // Field 15: kernel mode time
+    // kernel time
     fscanf(stats, " %lu", &ktime);
 
-    // Skip fields 16–17
-    for (int i = 0; i < 2; ++i) {
-        unsigned long dummy;
-        fscanf(stats, " %lu", &dummy);
+    // skip 16-17
+    for (int i = 0; i < 2; i++)
+    {
+        fscanf(stats, " %lu", &skipul);
     }
 
-    // Field 18: priority
+    // priority
     fscanf(stats, " %ld", &priority);
 
-    // Field 19: nice (skip)
-    unsigned long dummy;
-    fscanf(stats, " %lu", &dummy);
+    // skip 19
+    fscanf(stats, " %lu", &skipul);
 
-    // Field 20: number of threads
+    // # of threads
     fscanf(stats, " %ld", &threads);
 
-    // Skip fields 21–27
-    for (int i = 0; i < 7; ++i) {
-        fscanf(stats, " %lu", &dummy);
+    // 21-27 are longs
+    for (int i = 0; i < 7; i++)
+    {
+        fscanf(stats, " %lu", &skipul);
     }
 
-    // Field 28: stack address
+    // stack address
     fscanf(stats, " %lu", &stack_addr);
 
     fclose(stats);
 
-    // Print result
-    printf("Process %d:\t| %c\t|\t%lu\t|\t%lu\t|\t%ld\t|\t%ld\t|\t%lu\n",
-           pid, state, utime, ktime, priority, threads, stack_addr);
-}
 
+    printf("Process %d:\t| %c\t|\t%lu\t|\t%lu\t|\t%ld\t|\t%ld\t|\t%lu\n", 
+        pid, state, utime, ktime, priority, threads, stack_addr);
+    
+}
 
 // void print_stats(pid_t pid)
 // {
@@ -85,62 +106,62 @@ void print_stats(pid_t pid)
 //     snprintf(path, sizeof(path), "/proc/%d/stat", pid);
 
 //     FILE *stats = fopen(path, "r");
-//     if (stats == NULL)
-//     {
+//     if (!stats) {
 //         perror("Could not open stat file");
 //         return;
 //     }
 
-//     char buffer[2048];
-//     if (fgets(buffer, sizeof(buffer), stats) == NULL)
-//     {
-//         perror("Failed to read stat file");
-//         fclose(stats);
-//         return;
-//     }
-//     fclose(stats);
-
-//     // Step 1: extract pid, comm, state
 //     int pid_read;
 //     char comm[256];
 //     char state;
+//     unsigned long utime, ktime, stack_addr;
+//     long priority, threads;
 
-//     sscanf(buffer, "%d (%[^)]) %c", &pid_read, comm, &state);
+//     // Skip first 2 fields: pid (%d), comm (%s but inside parentheses)
+//     // We read comm as a string in parentheses using %[^(] and %*c to skip the closing ')'
+//     fscanf(stats, "%d ", &pid_read);
+//     fscanf(stats, " (%[^)])", comm); // read everything inside parentheses
+//     fscanf(stats, " %c", &state);    // now read the state
 
-//     // Step 2: tokenize to get the rest of the fields
-//     // After pid (field 1), comm (2), state (3) — we need to skip to fields 14, 15, 18, 20, and 28
-//     // We’ll use strtok starting *after* the state field
-//     char *ptr = strchr(buffer, ')'); // find closing parenthesis
-//     if (!ptr) {
-//         fprintf(stderr, "Malformed stat file\n");
-//         return;
-//     }
-//     ptr++; // move past ')'
-//     int field = 3;
-
-//     // Tokenize from field 4 onward
-//     char *token = strtok(ptr, " ");
-//     unsigned long utime = 0, ktime = 0, stack_addr = 0;
-//     long priority = 0, threads = 0;
-
-//     while (token && field <= 28)
-//     {
-//         field++;
-//         if (field == 14)
-//             utime = strtoul(token, NULL, 10);
-//         else if (field == 15)
-//             ktime = strtoul(token, NULL, 10);
-//         else if (field == 18)
-//             priority = strtol(token, NULL, 10);
-//         else if (field == 20)
-//             threads = strtol(token, NULL, 10);
-//         else if (field == 28)
-//             stack_addr = strtoul(token, NULL, 10);
-
-//         token = strtok(NULL, " ");
+//     // Now skip fields 4 to 13 (10 fields total)
+//     for (int i = 0; i < 10; ++i) {
+//         unsigned long dummy;
+//         fscanf(stats, " %lu", &dummy);
 //     }
 
-//     // Final formatted output line
+//     // Field 14: user mode time
+//     fscanf(stats, " %lu", &utime);
+
+//     // Field 15: kernel mode time
+//     fscanf(stats, " %lu", &ktime);
+
+//     // Skip fields 16–17
+//     for (int i = 0; i < 2; ++i) {
+//         unsigned long dummy;
+//         fscanf(stats, " %lu", &dummy);
+//     }
+
+//     // Field 18: priority
+//     fscanf(stats, " %ld", &priority);
+
+//     // Field 19: nice (skip)
+//     unsigned long dummy;
+//     fscanf(stats, " %lu", &dummy);
+
+//     // Field 20: number of threads
+//     fscanf(stats, " %ld", &threads);
+
+//     // Skip fields 21–27
+//     for (int i = 0; i < 7; ++i) {
+//         fscanf(stats, " %lu", &dummy);
+//     }
+
+//     // Field 28: stack address
+//     fscanf(stats, " %lu", &stack_addr);
+
+//     fclose(stats);
+
+//     // Print result
 //     printf("Process %d:\t| %c\t|\t%lu\t|\t%lu\t|\t%ld\t|\t%ld\t|\t%lu\n",
 //            pid, state, utime, ktime, priority, threads, stack_addr);
 // }
