@@ -260,7 +260,8 @@ int main(int argc, char* argv[])
     int num_done = 0;
     int current = -1;
 
-
+    // placeholder alarm until we determine quantum times
+    alarm (1);
 
     // if there are unfinished processes
     while(num_done < process_count)
