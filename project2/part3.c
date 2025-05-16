@@ -12,11 +12,6 @@
 #define MAX_PROCESSES 100
 #define QUANTUM 1
 
-// void alarm_handle(int signum)
-// {
-//     printf("context switch");
-//     alarm(QUANTUM);
-// }
 
 int main(int argc, char* argv[])
 {

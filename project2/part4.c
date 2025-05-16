@@ -12,11 +12,106 @@
 #define MAX_PROCESSES 100
 #define QUANTUM 1
 
-// void alarm_handle(int signum)
-// {
-//     printf("context switch");
-//     alarm(QUANTUM);
-// }
+void print_stats(pid_t pid)
+{
+    char path[128];
+
+    // "proc/<pid>/stat" is path we want
+    // print path name into path string
+    snprintf(path, sizeof(path), "/proc/%d/stat", pid);
+
+    // open path
+    FILE *stats = fopen(path, "r");
+    if (stats == NULL)
+    {
+        perror("Could not open input file");
+        return;
+    }
+
+    // from https://stackoverflow.com/questions/39066998/what-are-the-meaning-of-values-at-proc-pid-stat
+    // https://man7.org/linux/man-pages/man5/proc_pid_stat.5.html
+    /* desired fields:
+            state (3) %c
+            time in user mode (14) %lu
+            time in kernel mode (15) %lu
+            priority (18) %ld
+            # of threads (20) %ld
+            address of stack (28) %lu
+    */
+
+    char state;
+    unsigned long utime;
+    unsigned long ktime;
+    long priority;
+    long threads;
+    unsigned long stack_addr;
+
+    // dummy variables to skip fields we don't need
+    int skipint;
+    char skipstring[128];
+    long skiplong;
+    unsigned long skipul;    
+
+    // skip fields 1-2
+    fscanf(stats, "%d %s", &skipint, skipstring);
+
+    // state (3)
+    fscanf(stats, "%c", &state);
+
+    // 4-8 are ints
+    for (int i = 0; i < 5; i++)
+    {
+        fscanf(stats, "%d", &skipint);
+    }
+
+    // 9-13 are longs
+    for (int i = 0; i < 5; i++)
+    {
+        fscanf(stats, "%lu", &skiplong);
+    }
+
+    // user time
+    fscanf(stats, "%lu", &utime);
+
+    // kernel time
+    fscanf(stats, "%lu", &ktime);
+
+    // 16-17 are longs
+    for (int i = 0; i < 2; i++)
+    {
+        fscanf(stats, "%lu", &skiplong);
+    }
+
+    // priority
+    fscanf(stats, "%ld", &priority);
+
+    // 19 is long
+    fscanf(stats, "%lu", &skiplong);
+
+    // # of threads
+    fscanf(stats, "%ld", &threads);
+
+    // 21-27 are longs
+    for (int i = 0; i < 7; i++)
+    {
+        fscanf(stats, "%lu", &skiplong);
+    }
+
+    // stack address
+    fscanf(stats, "%lu", &stack_addr);
+
+    fclose(stats);
+
+    // system("clear");
+    // printf("\t\t\tState\t| Time in User Mode\t| Time in Kernel Mode\t| Priority\t|
+    //      Number of Threads\t| Address of Stack\n");
+    // printf("__________________________________________________________________________________________________________");
+    
+    printf("Process %s: \t\t %c\t|\t%lu\t|\t%lu\t|\t%ld\t|\t%ld\t|\t%lu\n", 
+        state, utime, ktime, priority, threads, stack_addr);
+    
+
+}
 
 int main(int argc, char* argv[])
 {
@@ -47,28 +142,18 @@ int main(int argc, char* argv[])
 
     // signal set
     int signum;
+
     sigset_t sigset;
     sigemptyset(&sigset);
-
-    // // add SIGUSR1 to set
-    // sigaddset(&sigset, SIGUSR1);
-
-    // add signals to set
-    // sigaddset(&sigset, SIGCONT);
     sigaddset(&sigset, SIGALRM);
-
     sigprocmask(SIG_BLOCK, &sigset, NULL);
 
-    // if context switch
-    // signal(SIGALRM, alarm_handle);
 
     while (1) 
     {
         if (getline(&line, &len, input) == -1) {
             break; 
         }
-
-        // removing logic for semicolon parsing since not needed for this proj and i think it was messing up the signaling
 
         command_line cmd = str_filler(line, " \t\n");
 
@@ -132,6 +217,7 @@ int main(int argc, char* argv[])
     }
 
 
+
     // round robin starts on all child processes
     printf("Beginning round robin\n");
 
@@ -154,10 +240,13 @@ int main(int argc, char* argv[])
         {
             int status;
             pid_t result = waitpid(pid_array[current], &status, WNOHANG);
-            if (result == 0) {
+            if (result == 0) 
+            {
                 printf("\tStopping Process: [%d]\n", pid_array[current]);
                 kill(pid_array[current], SIGSTOP);
-            } else {
+            } 
+            else 
+            {
                 done[current] = 1;
                 printf("\tProcess [%d] has finished.\n", pid_array[current]);
                 num_done++;
@@ -194,22 +283,23 @@ int main(int argc, char* argv[])
 
         
 
-        // int status;
-
-        // if (waitpid(pid_array[index], &status, WNOHANG) == pid_array[index])
-        // {
-        //     printf("\tProcess: %d has finished.\n", pid_array[index]);
-        //     done[index] = 1;
-        //     num_done++;
-        //     current = -1;
-        //     alarm(QUANTUM);
-        //     continue;
-
-        // }
-
         printf("\tContinuing Process: [%d]\n", pid_array[index]);
         kill(pid_array[index], SIGCONT);
         current = index;
+
+        system("clear");
+        printf("\t\t\tState\t| Time in User Mode\t| Time in Kernel Mode\t| Priority\t| Number of Threads\t| Address of Stack\n");
+        printf("__________________________________________________________________________________________________________________________________________\n");
+        
+        // printf("========= MCP Process Stats =========\n");
+        for (int i = 0; i < process_count; i++)
+        {
+            if (done[i] == 0)
+            {
+                // printf("\nProcess [%d]:\n", pid_array[i]);
+                print_stats(pid_array[i]);
+            }
+        }
 
         alarm(QUANTUM);
     }
