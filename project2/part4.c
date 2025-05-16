@@ -96,76 +96,10 @@ void print_stats(pid_t pid)
     fclose(stats);
 
 
-    printf("Process %d:\t| %c\t|\t%lu\t|\t%lu\t|\t%ld\t|\t%ld\t|\t%lu\n", 
+    printf("%-10d | %-5c | %-20lu | %-20lu | %-10ld | %-18ld | %-18lu\n",
         pid, state, utime, ktime, priority, threads, stack_addr);
-    
 }
 
-// void print_stats(pid_t pid)
-// {
-//     char path[128];
-//     snprintf(path, sizeof(path), "/proc/%d/stat", pid);
-
-//     FILE *stats = fopen(path, "r");
-//     if (!stats) {
-//         perror("Could not open stat file");
-//         return;
-//     }
-
-//     int pid_read;
-//     char comm[256];
-//     char state;
-//     unsigned long utime, ktime, stack_addr;
-//     long priority, threads;
-
-//     // Skip first 2 fields: pid (%d), comm (%s but inside parentheses)
-//     // We read comm as a string in parentheses using %[^(] and %*c to skip the closing ')'
-//     fscanf(stats, "%d ", &pid_read);
-//     fscanf(stats, " (%[^)])", comm); // read everything inside parentheses
-//     fscanf(stats, " %c", &state);    // now read the state
-
-//     // Now skip fields 4 to 13 (10 fields total)
-//     for (int i = 0; i < 10; ++i) {
-//         unsigned long dummy;
-//         fscanf(stats, " %lu", &dummy);
-//     }
-
-//     // Field 14: user mode time
-//     fscanf(stats, " %lu", &utime);
-
-//     // Field 15: kernel mode time
-//     fscanf(stats, " %lu", &ktime);
-
-//     // Skip fields 16–17
-//     for (int i = 0; i < 2; ++i) {
-//         unsigned long dummy;
-//         fscanf(stats, " %lu", &dummy);
-//     }
-
-//     // Field 18: priority
-//     fscanf(stats, " %ld", &priority);
-
-//     // Field 19: nice (skip)
-//     unsigned long dummy;
-//     fscanf(stats, " %lu", &dummy);
-
-//     // Field 20: number of threads
-//     fscanf(stats, " %ld", &threads);
-
-//     // Skip fields 21–27
-//     for (int i = 0; i < 7; ++i) {
-//         fscanf(stats, " %lu", &dummy);
-//     }
-
-//     // Field 28: stack address
-//     fscanf(stats, " %lu", &stack_addr);
-
-//     fclose(stats);
-
-//     // Print result
-//     printf("Process %d:\t| %c\t|\t%lu\t|\t%lu\t|\t%ld\t|\t%ld\t|\t%lu\n",
-//            pid, state, utime, ktime, priority, threads, stack_addr);
-// }
 
 int main(int argc, char* argv[])
 {
@@ -342,9 +276,11 @@ int main(int argc, char* argv[])
         current = index;
 
         system("clear");
-        printf("\t\t\tState\t| Time in User Mode\t| Time in Kernel Mode\t| Priority\t| Number of Threads\t| Address of Stack\n");
-        printf("__________________________________________________________________________________________________________________________________________\n");
-        
+        printf("\n%-10s | %-5s | %-20s | %-20s | %-10s | %-18s | %-18s\n",
+            "PID", "State", "User Time", "Kernel Time",
+            "Priority", "# Threads", "Stack Address");
+        printf("-------------------------------------------------------------------------------------------------------------\n");
+
         // printf("========= MCP Process Stats =========\n");
         for (int i = 0; i < process_count; i++)
         {
