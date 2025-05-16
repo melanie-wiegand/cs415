@@ -47,7 +47,7 @@ void print_stats(pid_t pid)
     unsigned long stack_addr;
 
     // dummy variables to skip fields we don't need
-    int skip_int;
+    int skipint;
     char skipstring[256];
     unsigned long skipul;    
 
