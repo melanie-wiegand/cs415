@@ -248,7 +248,7 @@ int main(int argc, char* argv[])
     // wake up children
     for (int i = 0; i < process_count; i++) {
         kill(parray[i].pid, SIGUSR1); // unblock
-        printf("Started child %d\n", parray[i].pid);
+        // printf("Started child %d\n", parray[i].pid);
         kill(parray[i].pid, SIGSTOP); // halt
     }
 
@@ -322,7 +322,7 @@ int main(int argc, char* argv[])
         system("clear");
         printf("\n|   %-9s | %-7s | %-15s | %-15s | %-10s | %-13s | %-15s | %-10s | %-10s |\n",
             "Process", "State", "User Time", "Kernel Time", "Priority", "# Threads", "Stack Address", "Type", "Quantum");
-        printf(" ---------------------------------------------------------------------------------------------------------------------------------------\n");
+        printf(" ------------------------------------------------------------------------------------------------------------------------------------\n");
 
 
         for (int i = 0; i < process_count; i++)
