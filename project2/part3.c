@@ -172,7 +172,11 @@ int main(int argc, char* argv[])
         {
             next++;
             next = next % process_count;
-            if (done[next] == 0)
+            if (done[next] != 0)
+            {
+                printf("Process: %d is complete.", pid_array[next]);
+            }
+            else
             {
                 // found an unfinished process
                 found = 1;
@@ -203,7 +207,7 @@ int main(int argc, char* argv[])
 
         // }
 
-        printf("\tContinuing Process: %d\n", pid_array[index]);
+        printf("\tContinuing Process: [%d]\n", pid_array[index]);
         kill(pid_array[index], SIGCONT);
         current = index;
 
