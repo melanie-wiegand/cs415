@@ -1,0 +1,97 @@
+Process: 2042416 - Begining calculation.
+cpu Process: 2042416 - Finished.
+s 2042414 has completed; no information to display.
+|   2042415   | T       | 388             | 125             | 20         | 1             | 140720499801568 |
+|   2042416   | R       | 173             | 240             | 20         | 1             | 140733616234432 |
+
+|   Process   | State   | User Time       | Kernel Time     | Priority   | # Threads     | Stack Address   |
+ ----------------------------------------------------------------------------------------------------------
+--> Process 2042412 has completed; no information to display.
+--> Process 2042413 has completed; no information to display.
+--> Process 2042414 has completed; no information to display.
+|   2042415   | R       | 390             | 127             | 20         | 1             | 140720499801568 |
+|   2042416   | T       | 219             | 295             | 20         | 1             | 140733616234432 |
+
+|   Process   | State   | User Time       | Kernel Time     | Priority   | # Threads     | Stack Address   |
+ ----------------------------------------------------------------------------------------------------------
+--> Process 2042412 has completed; no information to display.
+--> Process 2042413 has completed; no information to display.
+--> Process 2042414 has completed; no information to display.
+|   2042415   | T       | 465             | 151             | 20         | 1             | 140720499801568 |
+|   2042416   | R       | 220             | 296             | 20         | 1             | 140733616234432 |
+
+|   Process   | State   | User Time       | Kernel Time     | Priority   | # Threads     | Stack Address   |
+ ----------------------------------------------------------------------------------------------------------
+--> Process 2042412 has completed; no information to display.
+--> Process 2042413 has completed; no information to display.
+--> Process 2042414 has completed; no information to display.
+|   2042415   | R       | 467             | 153             | 20         | 1             | 140720499801568 |
+|   2042416   | T       | 268             | 349             | 20         | 1             | 140733616234432 |
+
+|   Process   | State   | User Time       | Kernel Time     | Priority   | # Threads     | Stack Address   |
+ ----------------------------------------------------------------------------------------------------------
+--> Process 2042412 has completed; no information to display.
+--> Process 2042413 has completed; no information to display.
+--> Process 2042414 has completed; no information to display.
+|   2042415   | T       | 541             | 178             | 20         | 1             | 140720499801568 |
+|   2042416   | R       | 269             | 350             | 20         | 1             | 140733616234432 |
+
+|   Process   | State   | User Time       | Kernel Time     | Priority   | # Threads     | Stack Address   |
+ ----------------------------------------------------------------------------------------------------------
+--> Process 2042412 has completed; no information to display.
+--> Process 2042413 has completed; no information to display.
+--> Process 2042414 has completed; no information to display.
+|   2042415   | R       | 543             | 179             | 20         | 1             | 140720499801568 |
+|   2042416   | T       | 312             | 407             | 20         | 1             | 140733616234432 |
+
+|   Process   | State   | User Time       | Kernel Time     | Priority   | # Threads     | Stack Address   |
+ ----------------------------------------------------------------------------------------------------------
+--> Process 2042412 has completed; no information to display.
+--> Process 2042413 has completed; no information to display.
+--> Process 2042414 has completed; no information to display.
+|   2042415   | T       | 618             | 204             | 20         | 1             | 140720499801568 |
+|   2042416   | R       | 313             | 408             | 20         | 1             | 140733616234432 |
+
+|   Process   | State   | User Time       | Kernel Time     | Priority   | # Threads     | Stack Address   |
+ ----------------------------------------------------------------------------------------------------------
+--> Process 2042412 has completed; no information to display.
+--> Process 2042413 has completed; no information to display.
+--> Process 2042414 has completed; no information to display.
+|   2042415   | R       | 620             | 205             | 20         | 1             | 140720499801568 |
+|   2042416   | T       | 355             | 466             | 20         | 1             | 140733616234432 |
+
+|   Process   | State   | User Time       | Kernel Time     | Priority   | # Threads     | Stack Address   |
+ ----------------------------------------------------------------------------------------------------------
+--> Process 2042412 has completed; no information to display.
+--> Process 2042413 has completed; no information to display.
+--> Process 2042414 has completed; no information to display.
+|   2042415   | T       | 695             | 230             | 20         | 1             | 140720499801568 |
+|   2042416   | R       | 357             | 467             | 20         | 1             | 140733616234432 |
+
+|   Process   | State   | User Time       | Kernel Time     | Priority   | # Threads     | Stack Address   |
+ ----------------------------------------------------------------------------------------------------------
+--> Process 2042412 has completed; no information to display.
+--> Process 2042413 has completed; no information to display.
+--> Process 2042414 has completed; no information to display.
+|   2042415   | R       | 696             | 232             | 20         | 1             | 140720499801568 |
+|   2042416   | T       | 402             | 522             | 20         | 1             | 140733616234432 |
+
+|   Process   | State   | User Time       | Kernel Time     | Priority   | # Threads     | Stack Address   |
+ ----------------------------------------------------------------------------------------------------------
+--> Process 2042412 has completed; no information to display.
+--> Process 2042413 has completed; no information to display.
+--> Process 2042414 has completed; no information to display.
+--> Process 2042415 has completed; no information to display.
+|   2042416   | R       | 403             | 524             | 20         | 1             | 140733616234432 |
+
+All processes have finished :)
+
+==2042411==
+==2042411== HEAP SUMMARY:
+==2042411==     in use at exit: 0 bytes in 0 blocks
+==2042411==   total heap usage: 134 allocs, 134 frees, 96,572 bytes allocated
+==2042411==
+==2042411== All heap blocks were freed -- no leaks are possible
+==2042411==
+==2042411== For lists of detected and suppressed errors, rerun with: -s
+==2042411== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

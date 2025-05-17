@@ -1,0 +1,230 @@
+==2039243== Memcheck, a memory error detector
+==2039243== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==2039243== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==2039243== Command: ./part3 input.txt
+==2039243==
+execvp failed: No such file or directory
+==2039246==
+==2039246== HEAP SUMMARY:
+==2039246==     in use at exit: 713 bytes in 13 blocks
+==2039246==   total heap usage: 17 allocs, 4 frees, 8,938 bytes allocated
+==2039246==
+==2039246== LEAK SUMMARY:
+==2039246==    definitely lost: 0 bytes in 0 blocks
+==2039246==    indirectly lost: 0 bytes in 0 blocks
+==2039246==      possibly lost: 0 bytes in 0 blocks
+==2039246==    still reachable: 713 bytes in 13 blocks
+==2039246==         suppressed: 0 bytes in 0 blocks
+==2039246== Reachable blocks (those to which a pointer was found) are not shown.
+==2039246== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==2039246==
+==2039246== For lists of detected and suppressed errors, rerun with: -s
+==2039246== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+total 206
+ 7 valgrind_log3.txt
+ 7 valgrind_log2.txt
+ 7 string_parser.o
+ 7 string_parser.h
+ 7 string_parser.c
+12 screenshots
+ 7 part5.c
+12 part5
+ 7 part4.c
+12 part4
+ 7 part3.c
+12 part3
+ 7 part2.c
+12 part2
+ 7 part1.c
+12 part1
+ 7 iobound.c
+12 iobound
+ 1 input.txt
+ 7 cpubound.c
+12 cpubound
+ 7 Makefile
+ 1 MCP.h
+12 ..
+12 .
+Process: 2039247 - Begining to write to file.
+io Process: 2039247 - Finished.
+Process: 2039248 - Begining calculation.
+cpu Process: 2039248 - Finished.
+Beginning round robin
+
+Received SIGALRM signal...
+        Finding next process to run...
+        Continuing Process: [2039245]
+
+Received SIGALRM signal...
+        Stopping Process: [2039245]
+        Finding next process to run...
+        Continuing Process: [2039246]
+
+Received SIGALRM signal...
+        Process [2039246] has finished.
+        Finding next process to run...
+        Continuing Process: [2039247]
+
+Received SIGALRM signal...
+        Stopping Process: [2039247]
+        Finding next process to run...
+        Continuing Process: [2039248]
+
+Received SIGALRM signal...
+        Stopping Process: [2039248]
+        Finding next process to run...
+        Continuing Process: [2039244]
+
+Received SIGALRM signal...
+        Process [2039244] has finished.
+        Finding next process to run...
+        Continuing Process: [2039245]
+
+Received SIGALRM signal...
+        Process [2039245] has finished.
+        Finding next process to run...
+        Process: 2039246 is complete.
+        Continuing Process: [2039247]
+
+Received SIGALRM signal...
+        Stopping Process: [2039247]
+        Finding next process to run...
+        Continuing Process: [2039248]
+
+Received SIGALRM signal...
+        Stopping Process: [2039248]
+        Finding next process to run...
+        Process: 2039244 is complete.
+        Process: 2039245 is complete.
+        Process: 2039246 is complete.
+        Continuing Process: [2039247]
+
+Received SIGALRM signal...
+        Stopping Process: [2039247]
+        Finding next process to run...
+        Continuing Process: [2039248]
+
+Received SIGALRM signal...
+        Stopping Process: [2039248]
+        Finding next process to run...
+        Process: 2039244 is complete.
+        Process: 2039245 is complete.
+        Process: 2039246 is complete.
+        Continuing Process: [2039247]
+
+Received SIGALRM signal...
+        Stopping Process: [2039247]
+        Finding next process to run...
+        Continuing Process: [2039248]
+
+Received SIGALRM signal...
+        Stopping Process: [2039248]
+        Finding next process to run...
+        Process: 2039244 is complete.
+        Process: 2039245 is complete.
+        Process: 2039246 is complete.
+        Continuing Process: [2039247]
+
+Received SIGALRM signal...
+        Stopping Process: [2039247]
+        Finding next process to run...
+        Continuing Process: [2039248]
+
+Received SIGALRM signal...
+        Stopping Process: [2039248]
+        Finding next process to run...
+        Process: 2039244 is complete.
+        Process: 2039245 is complete.
+        Process: 2039246 is complete.
+        Continuing Process: [2039247]
+
+Received SIGALRM signal...
+        Stopping Process: [2039247]
+        Finding next process to run...
+        Continuing Process: [2039248]
+
+Received SIGALRM signal...
+        Stopping Process: [2039248]
+        Finding next process to run...
+        Process: 2039244 is complete.
+        Process: 2039245 is complete.
+        Process: 2039246 is complete.
+        Continuing Process: [2039247]
+
+Received SIGALRM signal...
+        Stopping Process: [2039247]
+        Finding next process to run...
+        Continuing Process: [2039248]
+
+Received SIGALRM signal...
+        Stopping Process: [2039248]
+        Finding next process to run...
+        Process: 2039244 is complete.
+        Process: 2039245 is complete.
+        Process: 2039246 is complete.
+        Continuing Process: [2039247]
+
+Received SIGALRM signal...
+        Stopping Process: [2039247]
+        Finding next process to run...
+        Continuing Process: [2039248]
+
+Received SIGALRM signal...
+        Stopping Process: [2039248]
+        Finding next process to run...
+        Process: 2039244 is complete.
+        Process: 2039245 is complete.
+        Process: 2039246 is complete.
+        Continuing Process: [2039247]
+
+Received SIGALRM signal...
+        Stopping Process: [2039247]
+        Finding next process to run...
+        Continuing Process: [2039248]
+
+Received SIGALRM signal...
+        Stopping Process: [2039248]
+        Finding next process to run...
+        Process: 2039244 is complete.
+        Process: 2039245 is complete.
+        Process: 2039246 is complete.
+        Continuing Process: [2039247]
+
+Received SIGALRM signal...
+        Stopping Process: [2039247]
+        Finding next process to run...
+        Continuing Process: [2039248]
+
+Received SIGALRM signal...
+        Stopping Process: [2039248]
+        Finding next process to run...
+        Process: 2039244 is complete.
+        Process: 2039245 is complete.
+        Process: 2039246 is complete.
+        Continuing Process: [2039247]
+
+Received SIGALRM signal...
+        Process [2039247] has finished.
+        Finding next process to run...
+        Continuing Process: [2039248]
+
+Received SIGALRM signal...
+        Process [2039248] has finished.
+        Finding next process to run...
+        Process: 2039244 is complete.
+        Process: 2039245 is complete.
+        Process: 2039246 is complete.
+        Process: 2039247 is complete.
+        Process: 2039248 is complete.
+
+        All processes have finished :)
+==2039243==
+==2039243== HEAP SUMMARY:
+==2039243==     in use at exit: 0 bytes in 0 blocks
+==2039243==   total heap usage: 28 allocs, 28 frees, 17,284 bytes allocated
+==2039243==
+==2039243== All heap blocks were freed -- no leaks are possible
+==2039243==
+==2039243== For lists of detected and suppressed errors, rerun with: -s
+==2039243== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

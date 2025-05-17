@@ -1,0 +1,26 @@
+Process: 2047500 - Begining calculation.
+cpu Process: 2047500 - Finished.
+497 has completed; no information to display.
+--> Process 2047498 has completed; no information to display.
+--> Process 2047499 has completed; no information to display.
+|   2047500   | R       | 320             | 471             | 20         | 1             | 140720712396016 | I/O bound  | 1          |
+
+|   Process   | State   | User Time       | Kernel Time     | Priority   | # Threads     | Stack Address   | Type       | Quantum    |
+ ------------------------------------------------------------------------------------------------------------------------------------
+--> Process 2047496 has completed; no information to display.
+--> Process 2047497 has completed; no information to display.
+--> Process 2047498 has completed; no information to display.
+--> Process 2047499 has completed; no information to display.
+|   2047500   | R       | 399             | 601             | 20         | 1             | 140720712396016 | I/O bound  | 1          |
+
+All processes have finished :)
+
+==2047495==
+==2047495== HEAP SUMMARY:
+==2047495==     in use at exit: 0 bytes in 0 blocks
+==2047495==   total heap usage: 88 allocs, 88 frees, 62,164 bytes allocated
+==2047495==
+==2047495== All heap blocks were freed -- no leaks are possible
+==2047495==
+==2047495== For lists of detected and suppressed errors, rerun with: -s
+==2047495== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

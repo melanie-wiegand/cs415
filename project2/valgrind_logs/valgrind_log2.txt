@@ -1,0 +1,63 @@
+==2033378== Memcheck, a memory error detector
+==2033378== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==2033378== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==2033378== Command: ./part2 input.txt
+==2033378==
+total 193
+ 1 valgrind_log2.txt
+ 7 string_parser.o
+ 7 string_parser.h
+ 7 string_parser.c
+12 screenshots
+ 7 part5.c
+12 part5
+ 7 part4.c
+12 part4
+ 7 part3.c
+12 part3
+ 7 part2.c
+12 part2
+ 7 part1.c
+12 part1
+ 7 iobound.c
+12 iobound
+ 1 input.txt
+ 7 cpubound.c
+12 cpubound
+ 7 Makefile
+ 1 MCP.h
+12 ..
+12 .
+execvp failed: No such file or directory
+==2033390==
+==2033390== HEAP SUMMARY:
+==2033390==     in use at exit: 713 bytes in 13 blocks
+==2033390==   total heap usage: 17 allocs, 4 frees, 8,938 bytes allocated
+==2033390==
+==2033390== LEAK SUMMARY:
+==2033390==    definitely lost: 0 bytes in 0 blocks
+==2033390==    indirectly lost: 0 bytes in 0 blocks
+==2033390==      possibly lost: 0 bytes in 0 blocks
+==2033390==    still reachable: 713 bytes in 13 blocks
+==2033390==         suppressed: 0 bytes in 0 blocks
+==2033390== Reachable blocks (those to which a pointer was found) are not shown.
+==2033390== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==2033390==
+==2033390== For lists of detected and suppressed errors, rerun with: -s
+==2033390== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+Process: 2033392 - Begining calculation.
+cpu Process: 2033392 - Finished.
+Process: 2033391 - Begining to write to file.
+io Process: 2033391 - Finished.
+Sending SIGUSR1 signal...
+Sending SIGSTOP signal...
+Sending SIGCONT signal...
+==2033378==
+==2033378== HEAP SUMMARY:
+==2033378==     in use at exit: 0 bytes in 0 blocks
+==2033378==   total heap usage: 28 allocs, 28 frees, 17,284 bytes allocated
+==2033378==
+==2033378== All heap blocks were freed -- no leaks are possible
+==2033378==
+==2033378== For lists of detected and suppressed errors, rerun with: -s
+==2033378== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
