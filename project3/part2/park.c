@@ -18,12 +18,16 @@ int p = 4;
 int w = 10;
 int r = 5;
 
+// initialize queue counter
+int queue = 0;
+
 // car struct
 typedef struct
 {
     int id;
-    int riders;
+    int boarded_count;
     int *pass_ids;
+    int passengers_needed
     pthread_cond_t car_ready;
     pthread_cond_t ride_done;
     // pthread_mutex_t car_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -39,8 +43,8 @@ void randsleep()
 void print_time(const char* msg, const char* subject, int pid)
 {
     // prints current time before the message
-    time_t time = time(NULL);
-    struct tm* tm = localtime(&time);
+    time_t t = time(NULL);
+    struct tm* tm = localtime(&t);
     printf("[Time: %02d:%02d:%02d] %s %d %s\n", tm->tm_hour, tm->tm_min, tm->tm_sec, subject, pid, msg);
 }
 
@@ -60,16 +64,16 @@ void *passenger_routine(void *arg)
 
     while (1) 
     {
-        for (int i = 0; i < num_cars; ++i) 
+        for (int i = 0; i < c; ++i) 
         {
             Car *car = &cars[i];
             if (car->passengers_needed > 0) 
             {
-                car->passenger_ids[car->boarded_count++] = pid;
+                car->pass_ids[car->boarded_count++] = pid;
                 car->passengers_needed--;
                 if (car->passengers_needed == 0) 
                 {
-                    pthread_cond_broadcast(&car->car_board);
+                    pthread_cond_broadcast(&car->car_ready);
                 }
                 pthread_mutex_unlock(&mutex);
                 print_time("boarded", subject, pid);
@@ -112,13 +116,13 @@ void *car_routine(void *arg)
         pthread_cond_broadcast(&passenger_ready);
 
         while (car->passengers_needed > 0) {
-            pthread_cond_wait(&car->car_board, &mutex);
+            pthread_cond_wait(&car->car_ready, &mutex);
         }
 
         print_time("starting ride", subject, cid);
         pthread_mutex_unlock(&mutex);
 
-        sleep(ride_time);
+        sleep(r);
 
         pthread_mutex_lock(&mutex);
         print_time("unloading", subject, cid);
@@ -179,8 +183,8 @@ int main(int argc, char* argv[])
     printf("- Car waiting period: %d seconds\n", w);
     printf("- Ride duration: %d seconds\n", r);
 
-    Car car_arr[c];
-    int queue = 0;
+    Car cars[c];
+    // int queue = 0;
     int nextcar = 0;
 
     // seed random sleep
@@ -190,32 +194,32 @@ int main(int argc, char* argv[])
 
 
     // create threads for passenger and car
-    for (int i = 0; i < num_cars; ++i) {
+    for (int i = 0; i < c; ++i) {
         cars[i].id = i + 1;
-        cars[i].passenger_ids = malloc(sizeof(int) * car_capacity);
+        cars[i].pass_ids = malloc(sizeof(int) * car_capacity);
         cars[i].boarded_count = 0;
         cars[i].passengers_needed = 0;
-        pthread_cond_init(&cars[i].car_board, NULL);
+        pthread_cond_init(&cars[i].car_ready, NULL);
         pthread_cond_init(&cars[i].ride_done, NULL);
     }
 
     pthread_t passenger_threads[n];
     pthread_t car_threads[c];
-    int passenger_ids[n];
+    int pass_ids[n];
     int car_ids[c];
 
-        for (int i = 0; i < num_cars; ++i) {
+        for (int i = 0; i < c; ++i) {
         car_ids[i] = i + 1;
         pthread_create(&car_threads[i], NULL, car_routine, &car_ids[i]);
     }
 
-        for (int i = 0; i < num_passengers; ++i) {
-        passenger_ids[i] = i + 1;
-        pthread_create(&passenger_threads[i], NULL, passenger_routine, &passenger_ids[i]);
+        for (int i = 0; i < n; ++i) {
+        pass_ids[i] = i + 1;
+        pthread_create(&passenger_threads[i], NULL, passenger_routine, &pass_ids[i]);
         usleep(100000); 
     }
 
-        for (int i = 0; i < num_passengers; ++i) {
+        for (int i = 0; i < n; ++i) {
         pthread_join(passenger_threads[i], NULL);
     }
 
