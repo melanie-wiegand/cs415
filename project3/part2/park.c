@@ -81,13 +81,19 @@ void *passenger_routine(void *arg)
                         pthread_cond_broadcast(&car->car_ready);
                     }
                     pthread_mutex_unlock(&mutex);
-                    print_time("boarded", subject, pid);
+
+                    char msg[100];
+                    snprintf(msg, sizeof(msg), "boarded Car %d", car->id);
+                    print_time(msg, subject, pid);
+                    
 
                     pthread_mutex_lock(&mutex);
                     pthread_cond_wait(&car->ride_done, &mutex);
                     pthread_mutex_unlock(&mutex);
 
-                    print_time("deboarded", subject, pid);
+                    char msg[100];
+                    snprintf(msg, sizeof(msg), "deboarded Car %d", car->id);
+                    print_time(msg, subject, pid);
                     goto end;
                 }
             }
