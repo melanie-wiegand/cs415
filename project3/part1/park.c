@@ -82,6 +82,14 @@ void *car_routine(void *arg)
         pthread_mutex_lock(&mutex);
     }
 
+    print_time("starting ride", subject, pid);
+    riding = 1;
+    pthread_mutex_unlock(&mutex);
+
+    // ride duration
+    sleep(5);
+
+    pthread_mutex_lock(&mutex);
     print_time("unloading", subject, pid);
     pthread_cond_signal(&ride_done);
     pthread_mutex_unlock(&mutex);    
