@@ -142,9 +142,12 @@ int main(int argc, char* argv[])
     pthread_t passenger;
     pthread_t car;
 
+    int pass_id = 1;
+    int car_id = 1;
+
     // create threads for passenger and car
-    pthread_create(&passenger, NULL, passenger_routine, NULL);
-    pthread_create(&car, NULL, car_routine, NULL);
+    pthread_create(&passenger, NULL, passenger_routine, &pass_id);
+    pthread_create(&car, NULL, car_routine, &car_id);
 
     pthread_join(passenger, NULL);
     pthread_join(car, NULL);
