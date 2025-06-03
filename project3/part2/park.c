@@ -21,18 +21,21 @@ int r = 5;
 // initialize queue counter
 int queue = 0;
 
+
+
 // car struct
 typedef struct
 {
     int id;
     int boarded_count;
     int *pass_ids;
-    int passengers_needed
+    int passengers_needed;
     pthread_cond_t car_ready;
     pthread_cond_t ride_done;
     // pthread_mutex_t car_mutex = PTHREAD_MUTEX_INITIALIZER;
 } Car;
 
+Car cars[20];
 
 void randsleep()
 {
@@ -183,7 +186,7 @@ int main(int argc, char* argv[])
     printf("- Car waiting period: %d seconds\n", w);
     printf("- Ride duration: %d seconds\n", r);
 
-    Car cars[c];
+    // Car cars[c];
     // int queue = 0;
     int nextcar = 0;
 
