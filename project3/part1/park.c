@@ -22,8 +22,8 @@ void randsleep()
 void print_time(const char* msg, char* subject, int pid)
 {
     // prints current time before the message
-    time_t time = time(NULL);
-    struct tm* tm = localtime(&time);
+    time_t t = time(NULL);
+    struct tm* tm = localtime(&t);
     printf("[Time: %02d:%02d:%02d] %s %d %s\n", tm->tm_hour, tm->tm_min, tm->tm_sec, subject, pid, msg);
 }
 
@@ -33,7 +33,7 @@ void *passenger_routine(void *arg)
 
     char *subject = "Passenger";
 
-    print_time("entered the park", pid);
+    print_time("entered the park", subject, pid);
 
     // random wait
     randsleep();
