@@ -17,6 +17,8 @@ int queue = 0;
 int boarded = 0;
 int riding = 0;
 
+
+
 void randsleep()
 {
     int sleeptime = rand() % 5;
