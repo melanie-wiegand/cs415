@@ -81,13 +81,12 @@ void *passenger_routine(void *arg)
                 pthread_mutex_unlock(&mutex);
                 print_time("boarded", subject, pid);
 
-                // Wait for ride to finish
                 pthread_mutex_lock(&mutex);
                 pthread_cond_wait(&car->ride_done, &mutex);
                 pthread_mutex_unlock(&mutex);
 
                 print_time("deboarded", subject, pid);
-                return NULL;
+                break;
             }
         }
         pthread_cond_wait(&passenger_ready, &mutex);
@@ -102,7 +101,7 @@ void *car_routine(void *arg)
 
     while (1) {
         pthread_mutex_lock(&mutex);
-        print_time("waiting for passengers", subject, cid);
+        // print_time("waiting for passengers", subject, cid);
 
         int wait_counter = 0;
         while (queue < p && wait_counter < w) {
