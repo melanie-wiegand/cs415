@@ -122,6 +122,8 @@ int main(int argc, char* argv[]) {
     pthread_t passengers[MAX_PASSENGERS];
     pthread_t car;
 
+    printf("===== DUCK PARK SIMULATION =====");
+    
     pthread_create(&car, NULL, car_thread, NULL);
 
     for (int i = 0; i < n_passengers; i++) {
