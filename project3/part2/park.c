@@ -6,7 +6,7 @@
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 // pthread_cond_t car_ready = PTHREAD_COND_INITIALIZER;
-pthread_cond_t ride_done = PTHREAD_COND_INITIALIZER;
+pthread_cond_t passenger_ready = PTHREAD_COND_INITIALIZER;
 
 int boarded = 0;
 int riding = 0;
