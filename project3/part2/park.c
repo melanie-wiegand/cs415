@@ -102,14 +102,14 @@ void *car_routine(void *arg)
         print_time("waiting for passengers", subject, cid);
 
         int wait_counter = 0;
-        while (queue < car_capacity && wait_counter < car_wait_time) {
+        while (queue < p && wait_counter < w) {
             pthread_mutex_unlock(&mutex);
             sleep(1);
             wait_counter++;
             pthread_mutex_lock(&mutex);
         }
 
-        int boarding = (queue < car_capacity) ? queue : car_capacity;
+        int boarding = (queue < p) ? queue : p;
         car->passengers_needed = boarding;
         car->boarded_count = 0;
         queue -= boarding;
@@ -196,7 +196,7 @@ int main(int argc, char* argv[])
     // create threads for passenger and car
     for (int i = 0; i < c; ++i) {
         cars[i].id = i + 1;
-        cars[i].pass_ids = malloc(sizeof(int) * car_capacity);
+        cars[i].pass_ids = malloc(sizeof(int) * p);
         cars[i].boarded_count = 0;
         cars[i].passengers_needed = 0;
         pthread_cond_init(&cars[i].car_ready, NULL);
