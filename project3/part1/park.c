@@ -10,6 +10,8 @@ pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t car_ready = PTHREAD_COND_INITIALIZER;
 pthread_cond_t ride_done = PTHREAD_COND_INITIALIZER;
 
+int queue = 0;
+
 int boarded = 0;
 int riding = 0;
 
@@ -43,6 +45,8 @@ void *passenger_routine(void *arg)
     print_time("acquired a ticket", subject, pid);
 
     print_time("joined the ride queue", subject, pid);
+    queue++;
+    pthread_cond_signal(&passenger_ready);
     pthread_cond_wait(&car_ready, &mutex);
     print_time("boarded", subject, pid);
     boarded = 1;
@@ -61,7 +65,10 @@ void *car_routine(void *arg)
 
     print_time("waiting for passengers", subject, pid);
     // waiting
-    sleep(5);
+    while (queue == 0)
+    {
+        pthread_cond_wait(&passenger_ready, &mutex);
+    }
 
     print_time("boarding", subject, pid);
     pthread_cond_signal(&car_ready);
