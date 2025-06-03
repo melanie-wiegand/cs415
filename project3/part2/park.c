@@ -56,40 +56,47 @@ void *passenger_routine(void *arg)
     int pid = *(int*)arg;
     char *subject = "Passenger";
 
-    print_time("entered the park", subject, pid);
-    randsleep();
-    print_time("finished exploring, heading to ticket booth", subject, pid);
-    print_time("acquired a ticket", subject, pid);
-
-    pthread_mutex_lock(&mutex);
-    print_time("joined the ride queue", subject, pid);
-    queue++;
-
-    while (1) 
+    while (1)
     {
-        for (int i = 0; i < c; ++i) 
+        print_time("entered the park", subject, pid);
+        randsleep();
+        print_time("finished exploring, heading to ticket booth", subject, pid);
+        print_time("acquired a ticket", subject, pid);
+
+        pthread_mutex_lock(&mutex);
+        print_time("joined the ride queue", subject, pid);
+        queue++;
+
+        while (1) 
         {
-            Car *car = &cars[i];
-            if (car->passengers_needed > 0) 
+            for (int i = 0; i < c; ++i) 
             {
-                car->pass_ids[car->boarded_count++] = pid;
-                car->passengers_needed--;
-                if (car->passengers_needed == 0) 
+                Car *car = &cars[i];
+                if (car->passengers_needed > 0) 
                 {
-                    pthread_cond_broadcast(&car->car_ready);
+                    car->pass_ids[car->boarded_count++] = pid;
+                    car->passengers_needed--;
+                    if (car->passengers_needed == 0) 
+                    {
+                        pthread_cond_broadcast(&car->car_ready);
+                    }
+                    pthread_mutex_unlock(&mutex);
+                    print_time("boarded", subject, pid);
+
+                    pthread_mutex_lock(&mutex);
+                    pthread_cond_wait(&car->ride_done, &mutex);
+                    pthread_mutex_unlock(&mutex);
+
+                    print_time("deboarded", subject, pid);
+                    goto end;
                 }
-                pthread_mutex_unlock(&mutex);
-                print_time("boarded", subject, pid);
-
-                pthread_mutex_lock(&mutex);
-                pthread_cond_wait(&car->ride_done, &mutex);
-                pthread_mutex_unlock(&mutex);
-
-                print_time("deboarded", subject, pid);
-                break;
             }
+            pthread_cond_wait(&passenger_ready, &mutex);
         }
-        pthread_cond_wait(&passenger_ready, &mutex);
+    
+        end:
+            continue;
+
     }
 }
 
@@ -221,9 +228,9 @@ int main(int argc, char* argv[])
         usleep(100000); 
     }
 
-        for (int i = 0; i < n; ++i) {
-        pthread_join(passenger_threads[i], NULL);
-    }
+    //     for (int i = 0; i < n; ++i) {
+    //     pthread_join(passenger_threads[i], NULL);
+    // }
 
     return 0;
 }
