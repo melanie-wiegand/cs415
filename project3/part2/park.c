@@ -158,39 +158,45 @@ void *passenger_routine(void *arg)
                 Car *car = &cars[i];
                 if (car->passengers_needed > 0) 
                 {
-                    if (ride_queue[j] == pid) {
-                    // Remove from queue (shift the rest)
-                    for (int k = j; k < ride_rear - 1; ++k) {
-                        ride_queue[k] = ride_queue[k + 1];
+                    for (int j = ride_front; j < ride_rear; ++j)
+                    {
+                        if (ride_queue[j] == pid)
+                        {
+                            
+                            for (int k = j; k < ride_rear - 1; ++k)
+                            {
+                                ride_queue[k] = ride_queue[k + 1];
+                            }
+                            ride_rear--;
+                            // board
+                            car->pass_ids[car->boarded_count++] = pid;
+                            car->passengers_needed--;
+                            
+                            pthread_cond_broadcast(&passenger_ready);
+
+                            // if (car->passengers_needed == 0) 
+                            // {
+                            //     pthread_cond_signal(&car->car_ready);
+                            // }
+                            pthread_mutex_unlock(&mutex);
+
+                            char b_msg[100];
+                            snprintf(b_msg, sizeof(b_msg), "boarded Car %d", car->id);
+                            print_time(b_msg, subject, pid);
+                            
+                            // wait for ride end
+                            pthread_mutex_lock(&mutex);
+                            pthread_cond_wait(&car->ride_done, &mutex);
+                            pthread_mutex_unlock(&mutex);
+
+                            char db_msg[100];
+                            snprintf(db_msg, sizeof(db_msg), "deboarded Car %d", car->id);
+                            print_time(db_msg, subject, pid);
+                            
+                            boarded = 1;
+                            break;
+                        }
                     }
-                    ride_rear--;
-                    // board
-                    car->pass_ids[car->boarded_count++] = pid;
-                    car->passengers_needed--;
-                    
-                    pthread_cond_broadcast(&passenger_ready);
-
-                    // if (car->passengers_needed == 0) 
-                    // {
-                    //     pthread_cond_signal(&car->car_ready);
-                    // }
-                    pthread_mutex_unlock(&mutex);
-
-                    char b_msg[100];
-                    snprintf(b_msg, sizeof(b_msg), "boarded Car %d", car->id);
-                    print_time(b_msg, subject, pid);
-                    
-                    // wait for ride end
-                    pthread_mutex_lock(&mutex);
-                    pthread_cond_wait(&car->ride_done, &mutex);
-                    pthread_mutex_unlock(&mutex);
-
-                    char db_msg[100];
-                    snprintf(db_msg, sizeof(db_msg), "deboarded Car %d", car->id);
-                    print_time(db_msg, subject, pid);
-                    
-                    boarded = 1;
-                    break;
                 }
             }
 
