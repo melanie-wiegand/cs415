@@ -10,3 +10,18 @@
 # queue implementation is like a semaphore
 
 # how long should car wait to fill up before going (not full)?
+
+EXEC = park
+CC = gcc
+CFLAGS = -g
+
+all: $(EXEC)
+
+park: park.o 
+	$(CC) $(CFLAGS) -o $@ $^
+
+park.o: park.c
+	$(CC) $(CFLAGS) -c park.c
+
+clean:
+	rm -f *.o $(EXEC)
