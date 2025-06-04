@@ -257,15 +257,15 @@ void *car_routine(void *arg)
 
         pthread_cond_broadcast(&passenger_ready);
 
-        while (car->passengers_needed == boarding && !time_up)
+        while (car->boarded_count == 0 && !time_up)
         {
             pthread_cond_wait(&passenger_ready, &mutex);
         }
 
-        if (time_up) {
-            pthread_mutex_unlock(&mutex);
-            break;
-        }
+        // if (time_up) {
+        //     pthread_mutex_unlock(&mutex);
+        //     break;
+        // }
 
         int wait_counter = 0;
         while (car->passengers_needed > 0 && wait_counter < w && !time_up) 
