@@ -105,6 +105,7 @@ void *passenger_routine(void *arg)
         print_time("joined the ride queue", subject, pid);
         queue++;
 
+        usleep(50000); 
         pthread_cond_broadcast(&passenger_ready);
         pthread_mutex_unlock(&mutex);
 
