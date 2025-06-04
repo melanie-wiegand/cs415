@@ -158,21 +158,25 @@ void *passenger_routine(void *arg)
                 Car *car = &cars[i];
                 if (car->passengers_needed > 0 && ride_queue[ride_front] == pid) 
                 {
-                    car->pass_ids[car->boarded_count++] = pid;
-                    car->passengers_needed--;
                     // only first in queue can ride
                     dequeue(ride_queue, &ride_front, ride_rear);
-                    if (car->passengers_needed == 0) 
-                    {
-                        pthread_cond_signal(&car->car_ready);
-                    }
+                    // board
+                    car->pass_ids[car->boarded_count++] = pid;
+                    car->passengers_needed--;
+                    
+                    pthread_cond_broadcast(&passenger_ready);
+
+                    // if (car->passengers_needed == 0) 
+                    // {
+                    //     pthread_cond_signal(&car->car_ready);
+                    // }
                     pthread_mutex_unlock(&mutex);
 
                     char b_msg[100];
                     snprintf(b_msg, sizeof(b_msg), "boarded Car %d", car->id);
                     print_time(b_msg, subject, pid);
                     
-
+                    // wait for ride end
                     pthread_mutex_lock(&mutex);
                     pthread_cond_wait(&car->ride_done, &mutex);
                     pthread_mutex_unlock(&mutex);
