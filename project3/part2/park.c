@@ -11,6 +11,15 @@ pthread_cond_t passenger_ready = PTHREAD_COND_INITIALIZER;
 int boarded = 0;
 int riding = 0;
 
+volatile int time_up = 0;
+
+void* timer_routine(void* arg) {
+    sleep(300);  // 5 minutes
+    time_up = 1;
+    printf("[Monitor] Simulation time ended.\n");
+    return NULL;
+}
+
 // default values for parameters
 int n = 10;
 int c = 2;
@@ -56,7 +65,7 @@ void *passenger_routine(void *arg)
     int pid = *(int*)arg;
     char *subject = "Passenger";
 
-    while (1)
+    while (!time_up)
     {
         print_time("entered the park", subject, pid);
         randsleep();
@@ -67,7 +76,7 @@ void *passenger_routine(void *arg)
         print_time("joined the ride queue", subject, pid);
         queue++;
 
-        while (1) 
+        while (!time_up) 
         {
             for (int i = 0; i < c; ++i) 
             {
@@ -97,7 +106,10 @@ void *passenger_routine(void *arg)
                     goto end;
                 }
             }
-            pthread_cond_wait(&passenger_ready, &mutex);
+            // pthread_cond_wait(&passenger_ready, &mutex);
+            print_time("rejoining ride queue", subject, pid);
+            queue++;
+            pthread_cond_broadcast(&passenger_ready);
         }
     
         end:
@@ -207,6 +219,8 @@ int main(int argc, char* argv[])
     pthread_t passenger;
     pthread_t car;
 
+    pthread_t timer;
+    pthread_create(&timer, NULL, timer_routine, NULL);
 
     // create threads for passenger and car
     for (int i = 0; i < c; ++i) {
