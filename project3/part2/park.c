@@ -199,6 +199,7 @@ void *car_routine(void *arg)
 
         int boarding = (queue < p) ? queue : p;
 
+        usleep(50000);
         print_time("invoked load()", subject, cid + 1);
         car->passengers_needed = boarding;
         car->boarded_count = 0;
