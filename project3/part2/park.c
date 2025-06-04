@@ -78,6 +78,8 @@ void *passenger_routine(void *arg)
 
         while (!time_up) 
         {
+            int boarded_bool = 0;
+
             for (int i = 0; i < c; ++i) 
             {
                 Car *car = &cars[i];
@@ -103,13 +105,21 @@ void *passenger_routine(void *arg)
                     char db_msg[100];
                     snprintf(db_msg, sizeof(db_msg), "deboarded Car %d", car->id);
                     print_time(db_msg, subject, pid);
-                    goto end;
+                    
+                    boarded_bool = 1;
+                    break;
                 }
             }
-            // pthread_cond_wait(&passenger_ready, &mutex);
-            print_time("rejoining ride queue", subject, pid);
-            queue++;
-            pthread_cond_broadcast(&passenger_ready);
+
+            if (boarded_bool)
+            {
+                break;
+            }
+            
+            pthread_cond_wait(&passenger_ready, &mutex);
+            // print_time("rejoining ride queue", subject, pid);
+            // queue++;
+            // pthread_cond_broadcast(&passenger_ready);
         }
     
         end:
