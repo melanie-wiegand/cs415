@@ -93,7 +93,7 @@ void *passenger_routine(void *arg)
     {
         print_time("entered the park", subject, pid);
         randsleep();
-        print_time("is exploring the park", subject, pid);
+        print_time("is exploring the park...", subject, pid);
         randsleep();
         print_time("finished exploring, heading to ticket booth", subject, pid);
 
@@ -169,7 +169,7 @@ void *car_routine(void *arg)
     Car *car = &cars[cid];
     char *subject = "Car";
 
-    while (1) {
+    while (!time_up) {
 
         pthread_mutex_lock(&car_order_mutex);
         while (current_car_turn != cid) {
