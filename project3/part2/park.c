@@ -32,7 +32,7 @@ pthread_cond_t car_turn_cond = PTHREAD_COND_INITIALIZER;
 
 //indexing
 int current_car_turn = 0; 
-int total_cars = n;
+int total_cars = 10;
 
 // car struct
 typedef struct
