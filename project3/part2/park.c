@@ -167,7 +167,7 @@ void *car_routine(void *arg)
         int boarding = (queue < p) ? queue : p;
         car->passengers_needed = boarding;
         car->boarded_count = 0;
-        queue -= boarding;
+        // queue -= boarding;
 
         pthread_cond_broadcast(&passenger_ready);
 
@@ -280,9 +280,9 @@ int main(int argc, char* argv[])
         usleep(100000); 
     }
 
-    //     for (int i = 0; i < n; ++i) {
-    //     pthread_join(passenger_threads[i], NULL);
-    // }
+        for (int i = 0; i < n; ++i) {
+        pthread_join(passenger_threads[i], NULL);
+    }
 
     return 0;
 }
