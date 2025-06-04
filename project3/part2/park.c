@@ -156,10 +156,14 @@ void *passenger_routine(void *arg)
             for (int i = 0; i < c; ++i) 
             {
                 Car *car = &cars[i];
-                if (car->passengers_needed > 0 && ride_queue[ride_front] == pid) 
+                if (car->passengers_needed > 0) 
                 {
-                    // only first in queue can ride
-                    dequeue(ride_queue, &ride_front, ride_rear);
+                    if (ride_queue[j] == pid) {
+                    // Remove from queue (shift the rest)
+                    for (int k = j; k < ride_rear - 1; ++k) {
+                        ride_queue[k] = ride_queue[k + 1];
+                    }
+                    ride_rear--;
                     // board
                     car->pass_ids[car->boarded_count++] = pid;
                     car->passengers_needed--;
