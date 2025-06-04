@@ -8,6 +8,8 @@ pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 // pthread_cond_t car_ready = PTHREAD_COND_INITIALIZER;
 pthread_cond_t passenger_ready = PTHREAD_COND_INITIALIZER;
 
+
+
 int boarded = 0;
 int riding = 0;
 
@@ -24,7 +26,13 @@ int r = 5;
 // initialize queue counter
 int queue = 0;
 
+// car ordering
+pthread_mutex_t car_order_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t car_turn_cond = PTHREAD_COND_INITIALIZER;
 
+//indexing
+int current_car_turn = 0; 
+int total_cars = n;
 
 // car struct
 typedef struct
@@ -153,6 +161,13 @@ void *car_routine(void *arg)
     char *subject = "Car";
 
     while (1) {
+
+        pthread_mutex_lock(&car_order_mutex);
+        while (current_car_turn != cid) {
+            pthread_cond_wait(&car_turn_cond, &car_order_mutex);
+        }
+        pthread_mutex_unlock(&car_order_mutex);
+
         pthread_mutex_lock(&mutex);
         // print_time("waiting for passengers", subject, cid);
 
@@ -171,23 +186,30 @@ void *car_routine(void *arg)
 
         pthread_cond_broadcast(&passenger_ready);
 
-        while (car->passengers_needed > 0) {
+        while (car->passengers_needed > 0 && !time_up) {
             pthread_cond_wait(&car->car_ready, &mutex);
         }
 
-        print_time("starting ride", subject, cid);
+        print_time("starting ride", subject, cid + 1);
         pthread_mutex_unlock(&mutex);
 
         sleep(r);
 
         pthread_mutex_lock(&mutex);
-        print_time("unloading", subject, cid);
+        print_time("unloading", subject, cid + 1);
         pthread_cond_broadcast(&car->ride_done);
 
-        pthread_cond_broadcast(&passenger_ready);
+        // pthread_cond_broadcast(&passenger_ready);
 
         pthread_mutex_unlock(&mutex);
+
+        pthread_mutex_lock(&car_order_mutex);
+        current_car_turn = (current_car_turn + 1) % c;
+        pthread_cond_broadcast(&car_turn_cond);
+        pthread_mutex_unlock(&car_order_mutex);
     }
+
+    return NULL;
 }
 
 
@@ -270,7 +292,7 @@ int main(int argc, char* argv[])
     int car_ids[c];
 
         for (int i = 0; i < c; ++i) {
-        car_ids[i] = i + 1;
+        car_ids[i] = i;
         pthread_create(&car_threads[i], NULL, car_routine, &car_ids[i]);
     }
 
