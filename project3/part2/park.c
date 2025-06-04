@@ -13,21 +13,6 @@ int riding = 0;
 
 volatile int time_up = 0;
 
-void* timer_routine(void* arg) {
-    sleep(30);  
-    time_up = 1;
-    printf("[Monitor] Simulation time ended.\n");
-
-    pthread_mutex_lock(&mutex);
-    pthread_cond_broadcast(&passenger_ready);
-    for (int i = 0; i < c; ++i)
-    {
-        pthread_cond_broadcast(&cars[i].ride_done);
-    }
-    pthread_mutex_unlock(&mutex);
-
-    return NULL;
-}
 
 // default values for parameters
 int n = 10;
@@ -54,6 +39,24 @@ typedef struct
 } Car;
 
 Car cars[20];
+
+// timer
+void* timer_routine(void* arg) {
+    sleep(30);  
+    time_up = 1;
+    printf("[Monitor] Simulation time ended.\n");
+
+    pthread_mutex_lock(&mutex);
+    pthread_cond_broadcast(&passenger_ready);
+    for (int i = 0; i < c; ++i)
+    {
+        pthread_cond_broadcast(&cars[i].ride_done);
+    }
+    pthread_mutex_unlock(&mutex);
+
+    return NULL;
+}
+
 
 void randsleep()
 {
