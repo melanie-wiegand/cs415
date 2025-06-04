@@ -14,7 +14,7 @@ int riding = 0;
 volatile int time_up = 0;
 
 void* timer_routine(void* arg) {
-    sleep(300);  // 5 minutes
+    sleep(30);  
     time_up = 1;
     printf("[Monitor] Simulation time ended.\n");
     return NULL;
