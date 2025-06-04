@@ -129,7 +129,7 @@ void *passenger_routine(void *arg)
                 }
             }
 
-            if (!boarded)
+            if (!boarded && !time_up)
             {
                 pthread_cond_wait(&passenger_ready, &mutex);
             }
