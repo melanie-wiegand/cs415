@@ -310,7 +310,7 @@ int main(int argc, char* argv[])
     {
         pass_ids[i] = i + 1;
         pthread_create(&passenger_threads[i], NULL, passenger_routine, &pass_ids[i]);
-        sleep(1000000); 
+        usleep(1000000); 
     }
 
     for (int i = 0; i < n; ++i) 
