@@ -230,7 +230,7 @@ void *car_routine(void *arg)
         //     pthread_mutex_lock(&mutex);
         // }
 
-        // waits for at least one pasenger to be in queue
+        // waits for at least one passenger to be in queue
         while ((ride_rear - ride_front) == 0 && !time_up) {
             pthread_cond_wait(&passenger_ready, &mutex);
         }
@@ -256,6 +256,16 @@ void *car_routine(void *arg)
         // queue -= boarding;
 
         pthread_cond_broadcast(&passenger_ready);
+
+        while (car->passengers_needed == boarding && !time_up)
+        {
+            pthread_cond_wait(&passenger_ready, &mutex);
+        }
+
+        if (time_up) {
+            pthread_mutex_unlock(&mutex);
+            break;
+        }
 
         int wait_counter = 0;
         while (car->passengers_needed > 0 && wait_counter < w && !time_up) 
