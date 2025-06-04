@@ -96,10 +96,10 @@ void *passenger_routine(void *arg)
         print_time("is exploring the park", subject, pid);
         randsleep();
         print_time("finished exploring, heading to ticket booth", subject, pid);
-        
+
         pthread_mutex_lock(&ticket_mutex);
         print_time("acquired a ticket", subject, pid);
-        pthread_mutex_unlock(&ticket_mutex)
+        pthread_mutex_unlock(&ticket_mutex);
 
         pthread_mutex_lock(&mutex); 
         print_time("joined the ride queue", subject, pid);
