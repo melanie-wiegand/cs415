@@ -212,7 +212,7 @@ void *car_routine(void *arg)
     while (!time_up) {
 
         pthread_mutex_lock(&car_order_mutex);
-        while (current_car_turn != cid) 
+        while (current_car != cid) 
         {
             pthread_cond_wait(&car_turn_cond, &car_order_mutex);
         }
@@ -265,7 +265,7 @@ void *car_routine(void *arg)
         pthread_mutex_unlock(&mutex);
 
         pthread_mutex_lock(&car_order_mutex);
-        current_car_turn = (current_car_turn + 1) % c;
+        current_car = (current_car + 1) % c;
         pthread_cond_broadcast(&car_turn_cond);
         pthread_mutex_unlock(&car_order_mutex);
     }
