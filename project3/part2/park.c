@@ -91,6 +91,7 @@ void *passenger_routine(void *arg)
                     {
                         pthread_cond_broadcast(&car->car_ready);
                     }
+                    queue--;
                     pthread_mutex_unlock(&mutex);
 
                     char b_msg[100];
@@ -115,16 +116,14 @@ void *passenger_routine(void *arg)
             {
                 break;
             }
-            
+
             pthread_cond_wait(&passenger_ready, &mutex);
             // print_time("rejoining ride queue", subject, pid);
             // queue++;
             // pthread_cond_broadcast(&passenger_ready);
         }
     
-        end:
-            continue;
-
+        return NULL;
     }
 }
 
