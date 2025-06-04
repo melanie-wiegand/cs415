@@ -280,10 +280,10 @@ void *car_routine(void *arg)
             pthread_mutex_lock(&mutex);   
 
             // car full
-            if (car->passengers_needed == 0)
-            {
-                break; 
-            }
+            // if (car->passengers_needed == 0)
+            // {
+            //     break; 
+            // }
         }
 
         print_time("starting ride", subject, cid + 1);
