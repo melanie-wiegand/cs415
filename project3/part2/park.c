@@ -32,7 +32,7 @@ pthread_cond_t car_turn_cond = PTHREAD_COND_INITIALIZER;
 
 //indexing
 int current_car_turn = 0; 
-int total_cars = 10;
+int total_cars = 3;
 
 // car struct
 typedef struct
@@ -88,6 +88,8 @@ void *passenger_routine(void *arg)
     while (!time_up)
     {
         print_time("entered the park", subject, pid);
+        randsleep();
+        print_time("is exploring the park", subject, pid);
         randsleep();
         print_time("finished exploring, heading to ticket booth", subject, pid);
         print_time("acquired a ticket", subject, pid);
@@ -262,7 +264,7 @@ int main(int argc, char* argv[])
     printf("- Capacity per car: %d\n", p);
     printf("- Park exploration time: 0-5 seconds\n");
     printf("- Car waiting period: %d seconds\n", w);
-    printf("- Ride duration: %d seconds\n", r);
+    printf("- Ride duration: %d seconds\n\n", r);
 
     // Car cars[c];
     // int queue = 0;
