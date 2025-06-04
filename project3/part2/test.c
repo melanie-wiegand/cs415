@@ -138,6 +138,8 @@ void *car_routine(void *arg) {
             pthread_mutex_lock(&mutex);
         }
 
+        print_time("invoked load()", "Car", cid + 1);
+
         int to_board = (queue_size() < p) ? queue_size() : p;
         car->boarded_count = 0;
 
