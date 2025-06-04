@@ -284,16 +284,17 @@ void *car_routine(void *arg)
         int wait_counter = 0;
         while (wait_counter < w && !time_up) 
         {
+            pthread_cond_broadcast(&passenger_ready);
             pthread_mutex_unlock(&mutex);
             sleep(1);
             wait_counter++;
             pthread_mutex_lock(&mutex);   
 
             // car full
-            // if (car->passengers_needed == 0)
-            // {
-            //     break; 
-            // }
+            if (car->passengers_needed == 0)
+            {
+                break; 
+            }
         }
 
         print_time("starting ride", subject, cid + 1);
