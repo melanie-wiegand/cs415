@@ -17,6 +17,15 @@ void* timer_routine(void* arg) {
     sleep(30);  
     time_up = 1;
     printf("[Monitor] Simulation time ended.\n");
+
+    pthread_mutex_lock(&mutex);
+    pthread_cond_broadcast(&passenger_ready);
+    for (int i = 0; i < c; ++i)
+    {
+        pthread_cond_broadcast(&cars[i].ride_done);
+    }
+    pthread_mutex_unlock(&mutex);
+
     return NULL;
 }
 
@@ -76,9 +85,14 @@ void *passenger_routine(void *arg)
         print_time("joined the ride queue", subject, pid);
         queue++;
 
-        while (!time_up) 
+        pthread_cond_broadcast(&passenger_ready);
+        pthread_mutex_unlock(&mutex);
+
+        int boarded = 0;
+
+        while (!boarded && !time_up) 
         {
-            int boarded_bool = 0;
+           pthread_mutex_lock(&mutex);
 
             for (int i = 0; i < c; ++i) 
             {
@@ -107,23 +121,22 @@ void *passenger_routine(void *arg)
                     snprintf(db_msg, sizeof(db_msg), "deboarded Car %d", car->id);
                     print_time(db_msg, subject, pid);
                     
-                    boarded_bool = 1;
+                    boarded = 1;
                     break;
                 }
             }
 
-            if (boarded_bool)
+            if (!boarded)
             {
-                pthread_mutex_unlock(&mutex);
-
-                randsleep();
-                continue;
+                pthread_cond_wait(&passenger_ready, &mutex);
             }
 
-            pthread_cond_wait(&passenger_ready, &mutex);
-            // print_time("rejoining ride queue", subject, pid);
-            // queue++;
-            // pthread_cond_broadcast(&passenger_ready);
+            pthread_mutex_unlock(&mutex);
+        }
+
+        if (!time_up)
+        {
+            randsleep();
         }
     
     }
@@ -167,6 +180,9 @@ void *car_routine(void *arg)
         pthread_mutex_lock(&mutex);
         print_time("unloading", subject, cid);
         pthread_cond_broadcast(&car->ride_done);
+
+        pthread_cond_broadcast(&passenger_ready);
+
         pthread_mutex_unlock(&mutex);
     }
 }
