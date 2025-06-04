@@ -30,6 +30,10 @@ int queue = 0;
 pthread_mutex_t car_order_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t car_turn_cond = PTHREAD_COND_INITIALIZER;
 
+// ticket ordering
+pthread_mutex_t ticket_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+
 //indexing
 int current_car_turn = 0; 
 int total_cars = 3;
@@ -92,9 +96,12 @@ void *passenger_routine(void *arg)
         print_time("is exploring the park", subject, pid);
         randsleep();
         print_time("finished exploring, heading to ticket booth", subject, pid);
+        
+        pthread_mutex_lock(&ticket_mutex);
         print_time("acquired a ticket", subject, pid);
+        pthread_mutex_unlock(&ticket_mutex)
 
-        pthread_mutex_lock(&mutex);
+        pthread_mutex_lock(&mutex); 
         print_time("joined the ride queue", subject, pid);
         queue++;
 
@@ -293,18 +300,21 @@ int main(int argc, char* argv[])
     int pass_ids[n];
     int car_ids[c];
 
-        for (int i = 0; i < c; ++i) {
+    for (int i = 0; i < c; ++i) 
+    {
         car_ids[i] = i;
         pthread_create(&car_threads[i], NULL, car_routine, &car_ids[i]);
     }
 
-        for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i) 
+    {
         pass_ids[i] = i + 1;
         pthread_create(&passenger_threads[i], NULL, passenger_routine, &pass_ids[i]);
-        usleep(100000); 
+        sleep(1000000); 
     }
 
-        for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i) 
+    {
         pthread_join(passenger_threads[i], NULL);
     }
 
