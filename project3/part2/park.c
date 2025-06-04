@@ -221,13 +221,18 @@ void *car_routine(void *arg)
         pthread_mutex_lock(&mutex);
         // print_time("waiting for passengers", subject, cid);
 
-        int wait_counter = 0;
-        while ((ride_rear - ride_front) == 0 && wait_counter < w && !time_up) 
-        {
-            pthread_mutex_unlock(&mutex);
-            sleep(1);
-            wait_counter++;
-            pthread_mutex_lock(&mutex);
+        // int wait_counter = 0;
+        // while ((ride_rear - ride_front) == 0 && wait_counter < w && !time_up) 
+        // {
+        //     pthread_mutex_unlock(&mutex);
+        //     sleep(1);
+        //     wait_counter++;
+        //     pthread_mutex_lock(&mutex);
+        // }
+
+        // waits for at least one pasenger to be in queue
+        while ((ride_rear - ride_front) == 0 && !time_up) {
+            pthread_cond_wait(&passenger_ready, &mutex);
         }
 
         if (time_up) 
@@ -237,14 +242,14 @@ void *car_routine(void *arg)
         }
 
         int boarding = ((ride_rear - ride_front) < p) ? (ride_rear - ride_front) : p;
-        if (boarding == 0)
-        {
-            pthread_mutex_unlock(&mutex);
-            sleep(1);
-            continue;
-        }
+        // if (boarding == 0)
+        // {
+        //     pthread_mutex_unlock(&mutex);
+        //     sleep(1);
+        //     continue;
+        // }
 
-        usleep(50000);
+        // usleep(50000);
         print_time("invoked load()", subject, cid + 1);
         car->passengers_needed = boarding;
         car->boarded_count = 0;
@@ -252,9 +257,13 @@ void *car_routine(void *arg)
 
         pthread_cond_broadcast(&passenger_ready);
 
-        while (car->passengers_needed > 0 && !time_up) 
+        int wait_counter = 0;
+        while (car->passengers_needed > 0 && wait_counter < w && !time_up) 
         {
-            pthread_cond_wait(&car->car_ready, &mutex);
+            pthread_mutex_unlock(&mutex);
+            sleep(1);
+            pthread_mutex_lock(&mutex);
+            wait_counter++;
         }
 
         print_time("starting ride", subject, cid + 1);
