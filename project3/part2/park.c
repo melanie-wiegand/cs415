@@ -114,7 +114,10 @@ void *passenger_routine(void *arg)
 
             if (boarded_bool)
             {
-                break;
+                pthread_mutex_unlock(&mutex);
+
+                randsleep();
+                continue;
             }
 
             pthread_cond_wait(&passenger_ready, &mutex);
@@ -123,8 +126,8 @@ void *passenger_routine(void *arg)
             // pthread_cond_broadcast(&passenger_ready);
         }
     
-        return NULL;
     }
+    return NULL;
 }
 
 void *car_routine(void *arg)
@@ -149,6 +152,7 @@ void *car_routine(void *arg)
         car->passengers_needed = boarding;
         car->boarded_count = 0;
         queue -= boarding;
+
         pthread_cond_broadcast(&passenger_ready);
 
         while (car->passengers_needed > 0) {
