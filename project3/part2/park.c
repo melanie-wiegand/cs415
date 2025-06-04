@@ -237,6 +237,12 @@ void *car_routine(void *arg)
         }
 
         int boarding = ((ride_rear - ride_front) < p) ? (ride_rear - ride_front) : p;
+        if (boarding == 0)
+        {
+            pthread_mutex_unlock(&mutex);
+            sleep(1);
+            continue;
+        }
 
         usleep(50000);
         print_time("invoked load()", subject, cid + 1);
