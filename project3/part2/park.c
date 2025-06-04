@@ -60,7 +60,7 @@ void* timer_routine(void* arg) {
 
 void randsleep()
 {
-    int sleeptime = rand() % 5;
+    int sleeptime = (rand() % 4) + 2;
     sleep(sleeptime);
 }
 
