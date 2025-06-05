@@ -20,6 +20,8 @@ int riding = 0;
 
 volatile int time_up = 0;
 
+time_t start_time;
+
 
 // default values for parameters
 int n = 10;
@@ -113,8 +115,13 @@ void print_time(const char* msg, const char* subject, int pid)
     }
     // prints current time before the message
     time_t t = time(NULL);
-    struct tm* tm = localtime(&t);
-    printf("[Time: %02d:%02d:%02d] %s %d %s\n", tm->tm_hour, tm->tm_min, tm->tm_sec, subject, pid, msg);
+    int total_time = (int)difftime(t, start_time);
+    
+    int h = total_time / 3600;
+    int m = (total_time % 3600) / 60;
+    int s = total_time % 60;
+
+    printf("[Time: %02d:%02d:%02d] %s %d %s\n", h, m, s, subject, pid, msg);
 }
 
 void *passenger_routine(void *arg)
@@ -397,6 +404,8 @@ int main(int argc, char* argv[])
     // pthread_t passenger;
     // pthread_t car;
 
+    start_time = time(NULL);
+    
     pthread_t timer;
     pthread_create(&timer, NULL, timer_routine, NULL);
 
