@@ -59,6 +59,7 @@ typedef struct
     int passengers_needed;
     pthread_cond_t car_ready;
     pthread_cond_t ride_done;
+    int boarding_bool;
     // pthread_mutex_t car_mutex = PTHREAD_MUTEX_INITIALIZER;
 } Car;
 
@@ -156,7 +157,7 @@ void *passenger_routine(void *arg)
             for (int i = 0; i < c; ++i) 
             {
                 Car *car = &cars[i];
-                if (car->passengers_needed > 0) 
+                if (car->boarding_bool && car->passengers_needed > 0) 
                 {
                     for (int j = ride_front; j < ride_rear; ++j)
                     {
@@ -285,6 +286,8 @@ void *car_routine(void *arg)
         //     break;
         // }
 
+        car->boarding_bool = 1;
+
         float wait_counter = 0.0;
         while (wait_counter < w && !time_up) 
         {
@@ -303,6 +306,7 @@ void *car_routine(void *arg)
 
         }
 
+        car->boarding_bool = 0;
         print_time("starting ride", subject, cid + 1);
         pthread_mutex_unlock(&mutex);
 
