@@ -106,6 +106,11 @@ void randsleep()
 
 void print_time(const char* msg, const char* subject, int pid)
 {
+    // no prints after sim time is up
+    if (time_up)
+    {
+        return;
+    }
     // prints current time before the message
     time_t t = time(NULL);
     struct tm* tm = localtime(&t);
@@ -122,9 +127,11 @@ void *passenger_routine(void *arg)
         print_time("entered the park", subject, pid);
         // rand time to start exploring
         randsleep();
+        if (time_up) return NULL;
         print_time("is exploring the park...", subject, pid);
         // rand time to explore
         randsleep();
+        if (time_up) return NULL;
         print_time("finished exploring, heading to ticket booth", subject, pid);
         
         pthread_mutex_lock(&ticket_mutex);
