@@ -469,8 +469,13 @@ int main(int argc, char* argv[])
 
     start_time = time(NULL);
     
+    // timer thread
     pthread_t timer;
     pthread_create(&timer, NULL, timer_routine, NULL);
+
+    // monitor thread
+    pthread_t monitor;
+    pthread_create(&monitor, NULL, monitor_routine, NULL);
 
     pthread_t passenger_threads[n];
     pthread_t car_threads[c];
