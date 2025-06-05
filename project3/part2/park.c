@@ -497,8 +497,9 @@ int main(int argc, char* argv[])
     for (int i = 0; i < n; ++i) 
     {
         pass_ids[i] = i + 1;
+        usleep(100000); 
         pthread_create(&passenger_threads[i], NULL, passenger_routine, &pass_ids[i]);
-        usleep(1000000); 
+        
     }
 
     for (int i = 0; i < n; ++i) 
