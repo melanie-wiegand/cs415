@@ -297,7 +297,7 @@ void *car_routine(void *arg)
             }
 
             pthread_mutex_unlock(&mutex);
-            uleep(500*1000);
+            usleep(500*1000);
             wait_counter+= 0.5;
             pthread_mutex_lock(&mutex);   
 
