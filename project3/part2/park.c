@@ -226,90 +226,54 @@ void *car_routine(void *arg)
     while (!time_up) {
 
         pthread_mutex_lock(&car_order_mutex);
-        while (current_car != cid) 
-        {
+        while (current_car != cid) {
             pthread_cond_wait(&car_turn_cond, &car_order_mutex);
         }
         pthread_mutex_unlock(&car_order_mutex);
 
         pthread_mutex_lock(&mutex);
-        // print_time("waiting for passengers", subject, cid);
 
-        // int wait_counter = 0;
-        // while ((ride_rear - ride_front) == 0 && wait_counter < w && !time_up) 
-        // {
-        //     pthread_mutex_unlock(&mutex);
-        //     sleep(1);
-        //     wait_counter++;
-        //     pthread_mutex_lock(&mutex);
-        // }
-
-        // waits for at least one passenger to be in queue
+        // Wait for at least one passenger in queue
         while ((ride_rear - ride_front) == 0 && !time_up) {
             pthread_cond_wait(&passenger_ready, &mutex);
         }
 
-        if (time_up) 
-        {
+        if (time_up) {
             pthread_mutex_unlock(&mutex);
             break;
         }
 
-        int boarding = ((ride_rear - ride_front) < p) ? (ride_rear - ride_front) : p;
-        // if (boarding == 0)
-        // {
-        //     pthread_mutex_unlock(&mutex);
-        //     sleep(1);
-        //     continue;
-        // }
-
-        // usleep(50000);
         print_time("invoked load()", subject, cid + 1);
-        car->passengers_needed = boarding;
+
+        car->passengers_needed = p;
         car->boarded_count = 0;
-        // queue -= boarding;
 
-        pthread_cond_broadcast(&passenger_ready);
+        time_t start_time = time(NULL);
+        time_t now;
 
-        while (car->boarded_count == 0 && !time_up)
-        {
-            pthread_cond_wait(&passenger_ready, &mutex);
-        }
+        while ((now = time(NULL)) - start_time < w && !time_up) {
+            pthread_cond_broadcast(&passenger_ready);  // keep nudging passengers
 
-        // if (time_up) {
-        //     pthread_mutex_unlock(&mutex);
-        //     break;
-        // }
+            // Break early if car is full
+            if (car->passengers_needed == 0)
+                break;
 
-        int wait_counter = 0;
-        while (wait_counter < w && !time_up) 
-        {
-            pthread_cond_broadcast(&passenger_ready);
             pthread_mutex_unlock(&mutex);
-            sleep(1);
-            wait_counter++;
-            pthread_mutex_lock(&mutex);   
-
-            // car full
-            // if (car->passengers_needed == 0)
-            // {
-            //     break; 
-            // }
+            usleep(500 * 1000);  // 0.5 seconds
+            pthread_mutex_lock(&mutex);
         }
 
         print_time("starting ride", subject, cid + 1);
         pthread_mutex_unlock(&mutex);
 
-        sleep(r);
+        sleep(r);  // simulate ride duration
 
         pthread_mutex_lock(&mutex);
         print_time("unloading", subject, cid + 1);
         pthread_cond_broadcast(&car->ride_done);
-
-        // pthread_cond_broadcast(&passenger_ready);
-
         pthread_mutex_unlock(&mutex);
 
+        // Move to next car in round-robin order
         pthread_mutex_lock(&car_order_mutex);
         current_car = (current_car + 1) % c;
         pthread_cond_broadcast(&car_turn_cond);
@@ -318,6 +282,108 @@ void *car_routine(void *arg)
 
     return NULL;
 }
+
+// void *car_routine(void *arg)
+// {
+//     int cid = *(int*)arg;
+//     Car *car = &cars[cid];
+//     char *subject = "Car";
+
+//     while (!time_up) {
+
+//         pthread_mutex_lock(&car_order_mutex);
+//         while (current_car != cid) 
+//         {
+//             pthread_cond_wait(&car_turn_cond, &car_order_mutex);
+//         }
+//         pthread_mutex_unlock(&car_order_mutex);
+
+//         pthread_mutex_lock(&mutex);
+//         // print_time("waiting for passengers", subject, cid);
+
+//         // int wait_counter = 0;
+//         // while ((ride_rear - ride_front) == 0 && wait_counter < w && !time_up) 
+//         // {
+//         //     pthread_mutex_unlock(&mutex);
+//         //     sleep(1);
+//         //     wait_counter++;
+//         //     pthread_mutex_lock(&mutex);
+//         // }
+
+//         // waits for at least one passenger to be in queue
+//         while ((ride_rear - ride_front) == 0 && !time_up) {
+//             pthread_cond_wait(&passenger_ready, &mutex);
+//         }
+
+//         if (time_up) 
+//         {
+//             pthread_mutex_unlock(&mutex);
+//             break;
+//         }
+
+//         int boarding = ((ride_rear - ride_front) < p) ? (ride_rear - ride_front) : p;
+//         // if (boarding == 0)
+//         // {
+//         //     pthread_mutex_unlock(&mutex);
+//         //     sleep(1);
+//         //     continue;
+//         // }
+
+//         // usleep(50000);
+//         print_time("invoked load()", subject, cid + 1);
+//         car->passengers_needed = boarding;
+//         car->boarded_count = 0;
+//         // queue -= boarding;
+
+//         pthread_cond_broadcast(&passenger_ready);
+
+//         while (car->boarded_count == 0 && !time_up)
+//         {
+//             pthread_cond_wait(&passenger_ready, &mutex);
+//         }
+
+//         // if (time_up) {
+//         //     pthread_mutex_unlock(&mutex);
+//         //     break;
+//         // }
+
+//         int wait_counter = 0;
+//         while (wait_counter < w && !time_up) 
+//         {
+//             pthread_cond_broadcast(&passenger_ready);
+//             pthread_mutex_unlock(&mutex);
+//             sleep(1);
+//             wait_counter++;
+//             pthread_mutex_lock(&mutex);   
+
+//             // car full
+//             // if (car->passengers_needed == 0)
+//             // {
+//             //     break; 
+//             // }
+//         }
+
+//         print_time("starting ride", subject, cid + 1);
+//         pthread_mutex_unlock(&mutex);
+
+//         sleep(r);
+
+//         pthread_mutex_lock(&mutex);
+//         print_time("unloading", subject, cid + 1);
+//         pthread_cond_broadcast(&car->ride_done);
+
+//         // pthread_cond_broadcast(&passenger_ready);
+
+//         pthread_mutex_unlock(&mutex);
+
+//         pthread_mutex_lock(&car_order_mutex);
+//         current_car = (current_car + 1) % c;
+//         pthread_cond_broadcast(&car_turn_cond);
+//         pthread_mutex_unlock(&car_order_mutex);
+//     }
+
+//     return NULL;
+// }
 
 
 
