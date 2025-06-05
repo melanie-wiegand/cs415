@@ -124,6 +124,69 @@ void print_time(const char* msg, const char* subject, int pid)
     printf("[Time: %02d:%02d:%02d] %s %d %s\n", h, m, s, subject, pid, msg);
 }
 
+void* monitor_routine(void* arg)
+{
+    while (!time_up)
+    {
+        sleep(5); // print every five seconds
+
+        pthread_mutex_lock(&mutex);
+
+        time_t t = time(NULL);
+        int total_time = (int)difftime(t, start_time);
+        
+        int h = total_time / 3600;
+        int m = (total_time % 3600) / 60;
+        int s = total_time % 60;
+
+        printf("\n[Monitor] System State at %02d:%02d:%02d\n", h, m, s);
+
+        // ticket queue
+        printf("Ticket Queue: [");
+        for (int i = ticket_front; i < ticket_rear; ++i)
+        {
+            printf("Passenger %d", ticket_queue[i]);
+            if (i < ticket_rear - 1) printf(", ");
+        }
+        printf("]\n");
+
+        // ride queue
+        printf("Ride Queue: [");
+        for (int i = ride_front; i < ride_rear; ++i)
+        {
+            printf("Passenger %d", ticket_queue[i]);
+            if (i < ride_rear - 1) printf(", ");
+        }
+        printf("]\n");
+
+        // car status
+        for (int i = 0; i < c; ++i)
+        {
+            Car* car = &cars[i];
+            const char* status = car->boarding_bool ? "LOADING" : "WAITING";
+            printf("Car %d Status: %s (%d/%d passengers)\n", i + 1, status, car->boarded_count, p);
+        }
+
+        // passenger status
+        // passengers on rides (sum boarded counts of all cars)
+        int num_riding = 0;
+        // passengers in queue (sum ticket and ride queues)
+        int num_queued = (ride_rear - ride_front) + (ticket_rear - ticket_front);
+        for (int i = 0; i < c; ++i)
+        {
+            num_riding += cars[i].boarded_count;
+        }
+        // everyone else
+        int num_exploring = n - num_queued - num_riding;
+
+       
+        printf("Passengers in park: %d (%d exploring, %d in queues, %d on rides)\n\n", 
+            n, num_exploring, num_queued, num_riding);
+
+        pthread_mutex_unlock(&mutex);
+    }
+}
+
 void *passenger_routine(void *arg)
 {
     int pid = *(int*)arg;
