@@ -185,7 +185,7 @@ void* monitor_routine(void* arg)
         }
 
         // get vals for num passengers and num exploring
-        // pthread_mutex_lock(&passenger_count_mutex);
+        pthread_mutex_lock(&passenger_count_mutex);
         int total_created = passenger_count;
         pthread_mutex_unlock(&passenger_count_mutex);
 
