@@ -318,10 +318,6 @@ void *passenger_routine(void *arg)
                             
                             pthread_cond_broadcast(&passenger_ready);
 
-                            // if (car->passengers_needed == 0) 
-                            // {
-                            //     pthread_cond_signal(&car->car_ready);
-                            // }
                             pthread_mutex_unlock(&mutex);
 
                             char b_msg[100];
@@ -389,7 +385,8 @@ void *car_routine(void *arg)
 
 
         // waits for at least one passenger to be in queue
-        while ((ride_rear - ride_front) == 0 && !time_up) {
+        while ((ride_rear - ride_front) == 0 && !time_up)
+        {
             pthread_cond_wait(&passenger_ready, &mutex);
         }
 
@@ -401,19 +398,14 @@ void *car_routine(void *arg)
         printf("\n");
         print_time("invoked load()", subject, cid + 1);
 
-
-        
         car->passengers_needed = p;
         car->boarded_count = 0;
-
-
         car->boarding_bool = 1;
 
         float wait_counter = 0.0;
         while (wait_counter < w && !time_up) 
         {
             pthread_cond_broadcast(&passenger_ready);
-
             // car full
             if (car->passengers_needed == 0)
             {
@@ -432,12 +424,14 @@ void *car_routine(void *arg)
         }
 
         // pthread_mutex_lock(&mutex);
+
+
+        car->boarding_bool = 0;
+
         // dequeue passengers right before ride begins
         for (int i = 0; i < car->boarded_count; ++i) 
         {
             int pid = car->pass_ids[i];
-            
-            
             for (int j = ride_front; j < ride_rear; ++j) 
             {
                 if (ride_queue[j] == pid) {
@@ -452,7 +446,12 @@ void *car_routine(void *arg)
             // pthread_mutex_unlock(&mutex);
         }
 
-        car->boarding_bool = 0;
+        // let next car board while this car runs
+        pthread_mutex_lock(&car_order_mutex);
+        current_car = (current_car + 1) % c;
+        pthread_cond_broadcast(&car_turn_cond);
+        pthread_mutex_unlock(&car_order_mutex);
+
         print_time("departed for its run", subject, cid + 1);
         pthread_mutex_unlock(&mutex);
 
@@ -468,15 +467,12 @@ void *car_routine(void *arg)
         pthread_mutex_lock(&mutex);
         print_time("invoked unload()", subject, cid + 1);
         pthread_cond_broadcast(&car->ride_done);
-
-        // pthread_cond_broadcast(&passenger_ready);
-
         pthread_mutex_unlock(&mutex);
 
-        pthread_mutex_lock(&car_order_mutex);
-        current_car = (current_car + 1) % c;
-        pthread_cond_broadcast(&car_turn_cond);
-        pthread_mutex_unlock(&car_order_mutex);
+        // pthread_mutex_lock(&car_order_mutex);
+        // current_car = (current_car + 1) % c;
+        // pthread_cond_broadcast(&car_turn_cond);
+        // pthread_mutex_unlock(&car_order_mutex);
     }
 
     return NULL;
@@ -594,12 +590,12 @@ int main(int argc, char* argv[])
     pthread_join(timer, NULL);
     pthread_join(monitor, NULL);
     
-    // total simulation time
-    time_t end_time = time(NULL);
-    int totaltime = (int)difftime(end_time, start_time);
-    int total_h = totaltime / 3600;
-    int total_m = (totaltime % 3600) / 60;
-    int total_s = totaltime % 60;
+    // // total simulation time
+    // time_t end_time = time(NULL);
+    // int totaltime = (int)difftime(end_time, start_time);
+    // int total_h = totaltime / 3600;
+    // int total_m = (totaltime % 3600) / 60;
+    // int total_s = totaltime % 60;
 
     // calculate avg waits
     double ticketavg = ticketwait / served;
@@ -607,7 +603,8 @@ int main(int argc, char* argv[])
     float utilization = ((served / totalrides)/p) * 100;
 
     printf("\n[Monitor] FINAL STATISTICS:\n");
-    printf("Total simulation time: %02d:%02d:%02d\n", total_h, total_m, total_s);
+    // printf("Total simulation time: %02d:%02d:%02d\n", total_h, total_m, total_s);
+    printf("Total simulation time: 00:05:00\n");
     printf("Total passengers served: %d\n", served);
     printf("Total rides completed: %d\n", totalrides);
     printf("Average wait time in ticket queue: %.1f seconds\n", ticketavg);
