@@ -211,7 +211,7 @@ void* monitor_routine(void* arg)
         for (int i = 0; i < c; ++i)
         {
             // only track cars not boarding
-            if (!cars[i]->boarding_bool)
+            if (!cars[i].boarding_bool)
             {
                 num_riding += cars[i].boarded_count;
             }
