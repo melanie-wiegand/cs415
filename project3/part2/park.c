@@ -467,6 +467,8 @@ void *car_routine(void *arg)
         served += car->boarded_count;
         pthread_mutex_unlock(&summary_mutex);
 
+        car->boarded_count = 0;
+
         pthread_mutex_lock(&mutex);
         print_time("invoked unload()", subject, cid + 1);
         pthread_cond_broadcast(&car->ride_done);
