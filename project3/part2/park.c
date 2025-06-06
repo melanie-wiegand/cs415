@@ -203,9 +203,9 @@ void* monitor_routine(void* arg)
             num_riding += cars[i].boarded_count;
         }
 
-       
-        printf("Passengers in park: %d (%d exploring, %d in queues, %d on rides)\n\n", 
-            total_created, exploring_now, num_queued, num_riding);
+        int entered = total_created - exploring_now - num_queued - num_riding;
+        printf("Passengers in park: %d (%d just entered, %d exploring, %d in queues, %d on rides)\n\n", 
+            entered, total_created, exploring_now, num_queued, num_riding);
 
 
         // // passenger status
