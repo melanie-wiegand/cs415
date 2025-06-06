@@ -572,3 +572,4 @@ pthread_join(passenger_threads[i], NULL);
 }
 
 return 0;
+}
