@@ -502,7 +502,7 @@ int main(int argc, char* argv[])
         if (i % 6 == 5)
         {
             // every few passengers, wait longer (mimicking example behavior)
-            randsleep(1, 5);
+            randsleep(4, 10);
         }
         else
         {
