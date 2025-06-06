@@ -74,6 +74,7 @@ typedef struct
     pthread_cond_t car_ready;
     pthread_cond_t ride_done;
     int boarding_bool;
+    int running_bool;
     // pthread_mutex_t car_mutex = PTHREAD_MUTEX_INITIALIZER;
 } Car;
 
@@ -180,18 +181,18 @@ void* monitor_routine(void* arg)
         {
             Car* car = &cars[i];
             const char* status;
-            if (car->boarded_count == 0 && !car->boarding_bool)
+            if (car->running_bool)
             { 
-                status = "WAITING";
+                status = "RUNNING";
 
             } 
-            else if (car->passengers_needed == 0)
+            else if (car->boarding_bool)
             {
-                status = "RUNNING";
+                status = "LOADING";
             }
             else
             {
-                status = "LOADING";
+                status = "WAITING";
             }
             printf("Car %d Status: %s (%d/%d passengers)\n", car->id, status, car->boarded_count, p);
         }
@@ -452,12 +453,14 @@ void *car_routine(void *arg)
         pthread_cond_broadcast(&car_turn_cond);
         pthread_mutex_unlock(&car_order_mutex);
 
+        car->running_bool = 1;
         print_time("departed for its run", subject, cid + 1);
         pthread_mutex_unlock(&mutex);
 
         sleep(r);
 
         print_time("finished its run", subject, cid + 1);
+        car->running_bool = 0;
 
         pthread_mutex_lock(&summary_mutex);
         totalrides++;
