@@ -335,7 +335,7 @@ void *car_routine(void *arg)
             pthread_mutex_unlock(&mutex);
             break;
         }
-
+        printf("\n");
         print_time("invoked load()", subject, cid + 1);
 
         // int boarding = ((ride_rear - ride_front) < p) ? (ride_rear - ride_front) : p;
@@ -374,6 +374,9 @@ void *car_routine(void *arg)
             // car full
             if (car->passengers_needed == 0)
             {
+                char msg[200];
+                snprintf(msg, sizeof(msg), "is full with %d passengers", p);
+                print_time(msg, subject, pid);
                 break; 
             }
 
@@ -385,7 +388,7 @@ void *car_routine(void *arg)
         }
 
         car->boarding_bool = 0;
-        print_time("starting ride", subject, cid + 1);
+        print_time("departed for its run", subject, cid + 1);
         pthread_mutex_unlock(&mutex);
 
         sleep(r);
