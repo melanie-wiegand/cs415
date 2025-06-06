@@ -376,7 +376,8 @@ void *car_routine(void *arg)
             {
                 char msg[200];
                 snprintf(msg, sizeof(msg), "is full with %d passengers", p);
-                print_time(msg, subject, cid);
+                printf("\n");
+                print_time(msg, subject, cid + 1);
                 break; 
             }
 
@@ -394,7 +395,7 @@ void *car_routine(void *arg)
         sleep(r);
 
         pthread_mutex_lock(&mutex);
-        print_time("unloading", subject, cid + 1);
+        print_time("invoked unload()", subject, cid + 1);
         pthread_cond_broadcast(&car->ride_done);
 
         // pthread_cond_broadcast(&passenger_ready);
