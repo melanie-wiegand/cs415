@@ -100,9 +100,9 @@ void* timer_routine(void* arg)
 }
 
 
-void randsleep()
+void randsleep(int min, int max)
 {
-    int sleeptime = (rand() % 10) + 1; // 1-10 s
+    int sleeptime = (rand() % (max - min)) + min; 
     sleep(sleeptime);
 }
 
@@ -196,11 +196,11 @@ void *passenger_routine(void *arg)
     {
         print_time("entered the park", subject, pid);
         // rand time to start exploring
-        randsleep();
+        randsleep(1, 5);
         if (time_up) return NULL;
         print_time("is exploring the park...", subject, pid);
         // rand time to explore
-        randsleep();
+        randsleep(1, 10);
         if (time_up) return NULL;
         print_time("finished exploring, heading to ticket booth", subject, pid);
         
@@ -288,7 +288,8 @@ void *passenger_routine(void *arg)
 
         if (!time_up)
         {
-            randsleep();
+            // wait before exploring park again
+            randsleep(1, 10);
         }
     
     }
@@ -498,7 +499,15 @@ int main(int argc, char* argv[])
     for (int i = 0; i < n; ++i) 
     {
         pass_ids[i] = i + 1;
-        usleep(500000); 
+        if (n % 5 == 0)
+        {
+            // every five passengers, wait longer (mimicking example behavior)
+            randsleep(1, 5);
+        }
+        else
+        {
+            sleep(500000);
+        }
         pthread_create(&passenger_threads[i], NULL, passenger_routine, &pass_ids[i]);
         
     }
