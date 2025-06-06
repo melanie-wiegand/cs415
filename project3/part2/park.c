@@ -160,7 +160,7 @@ void* monitor_routine(void* arg)
         printf("Ride Queue: [");
         for (int i = ride_front; i < ride_rear; ++i)
         {
-            printf("Passenger %d", ticket_queue[i]);
+            printf("Passenger %d", ride_queue[i]);
             if (i < ride_rear - 1) printf(", ");
         }
         printf("]\n");
@@ -182,27 +182,27 @@ void* monitor_routine(void* arg)
         }
 
         // get vals for num passengers and num exploring
-        pthread_mutex_lock(&passenger_count_mutex);
-        int total_created = passenger_count;
-        pthread_mutex_unlock(&passenger_count_mutex);
+        // pthread_mutex_lock(&passenger_count_mutex);
+        // int total_created = passenger_count;
+        // pthread_mutex_unlock(&passenger_count_mutex);
 
-        pthread_mutex_lock(&num_exploring_mutex);
-        int exploring_now = num_exploring;
-        pthread_mutex_unlock(&num_exploring_mutex);
+        // pthread_mutex_lock(&num_exploring_mutex);
+        // int exploring_now = num_exploring;
+        // pthread_mutex_unlock(&num_exploring_mutex);
 
         // passenger status
         // passengers on rides (sum boarded counts of all cars)
-        int num_riding = 0;
-        // passengers in queue (sum ticket and ride queues)
-        int num_queued = (ride_rear - ride_front) + (ticket_rear - ticket_front);
-        for (int i = 0; i < c; ++i)
-        {
-            num_riding += cars[i].boarded_count;
-        }
+        // int num_riding = 0;
+        // // passengers in queue (sum ticket and ride queues)
+        // int num_queued = (ride_rear - ride_front) + (ticket_rear - ticket_front);
+        // for (int i = 0; i < c; ++i)
+        // {
+        //     num_riding += cars[i].boarded_count;
+        // }
 
        
-        printf("Passengers in park: %d (%d exploring, %d in queues, %d on rides)\n\n", 
-            total_created, exploring_now, num_queued, num_riding);
+        // printf("Passengers in park: %d (%d exploring, %d in queues, %d on rides)\n\n", 
+        //     total_created, exploring_now, num_queued, num_riding);
 
         pthread_mutex_unlock(&mutex);
     }
@@ -552,7 +552,7 @@ int main(int argc, char* argv[])
         pthread_create(&car_threads[i], NULL, car_routine, &car_ids[i]);
     }
 
-    usleep(500000);
+    usleep(400000);
     for (int i = 0; i < n; ++i) 
     {
         pass_ids[i] = i + 1;
