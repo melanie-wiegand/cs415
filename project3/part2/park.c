@@ -499,9 +499,9 @@ int main(int argc, char* argv[])
     for (int i = 0; i < n; ++i) 
     {
         pass_ids[i] = i + 1;
-        if (n % 5 == 0)
+        if (n % 6 == 5)
         {
-            // every five passengers, wait longer (mimicking example behavior)
+            // every few passengers, wait longer (mimicking example behavior)
             randsleep(1, 5);
         }
         else
