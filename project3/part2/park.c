@@ -446,6 +446,7 @@ void *car_routine(void *arg)
 
         sleep(r);
 
+        print_time("finished its run", subject, cid + 1);
         pthread_mutex_lock(&mutex);
         print_time("invoked unload()", subject, cid + 1);
         pthread_cond_broadcast(&car->ride_done);
