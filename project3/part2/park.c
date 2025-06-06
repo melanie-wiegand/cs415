@@ -292,11 +292,11 @@ void *passenger_routine(void *arg)
                         if (ride_queue[j] == pid)
                         {
                             
-                            // for (int k = j; k < ride_rear - 1; ++k)
-                            // {
-                            //     ride_queue[k] = ride_queue[k + 1];
-                            // }
-                            // ride_rear--;
+                            for (int k = j; k < ride_rear - 1; ++k)
+                            {
+                                ride_queue[k] = ride_queue[k + 1];
+                            }
+                            ride_rear--;
                             // board
                             car->pass_ids[car->boarded_count++] = pid;
                             car->passengers_needed--;
@@ -411,21 +411,21 @@ void *car_routine(void *arg)
         }
 
         // dequeue passengers right before ride begins
-        for (int i = 0; i < car->boarded_count; ++i) {
-            int pid = car->pass_ids[i];
+        // for (int i = 0; i < car->boarded_count; ++i) {
+        //     int pid = car->pass_ids[i];
             
-            pthread_mutex_lock(&mutex);
-            for (int j = ride_front; j < ride_rear; ++j) {
-                if (ride_queue[j] == pid) {
-                    for (int k = j; k < ride_rear - 1; ++k) {
-                        ride_queue[k] = ride_queue[k + 1];
-                    }
-                    ride_rear--;
-                    break;
-                }
-            }
-            pthread_mutex_unlock(&mutex);
-        }
+        //     pthread_mutex_lock(&mutex);
+        //     for (int j = ride_front; j < ride_rear; ++j) {
+        //         if (ride_queue[j] == pid) {
+        //             for (int k = j; k < ride_rear - 1; ++k) {
+        //                 ride_queue[k] = ride_queue[k + 1];
+        //             }
+        //             ride_rear--;
+        //             break;
+        //         }
+        //     }
+        //     pthread_mutex_unlock(&mutex);
+        // }
 
         car->boarding_bool = 0;
         print_time("departed for its run", subject, cid + 1);
