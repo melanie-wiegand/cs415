@@ -44,9 +44,6 @@ int current_car = 0;
 int ride_queue[MAX_PASSENGERS];
 int ride_front = 0;
 int ride_rear = 0;
-pthread_mutex_t unload_mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t unload_cond = PTHREAD_COND_INITIALIZER;
-int next_unload = 0;
 
 // ticket ordering + queue
 pthread_mutex_t ticket_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -54,7 +51,6 @@ pthread_cond_t ticket_cond = PTHREAD_COND_INITIALIZER;
 int ticket_queue[MAX_PASSENGERS];
 int ticket_front = 0; 
 int ticket_rear = 0;
-
 
 // car struct
 typedef struct
@@ -340,7 +336,7 @@ void *passenger_routine(void *arg)
         if (!time_up)
         {
             // wait before exploring park again
-            randsleep(1, 10);
+            randsleep(1, 8);
         }
     
     }
@@ -452,23 +448,11 @@ void *car_routine(void *arg)
         // reset boarded count
         car->boarded_count = 0;
 
-        // wait for turn to unload
-        pthread_mutex_lock(&unload_mutex);
-        while (cid != next_unload) 
-        {
-            pthread_cond_wait(&unload_cond, &unload_mutex);
-        }
-
         // signal end
         pthread_mutex_lock(&mutex);
         print_time("invoked unload()", subject, cid + 1);
         pthread_cond_broadcast(&car->ride_done);
         pthread_mutex_unlock(&mutex);
-
-        // next car's turn to unload
-        next_unload = (next_unload + 1) % c;
-        pthread_cond_broadcast(&unload_cond);
-        pthread_mutex_unlock(&unload_mutex);
     }
 
     return NULL;
