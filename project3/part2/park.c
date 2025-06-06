@@ -411,7 +411,7 @@ void *car_routine(void *arg)
         }
 
         pthread_mutex_lock(&mutex);
-        dequeue passengers right before ride begins
+        // dequeue passengers right before ride begins
         for (int i = 0; i < car->boarded_count; ++i) {
             int pid = car->pass_ids[i];
             
