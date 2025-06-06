@@ -376,7 +376,7 @@ void *car_routine(void *arg)
             {
                 char msg[200];
                 snprintf(msg, sizeof(msg), "is full with %d passengers", p);
-                print_time(msg, subject, pid);
+                print_time(msg, subject, cid);
                 break; 
             }
 
