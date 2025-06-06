@@ -169,7 +169,15 @@ void* monitor_routine(void* arg)
         for (int i = 0; i < c; ++i)
         {
             Car* car = &cars[i];
-            const char* status = car->boarding_bool ? "LOADING" : "WAITING";
+            const char* status;
+            if (car->passengers_needed == 0)
+            { 
+                status = "RUNNING";
+            } 
+            else
+            {
+                status = car->boarding_bool ? "LOADING" : "WAITING";
+            }
             printf("Car %d Status: %s (%d/%d passengers)\n", i + 1, status, car->boarded_count, p);
         }
 
