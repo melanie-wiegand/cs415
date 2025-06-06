@@ -8,36 +8,10 @@
 #define MAX_CARS 20
 #define MAX_CAPACITY 10
 
+// general mutex
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-// pthread_cond_t car_ready = PTHREAD_COND_INITIALIZER;
+// passenger mutex
 pthread_cond_t passenger_ready = PTHREAD_COND_INITIALIZER;
-
-
-// number boarded
-int boarded = 0;
-// number riding
-int riding = 0;
-
-volatile int time_up = 0;
-
-time_t start_time;
-
-// keep track of passengers created and exploring
-int passenger_count = 0;
-// int num_exploring = 0;
-pthread_mutex_t passenger_count_mutex = PTHREAD_MUTEX_INITIALIZER;
-// pthread_mutex_t num_exploring_mutex = PTHREAD_MUTEX_INITIALIZER;
-
-
-// summary message counters
-int served = 0;
-int totalrides = 0;
-// int totalboarded = 0;
-double ticketwait;
-double ridewait;
-// double utilization = 
-pthread_mutex_t summary_mutex = PTHREAD_MUTEX_INITIALIZER;
-
 
 // default values for parameters
 int n = 10;
@@ -46,6 +20,22 @@ int p = 4;
 int w = 10;
 int r = 5;
 
+// flag for end of sim
+volatile int time_up = 0;
+
+// initialize start time
+time_t start_time;
+
+// keep track of passengers created
+int passenger_count = 0;
+pthread_mutex_t passenger_count_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+// summary message counters
+int served = 0;
+int totalrides = 0;
+double ticketwait;
+double ridewait;
+pthread_mutex_t summary_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 // car ordering + queue
 pthread_mutex_t car_order_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -62,8 +52,6 @@ int ticket_queue[MAX_PASSENGERS];
 int ticket_front = 0; 
 int ticket_rear = 0;
 
-
-
 // car struct
 typedef struct
 {
@@ -78,7 +66,7 @@ typedef struct
     // pthread_mutex_t car_mutex = PTHREAD_MUTEX_INITIALIZER;
 } Car;
 
-// list of cars
+// initialize list of cars
 Car cars[MAX_CARS];
 
 // add passenger to queue
@@ -94,7 +82,7 @@ int dequeue(int queue[], int *front, int rear)
     return queue[(*front)++];
 }
 
-// thread to stop simulation after 5 min (30s for testing)
+// thread to stop simulation after 1 min (30s for testing)
 void* timer_routine(void* arg) 
 {
     sleep(30);  
@@ -145,10 +133,9 @@ void* monitor_routine(void* arg)
     {
         sleep(5); // print every five seconds
 
-        // printf("[Monitor] Attempting to lock mutex...\n");
         pthread_mutex_lock(&mutex);
-        // printf("[Monitor] Successfully locked mutex.\n");
 
+        // calculate elapsed time
         time_t t = time(NULL);
         int total_time = (int)difftime(t, start_time);
         
@@ -184,7 +171,6 @@ void* monitor_routine(void* arg)
             if (car->running_bool)
             { 
                 status = "RUNNING";
-
             } 
             else if (car->boarding_bool)
             {
@@ -197,12 +183,9 @@ void* monitor_routine(void* arg)
             printf("Car %d Status: %s (%d/%d passengers)\n", car->id, status, car->boarded_count, p);
         }
 
-        // get vals for num passengers and num exploring
+        // get vals for num passengers
         pthread_mutex_lock(&passenger_count_mutex);
-        // pthread_mutex_lock(&num_exploring_mutex);
         int total_created = passenger_count;
-
-        // int exploring_now = num_exploring;
     
         // passenger status
         // passengers on rides (sum boarded counts of all cars)
@@ -218,12 +201,10 @@ void* monitor_routine(void* arg)
             }
         }
 
-        int exploring_now = total_created - num_queued - num_riding;
-        // int entered = total_created - exploring_now - num_queued - num_riding;
+        int exploring_now = total_created - num_queued - num_riding;\
         printf("Passengers in park: %d (%d exploring, %d in queues, %d on rides)\n\n", 
              total_created, exploring_now, num_queued, num_riding);
 
-        // pthread_mutex_unlock(&num_exploring_mutex);
         pthread_mutex_unlock(&passenger_count_mutex);
         pthread_mutex_unlock(&mutex);
     }
@@ -232,15 +213,12 @@ void* monitor_routine(void* arg)
 // controls passenger threads
 void *passenger_routine(void *arg)
 {
-
     pthread_mutex_lock(&passenger_count_mutex);
     passenger_count++;
     pthread_mutex_unlock(&passenger_count_mutex);
 
-
     int pid = *(int*)arg;
     char *subject = "Passenger";
-
     int first = 1;
 
     while (!time_up)
@@ -253,23 +231,19 @@ void *passenger_routine(void *arg)
             randsleep(1, 5);
         }
 
-        // pthread_mutex_lock(&num_exploring_mutex);
-        // num_exploring++;
-        // pthread_mutex_unlock(&num_exploring_mutex);
-
         print_time("is exploring the park...", subject, pid);
         // rand time to explore
         randsleep(1, 10);
-        if (time_up) return NULL;
+        if (time_up) 
+        {
+            return NULL;
+        }
         print_time("finished exploring, heading to ticket booth", subject, pid);
-        
-        // pthread_mutex_lock(&num_exploring_mutex);
-        // num_exploring--;
-        // pthread_mutex_unlock(&num_exploring_mutex);
         
         // join ticket queue
         pthread_mutex_lock(&ticket_mutex);
         print_time("waiting in ticket queue", subject, pid);
+        // mark start time
         time_t ticketstart = time(NULL);
         enqueue(ticket_queue, &ticket_rear, pid);
         while (ticket_queue[ticket_front] != pid) 
@@ -279,6 +253,7 @@ void *passenger_routine(void *arg)
         // first in line gets ticket
         dequeue(ticket_queue, &ticket_front, ticket_rear);
         print_time("acquired a ticket", subject, pid);
+        // end time
         time_t ticketend = time(NULL);
 
         // calculate ticket wait time
@@ -293,42 +268,37 @@ void *passenger_routine(void *arg)
         pthread_mutex_lock(&mutex);      
         enqueue(ride_queue, &ride_rear, pid);
         print_time("joined the ride queue", subject, pid);
+        // start time
         time_t ridestart = time(NULL);
         pthread_cond_broadcast(&passenger_ready);
         pthread_mutex_unlock(&mutex);
 
         int boarded = 0;
 
+        // when not boarded, look to board
         while (!boarded && !time_up) 
         {
            pthread_mutex_lock(&mutex);
-
             for (int i = 0; i < c; ++i) 
             {
                 Car *car = &cars[i];
+                // find car with open seats
                 if (car->boarding_bool && car->passengers_needed > 0) 
                 {
                     for (int j = ride_front; j < ride_rear; ++j)
                     {
                         if (ride_queue[j] == pid)
                         {
-                            
-                            // for (int k = j; k < ride_rear - 1; ++k)
-                            // {
-                            //     ride_queue[k] = ride_queue[k + 1];
-                            // }
-                            // ride_rear--;
-                            // board
+                            // board car
                             car->pass_ids[car->boarded_count++] = pid;
-                            car->passengers_needed--;
-                            
+                            car->passengers_needed--;      
                             pthread_cond_broadcast(&passenger_ready);
-
                             pthread_mutex_unlock(&mutex);
 
                             char b_msg[100];
                             snprintf(b_msg, sizeof(b_msg), "boarded Car %d", car->id);
                             print_time(b_msg, subject, pid);
+                            // end time
                             time_t rideend = time(NULL);
 
                             // calculate ride wait time
@@ -341,10 +311,12 @@ void *passenger_routine(void *arg)
                             pthread_cond_wait(&car->ride_done, &mutex);
                             pthread_mutex_unlock(&mutex);
 
+                            // deboard
                             char db_msg[100];
                             snprintf(db_msg, sizeof(db_msg), "deboarded Car %d", car->id);
                             print_time(db_msg, subject, pid);
                             
+                            // exit out of ride loop
                             boarded = 1;
                             break;
                         }
@@ -354,6 +326,7 @@ void *passenger_routine(void *arg)
 
             if (!boarded && !time_up)
             {
+                // wait for car to start boarding
                 pthread_cond_wait(&passenger_ready, &mutex);
             }
 
@@ -379,14 +352,13 @@ void *car_routine(void *arg)
     char *subject = "Car";
 
     while (!time_up) {
-
         pthread_mutex_lock(&car_order_mutex);
         while (current_car != cid) 
         {
+            // wait for turn to board
             pthread_cond_wait(&car_turn_cond, &car_order_mutex);
         }
         pthread_mutex_unlock(&car_order_mutex);
-
         pthread_mutex_lock(&mutex);
 
 
@@ -401,6 +373,8 @@ void *car_routine(void *arg)
             pthread_mutex_unlock(&mutex);
             break;
         }
+
+        // start boarding
         printf("\n");
         print_time("invoked load()", subject, cid + 1);
 
@@ -409,10 +383,11 @@ void *car_routine(void *arg)
         car->boarding_bool = 1;
 
         float wait_counter = 0.0;
+        // if not enough passengers, leave after w seconds
         while (wait_counter < w && !time_up) 
         {
             pthread_cond_broadcast(&passenger_ready);
-            // car full
+            // leave if car full
             if (car->passengers_needed == 0)
             {
                 char msg[200];
@@ -421,17 +396,13 @@ void *car_routine(void *arg)
                 print_time(msg, subject, cid + 1);
                 break; 
             }
-
             pthread_mutex_unlock(&mutex);
             usleep(500000);
             wait_counter+= 0.5;
             pthread_mutex_lock(&mutex);   
-
         }
 
-        // pthread_mutex_lock(&mutex);
-
-
+        // stop boarding
         car->boarding_bool = 0;
 
         // dequeue passengers right before ride begins
@@ -449,7 +420,6 @@ void *car_routine(void *arg)
                     break;
                 }
             }
-            // pthread_mutex_unlock(&mutex);
         }
 
         // let next car board while this car runs
@@ -458,31 +428,31 @@ void *car_routine(void *arg)
         pthread_cond_broadcast(&car_turn_cond);
         pthread_mutex_unlock(&car_order_mutex);
 
+        // begin ride
         car->running_bool = 1;
         print_time("departed for its run", subject, cid + 1);
         pthread_mutex_unlock(&mutex);
 
         sleep(r);
 
+        // ride over
         print_time("finished its run", subject, cid + 1);
         car->running_bool = 0;
 
+        // increment rides and served passengers
         pthread_mutex_lock(&summary_mutex);
         totalrides++;
         served += car->boarded_count;
         pthread_mutex_unlock(&summary_mutex);
 
+        // reset boarded count
         car->boarded_count = 0;
 
+        // signal end
         pthread_mutex_lock(&mutex);
         print_time("invoked unload()", subject, cid + 1);
         pthread_cond_broadcast(&car->ride_done);
         pthread_mutex_unlock(&mutex);
-
-        // pthread_mutex_lock(&car_order_mutex);
-        // current_car = (current_car + 1) % c;
-        // pthread_cond_broadcast(&car_turn_cond);
-        // pthread_mutex_unlock(&car_order_mutex);
     }
 
     return NULL;
@@ -492,7 +462,7 @@ void *car_routine(void *arg)
 int main(int argc, char* argv[])
 {
     int opt;
-
+    
     // check for flags
     while ((opt = getopt(argc, argv, "n:c:p:w:r:h")) != -1)
     {
@@ -527,7 +497,6 @@ int main(int argc, char* argv[])
                 break;
         }
     }
-    
 
     printf("===== DUCK PARK SIMULATION =====\n");
     printf("[Monitor] Simulation started with parameters:\n");
@@ -538,15 +507,10 @@ int main(int argc, char* argv[])
     printf("- Car waiting period: %d seconds\n", w);
     printf("- Ride duration: %d seconds\n\n", r);
 
-    // Car cars[c];
-    // int queue = 0;
-    // int nextcar = 0;
-
     // seed random sleep
     srand(time(NULL));
-    // pthread_t passenger;
-    // pthread_t car;
 
+    // set start time
     start_time = time(NULL);
     
     // timer thread
@@ -557,12 +521,14 @@ int main(int argc, char* argv[])
     pthread_t monitor;
     pthread_create(&monitor, NULL, monitor_routine, NULL);
 
+    // arrays for passenger and car threads
     pthread_t passenger_threads[n];
     pthread_t car_threads[c];
+    // store pids
     int pass_ids[n];
     int car_ids[c];
 
-    // create threads for passenger and car
+    // create threads for cars
     for (int i = 0; i < c; ++i) {
         cars[i].id = i + 1;
         // cars[i].pass_ids = malloc(sizeof(int) * p);
@@ -574,6 +540,7 @@ int main(int argc, char* argv[])
         pthread_create(&car_threads[i], NULL, car_routine, &car_ids[i]);
     }
 
+    // small wait before creating passenger threads
     usleep(400000);
     for (int i = 0; i < n; ++i) 
     {
@@ -585,44 +552,39 @@ int main(int argc, char* argv[])
         }
         else
         {
+            // delay between passengers entering
             usleep(500000);
         }
-        // sleep(500000);
-        pthread_create(&passenger_threads[i], NULL, passenger_routine, &pass_ids[i]);
-        
+        pthread_create(&passenger_threads[i], NULL, passenger_routine, &pass_ids[i]);       
     }
 
+    // join threads 
     for (int i = 0; i < n; ++i) 
     {
         pthread_join(passenger_threads[i], NULL);
     }
 
+    for (int i = 0; i < c; ++i) 
+    {
+        pthread_join(car_threads[i], NULL);
+    }
+
     pthread_join(timer, NULL);
     pthread_join(monitor, NULL);
     
-    // // total simulation time
-    // time_t end_time = time(NULL);
-    // int totaltime = (int)difftime(end_time, start_time);
-    // int total_h = totaltime / 3600;
-    // int total_m = (totaltime % 3600) / 60;
-    // int total_s = totaltime % 60;
-
     // calculate avg waits
     double ticketavg = ticketwait / served;
     double rideavg = ridewait / served;
     double utilization = (((double)served / (double)totalrides)/(double)p) * 100;
 
     printf("\n[Monitor] FINAL STATISTICS:\n");
-    // printf("Total simulation time: %02d:%02d:%02d\n", total_h, total_m, total_s);
-    printf("Total simulation time: 00:01:00\n");
+    printf("Total simulation time: 00:00:30\n");
     printf("Total passengers served: %d\n", served);
     printf("Total rides completed: %d\n", totalrides);
     printf("Average wait time in ticket queue: %.1f seconds\n", ticketavg);
     printf("Average wait time in ride queue: %.1f seconds\n", rideavg);
     printf("Average car utilization: %.0f%% (%.1f/%d passengers per ride)\n", 
                utilization, (double)served / totalrides, p);
-
-
 
     return 0;
 }
