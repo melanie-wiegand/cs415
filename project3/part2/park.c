@@ -205,7 +205,7 @@ void* monitor_routine(void* arg)
 
         int entered = total_created - exploring_now - num_queued - num_riding;
         printf("Passengers in park: %d (%d just entered, %d exploring, %d in queues, %d on rides)\n\n", 
-            entered, total_created, exploring_now, num_queued, num_riding);
+             total_created, entered, exploring_now, num_queued, num_riding);
 
 
         // // passenger status
