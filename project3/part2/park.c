@@ -24,9 +24,9 @@ time_t start_time;
 
 // keep track of passengers created and exploring
 int passenger_count = 0;
-int num_exploring = 0;
+// int num_exploring = 0;
 pthread_mutex_t passenger_count_mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t num_exploring_mutex = PTHREAD_MUTEX_INITIALIZER;
+// pthread_mutex_t num_exploring_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
 // summary message counters
@@ -198,10 +198,10 @@ void* monitor_routine(void* arg)
 
         // get vals for num passengers and num exploring
         pthread_mutex_lock(&passenger_count_mutex);
-        pthread_mutex_lock(&num_exploring_mutex);
+        // pthread_mutex_lock(&num_exploring_mutex);
         int total_created = passenger_count;
 
-        int exploring_now = num_exploring;
+        // int exploring_now = num_exploring;
     
         // passenger status
         // passengers on rides (sum boarded counts of all cars)
@@ -213,9 +213,10 @@ void* monitor_routine(void* arg)
             num_riding += cars[i].boarded_count;
         }
 
-        int entered = total_created - exploring_now - num_queued - num_riding;
-        printf("Passengers in park: %d (%d just entered, %d exploring, %d in queues, %d on rides)\n\n", 
-             total_created, entered, exploring_now, num_queued, num_riding);
+        int exploring = total_created - num_queued - num_riding;
+        // int entered = total_created - exploring_now - num_queued - num_riding;
+        printf("Passengers in park: %d (%d exploring, %d in queues, %d on rides)\n\n", 
+             total_created, exploring_now, num_queued, num_riding);
 
         pthread_mutex_unlock(&num_exploring_mutex);
         pthread_mutex_unlock(&passenger_count_mutex);
