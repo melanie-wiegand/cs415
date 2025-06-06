@@ -22,12 +22,6 @@ volatile int time_up = 0;
 
 time_t start_time;
 
-// keep track of passengers created and exploring
-int passenger_count = 0;
-int num_exploring = 0;
-pthread_mutex_t passenger_count_mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t num_exploring_mutex = PTHREAD_MUTEX_INITIALIZER;
-
 
 // default values for parameters
 int n = 10;
@@ -173,15 +167,6 @@ const char* status = car->boarding_bool ? "LOADING" : "WAITING";
 printf("Car %d Status: %s (%d/%d passengers)\n", i + 1, status, car->boarded_count, p);
 }
 
-// get vals for num passengers and num exploring
-pthread_mutex_lock(&passenger_count_mutex);
-int total_created = passenger_count;
-pthread_mutex_unlock(&passenger_count_mutex);
-
-pthread_mutex_lock(&num_exploring_mutex);
-int exploring_now = num_exploring;
-pthread_mutex_unlock(&num_exploring_mutex);
-
 // passenger status
 // passengers on rides (sum boarded counts of all cars)
 int num_riding = 0;
@@ -191,10 +176,12 @@ for (int i = 0; i < c; ++i)
 {
 num_riding += cars[i].boarded_count;
 }
+// everyone else
+int num_exploring = n - num_queued - num_riding;
 
 
 printf("Passengers in park: %d (%d exploring, %d in queues, %d on rides)\n\n", 
-total_created, exploring_now, num_queued, num_riding);
+n, num_exploring, num_queued, num_riding);
 
 pthread_mutex_unlock(&mutex);
 }
@@ -202,12 +189,6 @@ pthread_mutex_unlock(&mutex);
 
 void *passenger_routine(void *arg)
 {
-
-pthread_mutex_lock(&passenger_count_mutex);
-passenger_count++;
-pthread_mutex_unlock(&passenger_count_mutex);
-
-
 int pid = *(int*)arg;
 char *subject = "Passenger";
 
@@ -217,19 +198,11 @@ print_time("entered the park", subject, pid);
 // rand time to start exploring
 randsleep(1, 5);
 if (time_up) return NULL;
-
-pthread_mutex_lock(&num_exploring_mutex);
-num_exploring++;
-pthread_mutex_unlock(&num_exploring_mutex);
-
 print_time("is exploring the park...", subject, pid);
 // rand time to explore
 randsleep(1, 10);
 if (time_up) return NULL;
 print_time("finished exploring, heading to ticket booth", subject, pid);
-pthread_mutex_lock(&num_exploring_mutex);
-num_exploring--;
-pthread_mutex_unlock(&num_exploring_mutex);
 
 pthread_mutex_lock(&ticket_mutex);
 // join ticket queue
@@ -268,16 +241,11 @@ for (int j = ride_front; j < ride_rear; ++j)
 if (ride_queue[j] == pid)
 {
 
-                            for (int k = j; k < ride_rear - 1; ++k)
-                            {
-                                ride_queue[k] = ride_queue[k + 1];
-                            }
-                            ride_rear--;
-                            // for (int k = j; k < ride_rear - 1; ++k)
-                            // {
-                            //     ride_queue[k] = ride_queue[k + 1];
-                            // }
-                            // ride_rear--;
+for (int k = j; k < ride_rear - 1; ++k)
+{
+ride_queue[k] = ride_queue[k + 1];
+}
+ride_rear--;
 // board
 car->pass_ids[car->boarded_count++] = pid;
 car->passengers_needed--;
@@ -408,8 +376,9 @@ if (car->passengers_needed == 0)
 {
 char msg[200];
 snprintf(msg, sizeof(msg), "is full with %d passengers", p);
-printf("\n");
-print_time(msg, subject, cid + 1);
+                print_time(msg, subject, cid);
+                printf("\n");
+                print_time(msg, subject, cid + 1);
 break; 
 }
 
@@ -420,23 +389,6 @@ pthread_mutex_lock(&mutex);
 
 }
 
-        // dequeue passengers right before ride begins
-        for (int i = 0; i < car->boarded_count; ++i) {
-            int pid = car->pass_ids[i];
-            
-            pthread_mutex_lock(&mutex);
-            for (int j = ride_front; j < ride_rear; ++j) {
-                if (ride_queue[j] == pid) {
-                    for (int k = j; k < ride_rear - 1; ++k) {
-                        ride_queue[k] = ride_queue[k + 1];
-                    }
-                    ride_rear--;
-                    break;
-                }
-            }
-            pthread_mutex_unlock(&mutex);
-        }
-
 car->boarding_bool = 0;
 print_time("departed for its run", subject, cid + 1);
 pthread_mutex_unlock(&mutex);
@@ -444,7 +396,8 @@ pthread_mutex_unlock(&mutex);
 sleep(r);
 
 pthread_mutex_lock(&mutex);
-print_time("invoked unload()", subject, cid + 1);
+        print_time("unloading", subject, cid + 1);
+        print_time("invoked unload()", subject, cid + 1);
 pthread_cond_broadcast(&car->ride_done);
 
 // pthread_cond_broadcast(&passenger_ready);
