@@ -494,6 +494,7 @@ int main(int argc, char* argv[])
         pthread_create(&car_threads[i], NULL, car_routine, &car_ids[i]);
     }
 
+    usleep(500000);
     for (int i = 0; i < n; ++i) 
     {
         pass_ids[i] = i + 1;
