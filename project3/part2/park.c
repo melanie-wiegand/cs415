@@ -210,7 +210,11 @@ void* monitor_routine(void* arg)
         int num_queued = (ride_rear - ride_front) + (ticket_rear - ticket_front);
         for (int i = 0; i < c; ++i)
         {
-            num_riding += cars[i].boarded_count;
+            // only track cars not boarding
+            if (!cars[i]->boarding_bool)
+            {
+                num_riding += cars[i].boarded_count;
+            }
         }
 
         int exploring_now = total_created - num_queued - num_riding;
