@@ -193,8 +193,8 @@ void* monitor_routine(void* arg)
         int exploring_now = num_exploring;
         pthread_mutex_unlock(&num_exploring_mutex);
 
-        passenger status
-        passengers on rides (sum boarded counts of all cars)
+        // passenger status
+        // passengers on rides (sum boarded counts of all cars)
         int num_riding = 0;
         // passengers in queue (sum ticket and ride queues)
         int num_queued = (ride_rear - ride_front) + (ticket_rear - ticket_front);
