@@ -136,7 +136,9 @@ void* monitor_routine(void* arg)
     {
         sleep(5); // print every five seconds
 
+        printf("[Monitor] Attempting to lock mutex...\n");
         pthread_mutex_lock(&mutex);
+        printf("[Monitor] Successfully locked mutex.\n");
 
         time_t t = time(NULL);
         int total_time = (int)difftime(t, start_time);
