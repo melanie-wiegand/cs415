@@ -241,12 +241,17 @@ void *passenger_routine(void *arg)
     int pid = *(int*)arg;
     char *subject = "Passenger";
 
+    int first = 1;
+
     while (!time_up)
     {
-        print_time("entered the park", subject, pid);
-        // rand time to start exploring
-        randsleep(1, 5);
-        if (time_up) return NULL;
+        // take time to enter if first spawning
+        if (first)
+        {
+            print_time("entered the park", subject, pid);
+            // rand time to start exploring
+            randsleep(1, 5);
+        }
 
         // pthread_mutex_lock(&num_exploring_mutex);
         // num_exploring++;
@@ -326,7 +331,7 @@ void *passenger_routine(void *arg)
                             print_time(b_msg, subject, pid);
                             time_t rideend = time(NULL);
 
-                            // calculate ride time
+                            // calculate ride wait time
                             pthread_mutex_lock(&summary_mutex);
                             ridewait += difftime(rideend, ridestart);
                             pthread_mutex_unlock(&summary_mutex);
