@@ -213,12 +213,12 @@ void* monitor_routine(void* arg)
             num_riding += cars[i].boarded_count;
         }
 
-        int exploring = total_created - num_queued - num_riding;
+        int exploring_now = total_created - num_queued - num_riding;
         // int entered = total_created - exploring_now - num_queued - num_riding;
         printf("Passengers in park: %d (%d exploring, %d in queues, %d on rides)\n\n", 
              total_created, exploring_now, num_queued, num_riding);
 
-        pthread_mutex_unlock(&num_exploring_mutex);
+        // pthread_mutex_unlock(&num_exploring_mutex);
         pthread_mutex_unlock(&passenger_count_mutex);
         pthread_mutex_unlock(&mutex);
     }
@@ -243,9 +243,9 @@ void *passenger_routine(void *arg)
         randsleep(1, 5);
         if (time_up) return NULL;
 
-        pthread_mutex_lock(&num_exploring_mutex);
-        num_exploring++;
-        pthread_mutex_unlock(&num_exploring_mutex);
+        // pthread_mutex_lock(&num_exploring_mutex);
+        // num_exploring++;
+        // pthread_mutex_unlock(&num_exploring_mutex);
 
         print_time("is exploring the park...", subject, pid);
         // rand time to explore
@@ -253,9 +253,9 @@ void *passenger_routine(void *arg)
         if (time_up) return NULL;
         print_time("finished exploring, heading to ticket booth", subject, pid);
         
-        pthread_mutex_lock(&num_exploring_mutex);
-        num_exploring--;
-        pthread_mutex_unlock(&num_exploring_mutex);
+        // pthread_mutex_lock(&num_exploring_mutex);
+        // num_exploring--;
+        // pthread_mutex_unlock(&num_exploring_mutex);
         
         // join ticket queue
         pthread_mutex_lock(&ticket_mutex);
