@@ -605,11 +605,11 @@ int main(int argc, char* argv[])
     // calculate avg waits
     double ticketavg = ticketwait / served;
     double rideavg = ridewait / served;
-    float utilization = ((served / totalrides)/p) * 100;
+    double utilization = (((double)served / (double)totalrides)/(double)p) * 100;
 
     printf("\n[Monitor] FINAL STATISTICS:\n");
     // printf("Total simulation time: %02d:%02d:%02d\n", total_h, total_m, total_s);
-    printf("Total simulation time: 00:05:00\n");
+    printf("Total simulation time: 00:01:00\n");
     printf("Total passengers served: %d\n", served);
     printf("Total rides completed: %d\n", totalrides);
     printf("Average wait time in ticket queue: %.1f seconds\n", ticketavg);
