@@ -125,11 +125,11 @@ void print_from_monitor(const char* status, const char* subject, int pid) {
 
     char buff[256];
     time_t now = time(NULL);
-    int diff_time = (int)difftime(curr_time, start_time);
+    int diff_time = (int)difftime(now, start_time);
     
-    int h = total_time / 3600;
-    int m = (total_time % 3600) / 60;
-    int s = total_time % 60;
+    int h = diff_time / 3600;
+    int m = (diff_time % 3600) / 60;
+    int s = diff_time % 60;
     
     // char h_str[10];
     // char m_str[10];
