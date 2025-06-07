@@ -209,7 +209,7 @@ void* monitor_routine(void* arg) {
         pthread_mutex_unlock(&mutex);
 
         // write the full string to pipe
-        write(monito_pipe[1], buffer, strlen(buffer));
+        write(monitorpipe[1], buffer, strlen(buffer));
     }
 
     return NULL;
