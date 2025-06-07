@@ -118,7 +118,7 @@ void randsleep(int min, int max)
 
 // use ipc pipe instead of printing directly
 void print_from_monitor(const char* status, const char* subject, int pid) {
-    if (monitor_pipe_fd == -1 || time_up) 
+    if (monitor_writespace == -1 || time_up) 
     {
         return;
     }
