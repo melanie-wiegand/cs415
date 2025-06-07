@@ -125,11 +125,20 @@ void print_from_monitor(const char* status, const char* subject, int pid) {
 
     char buff[256];
     time_t now = time(NULL);
-    struct tm* curr_time = localtime(&now);
-    char time_str[20];
-    strftime(time_str, sizeof(time_str), "%H:%M:%S", curr_time);
+    int diff_time = (int)difftime(curr_time, start_time);
+    
+    int h = total_time / 3600;
+    int m = (total_time % 3600) / 60;
+    int s = total_time % 60;
+    
+    // char h_str[10];
+    // char m_str[10];
+    // char s_str[10];
+    // sprintf(h_str, sizeof(h_str), "%s", h);
+    // sprintf(m_str, sizeof(m_str), "%s", m);
+    // sprintf(s_str, sizeof(s_str), "%s", s);
 
-    snprintf(buff, sizeof(buff), "[%s] [%s %d] %s\n", time_str, subject, pid, status);
+    snprintf(buff, sizeof(buff), "[Time: %02d:%02d:%02d] %s %d %s\n", h, m, s, subject, pid, status);
     // write to pipe
     write(monitor_writespace, buff, strlen(buff));
 }
