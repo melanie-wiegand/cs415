@@ -162,59 +162,56 @@ void* monitor_routine(void* arg) {
         int total_time = (int)difftime(t, start_time);
         int h = total_time / 3600, m = (total_time % 3600) / 60, s = total_time % 60;
 
-        if (!time_up)
-        {
-            int offset = 0;
+        int offset = 0;
+        offset += snprintf(buffer + offset, sizeof(buffer) - offset,
+                           "\n[Monitor] System State at %02d:%02d:%02d\n", h, m, s);
+
+        offset += snprintf(buffer + offset, sizeof(buffer) - offset, "Ticket Queue: [");
+        for (int i = ticket_front; i < ticket_rear; ++i) {
             offset += snprintf(buffer + offset, sizeof(buffer) - offset,
-                            "\n[Monitor] System State at %02d:%02d:%02d\n", h, m, s);
-
-            offset += snprintf(buffer + offset, sizeof(buffer) - offset, "Ticket Queue: [");
-            for (int i = ticket_front; i < ticket_rear; ++i) {
-                offset += snprintf(buffer + offset, sizeof(buffer) - offset,
-                                "Passenger %d%s", ticket_queue[i], 
-                                (i < ticket_rear - 1) ? ", " : "");
-            }
-            offset += snprintf(buffer + offset, sizeof(buffer) - offset, "]\n");
-
-            offset += snprintf(buffer + offset, sizeof(buffer) - offset, "Ride Queue: [");
-            for (int i = ride_front; i < ride_rear; ++i) {
-                offset += snprintf(buffer + offset, sizeof(buffer) - offset,
-                                "Passenger %d%s", ride_queue[i], 
-                                (i < ride_rear - 1) ? ", " : "");
-            }
-            offset += snprintf(buffer + offset, sizeof(buffer) - offset, "]\n");
-
-            for (int i = 0; i < c; ++i) {
-                Car* car = &cars[i];
-                const char* status = car->running_bool ? "RUNNING" :
-                                    car->boarding_bool ? "LOADING" : "WAITING";
-                offset += snprintf(buffer + offset, sizeof(buffer) - offset,
-                                "Car %d Status: %s (%d/%d passengers)\n", 
-                                car->id, status, car->boarded_count, p);
-            }
-
-            pthread_mutex_lock(&passenger_count_mutex);
-            int total_created = passenger_count;
-
-            int num_riding = 0;
-            int num_queued = (ride_rear - ride_front) + (ticket_rear - ticket_front);
-            for (int i = 0; i < c; ++i) {
-                if (!cars[i].boarding_bool) {
-                    num_riding += cars[i].boarded_count;
-                }
-            }
-
-            int exploring_now = total_created - num_queued - num_riding;
-            offset += snprintf(buffer + offset, sizeof(buffer) - offset,
-                            "Passengers in park: %d (%d exploring, %d in queues, %d on rides)\n\n",
-                            total_created, exploring_now, num_queued, num_riding);
-
-            pthread_mutex_unlock(&passenger_count_mutex);
-            pthread_mutex_unlock(&mutex);
-
-            // write the full string to pipe
-            write(monitorpipe[1], buffer, strlen(buffer));
+                               "Passenger %d%s", ticket_queue[i], 
+                               (i < ticket_rear - 1) ? ", " : "");
         }
+        offset += snprintf(buffer + offset, sizeof(buffer) - offset, "]\n");
+
+        offset += snprintf(buffer + offset, sizeof(buffer) - offset, "Ride Queue: [");
+        for (int i = ride_front; i < ride_rear; ++i) {
+            offset += snprintf(buffer + offset, sizeof(buffer) - offset,
+                               "Passenger %d%s", ride_queue[i], 
+                               (i < ride_rear - 1) ? ", " : "");
+        }
+        offset += snprintf(buffer + offset, sizeof(buffer) - offset, "]\n");
+
+        for (int i = 0; i < c; ++i) {
+            Car* car = &cars[i];
+            const char* status = car->running_bool ? "RUNNING" :
+                                 car->boarding_bool ? "LOADING" : "WAITING";
+            offset += snprintf(buffer + offset, sizeof(buffer) - offset,
+                               "Car %d Status: %s (%d/%d passengers)\n", 
+                               car->id, status, car->boarded_count, p);
+        }
+
+        pthread_mutex_lock(&passenger_count_mutex);
+        int total_created = passenger_count;
+
+        int num_riding = 0;
+        int num_queued = (ride_rear - ride_front) + (ticket_rear - ticket_front);
+        for (int i = 0; i < c; ++i) {
+            if (!cars[i].boarding_bool) {
+                num_riding += cars[i].boarded_count;
+            }
+        }
+
+        int exploring_now = total_created - num_queued - num_riding;
+        offset += snprintf(buffer + offset, sizeof(buffer) - offset,
+                           "Passengers in park: %d (%d exploring, %d in queues, %d on rides)\n\n",
+                           total_created, exploring_now, num_queued, num_riding);
+
+        pthread_mutex_unlock(&passenger_count_mutex);
+        pthread_mutex_unlock(&mutex);
+
+        // write the full string to pipe
+        write(monitorpipe[1], buffer, strlen(buffer));
     }
 
     return NULL;
