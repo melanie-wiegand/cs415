@@ -98,7 +98,7 @@ int dequeue(int queue[], int *front, int rear)
 // thread to stop simulation after 1 min (30s for testing)
 void* timer_routine(void* arg) 
 {
-    sleep(30);  
+    sleep(60);  
     time_up = 1;
     printf("[Monitor] Simulation time ended.\n");
 
@@ -735,7 +735,7 @@ int main(int argc, char* argv[])
     double utilization = (((double)served / (double)totalrides)/(double)p) * 100;
 
     printf("\n[Monitor] FINAL STATISTICS:\n");
-    printf("Total simulation time: 00:00:30\n");
+    printf("Total simulation time: 00:01:00\n");
     printf("Total passengers served: %d\n", served);
     printf("Total rides completed: %d\n", totalrides);
     printf("Average wait time in ticket queue: %.1f seconds\n", ticketavg);
