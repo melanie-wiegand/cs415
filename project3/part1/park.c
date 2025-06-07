@@ -6,11 +6,13 @@
 
 // PART 1 - Single Threaded Solution
 
+
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t car_ready = PTHREAD_COND_INITIALIZER;
 pthread_cond_t ride_done = PTHREAD_COND_INITIALIZER;
 
 pthread_cond_t passenger_ready = PTHREAD_COND_INITIALIZER;
+
 int queue = 0;
 
 
@@ -29,8 +31,13 @@ void print_time(const char* msg, char* subject, int pid)
 {
     // prints current time before the message
     time_t t = time(NULL);
-    struct tm* tm = localtime(&t);
-    printf("[Time: %02d:%02d:%02d] %s %d %s\n", tm->tm_hour, tm->tm_min, tm->tm_sec, subject, pid, msg);
+    int total_time = (int)difftime(t, start_time);
+    
+    int h = total_time / 3600;
+    int m = (total_time % 3600) / 60;
+    int s = total_time % 60;
+
+    printf("[Time: %02d:%02d:%02d] %s %d %s\n", h, m, s, subject, pid, msg);
 }
 
 void *passenger_routine(void *arg)
@@ -97,59 +104,14 @@ void *car_routine(void *arg)
     pthread_mutex_unlock(&mutex);    
 }
 
-
-// default values for parameters
-// int n = 10;
-// int c = 2;
-// int p = 4;
-// int w = 10;
-// int r = 5;
-
 int main(int argc, char* argv[])
 {
-    // int opt;
-
-    // check for flags
-    // while ((opt = getopt(argc, argv, "c:p:w:r:h")) != -1)
-    // {
-    //     switch(opt)
-    //     {
-    //         case 'n':
-    //             n = atoi(optarg);
-    //             break;
-    //         case 'c':
-    //             c = atoi(optarg);
-    //             break;
-    //         case 'p':
-    //             p = atoi(optarg);
-    //             break;
-    //         case 'w':
-    //             w = atoi(optarg);
-    //             break;
-    //         case 'r':
-    //             r = atoi(optarg);
-    //             break;
-    //         case 'h':
-    //         // help message
-    //             printf("USAGE:\n");
-    //             printf("  %s [OPTIONS]\n\n", prog_name);
-    //             printf("OPTIONS:\n");
-    //             printf("  -n INT   Number of passenger threads\n");
-    //             printf("  -c INT   Number of cars\n");
-    //             printf("  -p INT   Capacity per car\n");
-    //             printf("  -w INT   Car waiting period in seconds\n");
-    //             printf("  -r INT   Ride duration in seconds\n");
-    //             printf("  -h       Display this help message\n");
-    //             break;
-    //     }
-    // }
-    
 
     printf("===== DUCK PARK SIMULATION =====\n");
     printf("[Monitor] Simulation started with parameters:\n");
     printf("- Number of passenger threads: 1\n");
     printf("- Number of cars: 1\n");
-    printf("- Capacity per car: 4\n");
+    printf("- Capacity per car: 1\n");
     printf("- Park exploration time: 0-5 seconds\n");
     printf("- Car waiting period: 10 seconds\n");
     printf("- Ride duration: 5 seconds\n");
@@ -168,6 +130,7 @@ int main(int argc, char* argv[])
     pthread_create(&passenger, NULL, passenger_routine, &pass_id);
     pthread_create(&car, NULL, car_routine, &car_id);
 
+    // join threads
     pthread_join(passenger, NULL);
     pthread_join(car, NULL);
 
