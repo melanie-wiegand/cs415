@@ -477,7 +477,6 @@ void *car_routine(void *arg)
         }
 
         // start boarding
-        printf("\n");
         print_from_monitor("invoked load()", subject, cid + 1);
 
         car->passengers_needed = p;
@@ -494,7 +493,6 @@ void *car_routine(void *arg)
             {
                 char msg[200];
                 snprintf(msg, sizeof(msg), "is full with %d passengers", p);
-                printf("\n");
                 print_from_monitor(msg, subject, cid + 1);
                 break; 
             }
@@ -724,7 +722,8 @@ int main(int argc, char* argv[])
     pthread_join(timer, NULL);
 
 
-    // pthread_join(monitor, NULL);
+    pthread_join(monitor_thread, NULL);
+    pthread_join(logger_thread, NULL);
 
     close(monitor_writespace);
     // wait for monitor to close
