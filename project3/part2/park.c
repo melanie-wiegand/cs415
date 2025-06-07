@@ -503,7 +503,7 @@ int main(int argc, char* argv[])
     printf("- Number of passenger threads: %d\n", n);
     printf("- Number of cars: %d\n", c);
     printf("- Capacity per car: %d\n", p);
-    printf("- Park exploration time: 1-10 seconds\n");
+    printf("- Park exploration time: 1-8 seconds\n");
     printf("- Car waiting period: %d seconds\n", w);
     printf("- Ride duration: %d seconds\n\n", r);
 

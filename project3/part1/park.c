@@ -145,14 +145,14 @@ int main(int argc, char* argv[])
     // }
     
 
-    // printf("===== DUCK PARK SIMULATION =====\n");
-    // printf("[Monitor] Simulation started with parameters:\n");
-    // printf("- Number of passenger threads: 1\n");
-    // printf("- Number of cars: 1\n");
-    // printf("- Capacity per car: 4\n");
-    // printf("- Park exploration time: 0-5 seconds\n");
-    // printf("- Car waiting period: 10 seconds\n");
-    // printf("- Ride duration: 5 seconds\n");
+    printf("===== DUCK PARK SIMULATION =====\n");
+    printf("[Monitor] Simulation started with parameters:\n");
+    printf("- Number of passenger threads: 1\n");
+    printf("- Number of cars: 1\n");
+    printf("- Capacity per car: 4\n");
+    printf("- Park exploration time: 0-5 seconds\n");
+    printf("- Car waiting period: 10 seconds\n");
+    printf("- Ride duration: 5 seconds\n");
 
 
     // seed random sleep
