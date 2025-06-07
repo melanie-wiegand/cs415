@@ -85,7 +85,7 @@ int dequeue(int queue[], int *front, int rear)
 // thread to stop simulation after 1 min (30s for testing)
 void* timer_routine(void* arg) 
 {
-    sleep(60);  
+    sleep(30);  
     time_up = 1;
     printf("[Monitor] Simulation time ended.\n");
 
