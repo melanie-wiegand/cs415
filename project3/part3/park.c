@@ -101,6 +101,8 @@ void* timer_routine(void* arg)
     sleep(60);  
     time_up = 1;
     printf("[Monitor] Simulation time ended.\n");
+    printf("Please allow a few moments for threads to finish\n");
+
 
     // pthread_mutex_lock(&mutex);
     pthread_cond_broadcast(&passenger_ready);
