@@ -88,7 +88,7 @@ void* timer_routine(void* arg)
     sleep(60);  
     time_up = 1;
     printf("[Monitor] Simulation time ended.\n");
-    printf("Please allow a few moments for threads to finish\n");
+    printf("Please allow a few moments for threads to finish...\n");
 
     // pthread_mutex_lock(&mutex);
     pthread_cond_broadcast(&passenger_ready);
@@ -143,71 +143,73 @@ void* monitor_routine(void* arg)
         int h = total_time / 3600;
         int m = (total_time % 3600) / 60;
         int s = total_time % 60;
-
-        printf("\n[Monitor] System State at %02d:%02d:%02d\n", h, m, s);
-
-        // ticket queue
-        printf("Ticket Queue: [");
-        for (int i = ticket_front; i < ticket_rear; ++i)
+        if (!time_up)
         {
-            printf("Passenger %d", ticket_queue[i]);
-            if (i < ticket_rear - 1) printf(", ");
-        }
-        printf("]\n");
+            printf("\n[Monitor] System State at %02d:%02d:%02d\n", h, m, s);
 
-        // ride queue
-        printf("Ride Queue: [");
-        for (int i = ride_front; i < ride_rear; ++i)
-        {
-            printf("Passenger %d", ride_queue[i]);
-            if (i < ride_rear - 1) printf(", ");
-        }
-        printf("]\n");
-
-        // car status
-        for (int i = 0; i < c; ++i)
-        {
-            Car* car = &cars[i];
-            const char* status;
-            if (car->running_bool)
-            { 
-                status = "RUNNING";
-            } 
-            else if (car->boarding_bool)
+            // ticket queue
+            printf("Ticket Queue: [");
+            for (int i = ticket_front; i < ticket_rear; ++i)
             {
-                status = "LOADING";
+                printf("Passenger %d", ticket_queue[i]);
+                if (i < ticket_rear - 1) printf(", ");
             }
-            else
+            printf("]\n");
+
+            // ride queue
+            printf("Ride Queue: [");
+            for (int i = ride_front; i < ride_rear; ++i)
             {
-                status = "WAITING";
+                printf("Passenger %d", ride_queue[i]);
+                if (i < ride_rear - 1) printf(", ");
             }
-            printf("Car %d Status: %s (%d/%d passengers)\n", car->id, status, car->boarded_count, p);
-        }
+            printf("]\n");
 
-        // get vals for num passengers
-        pthread_mutex_lock(&passenger_count_mutex);
-        int total_created = passenger_count;
-    
-        // passenger status
-        // passengers on rides (sum boarded counts of all cars)
-        int num_riding = 0;
-        // passengers in queue (sum ticket and ride queues)
-        int num_queued = (ride_rear - ride_front) + (ticket_rear - ticket_front);
-        for (int i = 0; i < c; ++i)
-        {
-            // only track cars not boarding
-            if (!cars[i].boarding_bool)
+            // car status
+            for (int i = 0; i < c; ++i)
             {
-                num_riding += cars[i].boarded_count;
+                Car* car = &cars[i];
+                const char* status;
+                if (car->running_bool)
+                { 
+                    status = "RUNNING";
+                } 
+                else if (car->boarding_bool)
+                {
+                    status = "LOADING";
+                }
+                else
+                {
+                    status = "WAITING";
+                }
+                printf("Car %d Status: %s (%d/%d passengers)\n", car->id, status, car->boarded_count, p);
             }
+
+            // get vals for num passengers
+            pthread_mutex_lock(&passenger_count_mutex);
+            int total_created = passenger_count;
+        
+            // passenger status
+            // passengers on rides (sum boarded counts of all cars)
+            int num_riding = 0;
+            // passengers in queue (sum ticket and ride queues)
+            int num_queued = (ride_rear - ride_front) + (ticket_rear - ticket_front);
+            for (int i = 0; i < c; ++i)
+            {
+                // only track cars not boarding
+                if (!cars[i].boarding_bool)
+                {
+                    num_riding += cars[i].boarded_count;
+                }
+            }
+
+            int exploring_now = total_created - num_queued - num_riding;\
+            printf("Passengers in park: %d (%d exploring, %d in queues, %d on rides)\n\n", 
+                total_created, exploring_now, num_queued, num_riding);
+
+            pthread_mutex_unlock(&passenger_count_mutex);
+            pthread_mutex_unlock(&mutex);
         }
-
-        int exploring_now = total_created - num_queued - num_riding;\
-        printf("Passengers in park: %d (%d exploring, %d in queues, %d on rides)\n\n", 
-             total_created, exploring_now, num_queued, num_riding);
-
-        pthread_mutex_unlock(&passenger_count_mutex);
-        pthread_mutex_unlock(&mutex);
     }
 }
 
