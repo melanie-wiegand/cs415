@@ -15,6 +15,7 @@ pthread_cond_t passenger_ready = PTHREAD_COND_INITIALIZER;
 
 int queue = 0;
 
+time_t start_time;
 
 int boarded = 0;
 int riding = 0;
@@ -119,6 +120,8 @@ int main(int argc, char* argv[])
 
     // seed random sleep
     srand(time(NULL));
+
+    start_time = time(NULL);
 
     pthread_t passenger;
     pthread_t car;
