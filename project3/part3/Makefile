@@ -1,6 +1,6 @@
 EXEC = park
 CC = gcc
-CFLAGS = -g
+CFLAGS = -g -pthread -lpthread
 
 all: $(EXEC)
 

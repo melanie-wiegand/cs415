@@ -1,0 +1,377 @@
+==1594293== Memcheck, a memory error detector
+==1594293== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1594293== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1594293== Command: park
+==1594293==
+===== DUCK PARK SIMULATION =====
+[Monitor] Simulation started with parameters:
+- Number of passenger threads: 10
+- Number of cars: 2
+- Capacity per car: 4
+- Park exploration time: 1-8 seconds
+- Car waiting period: 10 seconds
+- Ride duration: 5 seconds
+
+[Time: 00:00:01] Passenger 1 entered the park
+[Time: 00:00:02] Passenger 2 entered the park
+[Time: 00:00:02] Passenger 1 is exploring the park...
+[Time: 00:00:03] Passenger 3 entered the park
+[Time: 00:00:03] Passenger 4 entered the park
+[Time: 00:00:04] Passenger 3 is exploring the park...
+[Time: 00:00:04] Passenger 5 entered the park
+[Time: 00:00:05] Passenger 1 finished exploring, heading to ticket booth
+[Time: 00:00:05] Passenger 1 waiting in ticket queue
+[Time: 00:00:05] Passenger 1 acquired a ticket
+[Time: 00:00:05] Passenger 1 joined the ride queue
+[Time: 00:00:05] Car 1 invoked load()
+[Time: 00:00:05] Passenger 1 boarded Car 1
+
+[Monitor] System State at 00:00:06
+Ticket Queue: []
+Ride Queue: [Passenger 1]
+Car 1 Status: LOADING (1/4 passengers)
+Car 2 Status: WAITING (0/4 passengers)
+Passengers in park: 5 (4 exploring, 1 in queues, 0 on rides)
+
+[Time: 00:00:06] Passenger 2 is exploring the park...
+[Time: 00:00:06] Passenger 4 is exploring the park...
+[Time: 00:00:08] Passenger 5 is exploring the park...
+[Time: 00:00:08] Passenger 4 finished exploring, heading to ticket booth
+[Time: 00:00:08] Passenger 4 waiting in ticket queue
+[Time: 00:00:08] Passenger 4 acquired a ticket
+[Time: 00:00:08] Passenger 4 joined the ride queue
+[Time: 00:00:08] Passenger 4 boarded Car 1
+[Time: 00:00:10] Passenger 3 finished exploring, heading to ticket booth
+[Time: 00:00:10] Passenger 3 waiting in ticket queue
+[Time: 00:00:10] Passenger 3 acquired a ticket
+[Time: 00:00:10] Passenger 3 joined the ride queue
+[Time: 00:00:10] Passenger 3 boarded Car 1
+
+[Monitor] System State at 00:00:11
+Ticket Queue: []
+Ride Queue: [Passenger 1, Passenger 4, Passenger 3]
+Car 1 Status: LOADING (3/4 passengers)
+Car 2 Status: WAITING (0/4 passengers)
+Passengers in park: 5 (2 exploring, 3 in queues, 0 on rides)
+
+[Time: 00:00:13] Passenger 6 entered the park
+[Time: 00:00:13] Passenger 2 finished exploring, heading to ticket booth
+[Time: 00:00:13] Passenger 2 waiting in ticket queue
+[Time: 00:00:13] Passenger 2 acquired a ticket
+[Time: 00:00:13] Passenger 2 joined the ride queue
+[Time: 00:00:13] Passenger 2 boarded Car 1
+[Time: 00:00:13] Passenger 7 entered the park
+[Time: 00:00:13] Car 1 is full with 4 passengers
+[Time: 00:00:13] Car 1 departed for its run
+[Time: 00:00:14] Passenger 5 finished exploring, heading to ticket booth
+[Time: 00:00:14] Passenger 5 waiting in ticket queue
+[Time: 00:00:14] Passenger 5 acquired a ticket
+[Time: 00:00:14] Passenger 5 joined the ride queue
+[Time: 00:00:14] Car 2 invoked load()
+[Time: 00:00:14] Passenger 5 boarded Car 2
+[Time: 00:00:14] Passenger 8 entered the park
+[Time: 00:00:14] Passenger 9 entered the park
+[Time: 00:00:15] Passenger 10 entered the park
+
+[Monitor] System State at 00:00:16
+Ticket Queue: []
+Ride Queue: [Passenger 5]
+Car 1 Status: RUNNING (4/4 passengers)
+Car 2 Status: LOADING (1/4 passengers)
+Passengers in park: 10 (5 exploring, 1 in queues, 4 on rides)
+
+[Time: 00:00:16] Passenger 7 is exploring the park...
+[Time: 00:00:17] Passenger 6 is exploring the park...
+[Time: 00:00:17] Passenger 8 is exploring the park...
+[Time: 00:00:17] Passenger 9 is exploring the park...
+[Time: 00:00:18] Passenger 10 is exploring the park...
+[Time: 00:00:18] Car 1 finished its run
+[Time: 00:00:18] Car 1 invoked unload()
+[Time: 00:00:18] Passenger 4 deboarded Car 1
+[Time: 00:00:18] Passenger 3 deboarded Car 1
+[Time: 00:00:18] Passenger 2 deboarded Car 1
+[Time: 00:00:18] Passenger 1 deboarded Car 1
+[Time: 00:00:19] Passenger 7 finished exploring, heading to ticket booth
+[Time: 00:00:19] Passenger 7 waiting in ticket queue
+[Time: 00:00:19] Passenger 7 acquired a ticket
+[Time: 00:00:19] Passenger 7 joined the ride queue
+[Time: 00:00:19] Passenger 7 boarded Car 2
+[Time: 00:00:19] Passenger 4 entered the park
+[Time: 00:00:19] Passenger 3 entered the park
+[Time: 00:00:20] Passenger 8 finished exploring, heading to ticket booth
+[Time: 00:00:20] Passenger 8 waiting in ticket queue
+[Time: 00:00:20] Passenger 8 acquired a ticket
+[Time: 00:00:20] Passenger 8 joined the ride queue
+[Time: 00:00:20] Passenger 8 boarded Car 2
+[Time: 00:00:20] Passenger 10 finished exploring, heading to ticket booth
+[Time: 00:00:20] Passenger 10 waiting in ticket queue
+[Time: 00:00:20] Passenger 10 acquired a ticket
+[Time: 00:00:20] Passenger 10 joined the ride queue
+[Time: 00:00:20] Passenger 10 boarded Car 2
+[Time: 00:00:20] Car 2 is full with 4 passengers
+[Time: 00:00:20] Car 2 departed for its run
+
+[Monitor] System State at 00:00:21
+Ticket Queue: []
+Ride Queue: []
+Car 1 Status: WAITING (0/4 passengers)
+Car 2 Status: RUNNING (4/4 passengers)
+Passengers in park: 10 (6 exploring, 0 in queues, 4 on rides)
+
+[Time: 00:00:21] Passenger 6 finished exploring, heading to ticket booth
+[Time: 00:00:21] Passenger 6 waiting in ticket queue
+[Time: 00:00:21] Passenger 6 acquired a ticket
+[Time: 00:00:21] Passenger 6 joined the ride queue
+[Time: 00:00:21] Car 1 invoked load()
+[Time: 00:00:21] Passenger 6 boarded Car 1
+[Time: 00:00:21] Passenger 4 is exploring the park...
+[Time: 00:00:22] Passenger 9 finished exploring, heading to ticket booth
+[Time: 00:00:22] Passenger 9 waiting in ticket queue
+[Time: 00:00:22] Passenger 9 acquired a ticket
+[Time: 00:00:22] Passenger 9 joined the ride queue
+[Time: 00:00:22] Passenger 9 boarded Car 1
+[Time: 00:00:23] Passenger 3 is exploring the park...
+[Time: 00:00:24] Passenger 2 entered the park
+[Time: 00:00:25] Car 2 finished its run
+[Time: 00:00:25] Car 2 invoked unload()
+[Time: 00:00:25] Passenger 8 deboarded Car 2
+[Time: 00:00:25] Passenger 10 deboarded Car 2
+[Time: 00:00:25] Passenger 5 deboarded Car 2
+[Time: 00:00:25] Passenger 7 deboarded Car 2
+[Time: 00:00:25] Passenger 1 entered the park
+[Time: 00:00:25] Passenger 4 finished exploring, heading to ticket booth
+[Time: 00:00:25] Passenger 4 waiting in ticket queue
+[Time: 00:00:25] Passenger 4 acquired a ticket
+[Time: 00:00:25] Passenger 4 joined the ride queue
+[Time: 00:00:25] Passenger 4 boarded Car 1
+
+[Monitor] System State at 00:00:26
+Ticket Queue: []
+Ride Queue: [Passenger 6, Passenger 9, Passenger 4]
+Car 1 Status: LOADING (3/4 passengers)
+Car 2 Status: WAITING (0/4 passengers)
+Passengers in park: 10 (7 exploring, 3 in queues, 0 on rides)
+
+[Time: 00:00:26] Passenger 10 entered the park
+[Time: 00:00:27] Passenger 10 is exploring the park...
+[Time: 00:00:27] Passenger 2 is exploring the park...
+[Time: 00:00:27] Passenger 1 is exploring the park...
+[Time: 00:00:28] Passenger 8 entered the park
+[Time: 00:00:28] Passenger 7 entered the park
+[Time: 00:00:28] Passenger 3 finished exploring, heading to ticket booth
+[Time: 00:00:28] Passenger 3 waiting in ticket queue
+[Time: 00:00:28] Passenger 3 acquired a ticket
+[Time: 00:00:28] Passenger 3 joined the ride queue
+[Time: 00:00:28] Passenger 3 boarded Car 1
+[Time: 00:00:29] Car 1 is full with 4 passengers
+[Time: 00:00:29] Car 1 departed for its run
+[Time: 00:00:29] Passenger 8 is exploring the park...
+[Time: 00:00:30] Passenger 5 entered the park
+[Time: 00:00:30] Passenger 2 finished exploring, heading to ticket booth
+[Time: 00:00:30] Passenger 2 waiting in ticket queue
+[Time: 00:00:30] Passenger 2 acquired a ticket
+[Time: 00:00:30] Passenger 2 joined the ride queue
+[Time: 00:00:30] Car 2 invoked load()
+[Time: 00:00:30] Passenger 2 boarded Car 2
+
+[Monitor] System State at 00:00:31
+Ticket Queue: []
+Ride Queue: [Passenger 2]
+Car 1 Status: RUNNING (4/4 passengers)
+Car 2 Status: LOADING (1/4 passengers)
+Passengers in park: 10 (5 exploring, 1 in queues, 4 on rides)
+
+[Time: 00:00:31] Passenger 7 is exploring the park...
+[Time: 00:00:31] Passenger 1 finished exploring, heading to ticket booth
+[Time: 00:00:31] Passenger 1 waiting in ticket queue
+[Time: 00:00:31] Passenger 1 acquired a ticket
+[Time: 00:00:31] Passenger 1 joined the ride queue
+[Time: 00:00:31] Passenger 1 boarded Car 2
+[Time: 00:00:33] Passenger 10 finished exploring, heading to ticket booth
+[Time: 00:00:33] Passenger 10 waiting in ticket queue
+[Time: 00:00:33] Passenger 10 acquired a ticket
+[Time: 00:00:33] Passenger 10 joined the ride queue
+[Time: 00:00:33] Passenger 10 boarded Car 2
+[Time: 00:00:34] Car 1 finished its run
+[Time: 00:00:34] Car 1 invoked unload()
+[Time: 00:00:34] Passenger 4 deboarded Car 1
+[Time: 00:00:34] Passenger 9 deboarded Car 1
+[Time: 00:00:34] Passenger 3 deboarded Car 1
+[Time: 00:00:34] Passenger 6 deboarded Car 1
+[Time: 00:00:34] Passenger 5 is exploring the park...
+[Time: 00:00:35] Passenger 4 entered the park
+[Time: 00:00:35] Passenger 7 finished exploring, heading to ticket booth
+[Time: 00:00:35] Passenger 7 waiting in ticket queue
+[Time: 00:00:35] Passenger 7 acquired a ticket
+[Time: 00:00:35] Passenger 7 joined the ride queue
+[Time: 00:00:35] Passenger 7 boarded Car 2
+[Time: 00:00:35] Car 2 is full with 4 passengers
+[Time: 00:00:35] Car 2 departed for its run
+
+[Monitor] System State at 00:00:36
+Ticket Queue: []
+Ride Queue: []
+Car 1 Status: WAITING (0/4 passengers)
+Car 2 Status: RUNNING (4/4 passengers)
+Passengers in park: 10 (6 exploring, 0 in queues, 4 on rides)
+
+[Time: 00:00:36] Passenger 8 finished exploring, heading to ticket booth
+[Time: 00:00:36] Passenger 8 waiting in ticket queue
+[Time: 00:00:36] Passenger 8 acquired a ticket
+[Time: 00:00:36] Passenger 8 joined the ride queue
+[Time: 00:00:36] Car 1 invoked load()
+[Time: 00:00:36] Passenger 8 boarded Car 1
+[Time: 00:00:37] Passenger 6 entered the park
+[Time: 00:00:38] Passenger 4 is exploring the park...
+[Time: 00:00:38] Passenger 9 entered the park
+[Time: 00:00:39] Passenger 3 entered the park
+[Time: 00:00:40] Passenger 6 is exploring the park...
+[Time: 00:00:40] Car 2 finished its run
+[Time: 00:00:40] Car 2 invoked unload()
+[Time: 00:00:40] Passenger 7 deboarded Car 2
+[Time: 00:00:40] Passenger 10 deboarded Car 2
+[Time: 00:00:40] Passenger 1 deboarded Car 2
+[Time: 00:00:40] Passenger 2 deboarded Car 2
+
+[Monitor] System State at 00:00:41
+Ticket Queue: []
+Ride Queue: [Passenger 8]
+Car 1 Status: LOADING (1/4 passengers)
+Car 2 Status: WAITING (0/4 passengers)
+Passengers in park: 10 (9 exploring, 1 in queues, 0 on rides)
+
+[Time: 00:00:41] Passenger 5 finished exploring, heading to ticket booth
+[Time: 00:00:41] Passenger 5 waiting in ticket queue
+[Time: 00:00:41] Passenger 5 acquired a ticket
+[Time: 00:00:41] Passenger 5 joined the ride queue
+[Time: 00:00:41] Passenger 5 boarded Car 1
+[Time: 00:00:42] Passenger 3 is exploring the park...
+[Time: 00:00:42] Passenger 9 is exploring the park...
+[Time: 00:00:43] Passenger 1 entered the park
+[Time: 00:00:44] Passenger 4 finished exploring, heading to ticket booth
+[Time: 00:00:44] Passenger 4 waiting in ticket queue
+[Time: 00:00:44] Passenger 4 acquired a ticket
+[Time: 00:00:44] Passenger 4 joined the ride queue
+[Time: 00:00:44] Passenger 4 boarded Car 1
+[Time: 00:00:45] Passenger 3 finished exploring, heading to ticket booth
+[Time: 00:00:45] Passenger 3 waiting in ticket queue
+[Time: 00:00:45] Passenger 3 acquired a ticket
+[Time: 00:00:45] Passenger 3 joined the ride queue
+[Time: 00:00:45] Passenger 3 boarded Car 1
+[Time: 00:00:45] Car 1 is full with 4 passengers
+[Time: 00:00:45] Car 1 departed for its run
+
+[Monitor] System State at 00:00:46
+Ticket Queue: []
+Ride Queue: []
+Car 1 Status: RUNNING (4/4 passengers)
+Car 2 Status: WAITING (0/4 passengers)
+Passengers in park: 10 (6 exploring, 0 in queues, 4 on rides)
+
+[Time: 00:00:46] Passenger 6 finished exploring, heading to ticket booth
+[Time: 00:00:46] Passenger 6 waiting in ticket queue
+[Time: 00:00:46] Passenger 6 acquired a ticket
+[Time: 00:00:46] Passenger 6 joined the ride queue
+[Time: 00:00:46] Car 2 invoked load()
+[Time: 00:00:46] Passenger 6 boarded Car 2
+[Time: 00:00:46] Passenger 7 entered the park
+[Time: 00:00:46] Passenger 10 entered the park
+[Time: 00:00:46] Passenger 1 is exploring the park...
+[Time: 00:00:47] Passenger 9 finished exploring, heading to ticket booth
+[Time: 00:00:47] Passenger 9 waiting in ticket queue
+[Time: 00:00:47] Passenger 9 acquired a ticket
+[Time: 00:00:47] Passenger 9 joined the ride queue
+[Time: 00:00:47] Passenger 9 boarded Car 2
+[Time: 00:00:47] Passenger 10 is exploring the park...
+[Time: 00:00:47] Passenger 2 entered the park
+[Time: 00:00:49] Passenger 7 is exploring the park...
+[Time: 00:00:49] Passenger 2 is exploring the park...
+[Time: 00:00:50] Car 1 finished its run
+[Time: 00:00:50] Car 1 invoked unload()
+[Time: 00:00:50] Passenger 5 deboarded Car 1
+[Time: 00:00:50] Passenger 3 deboarded Car 1
+[Time: 00:00:50] Passenger 4 deboarded Car 1
+[Time: 00:00:50] Passenger 8 deboarded Car 1
+
+[Monitor] System State at 00:00:51
+Ticket Queue: []
+Ride Queue: [Passenger 6, Passenger 9]
+Car 1 Status: WAITING (0/4 passengers)
+Car 2 Status: LOADING (2/4 passengers)
+Passengers in park: 10 (8 exploring, 2 in queues, 0 on rides)
+
+[Time: 00:00:51] Passenger 7 finished exploring, heading to ticket booth
+[Time: 00:00:51] Passenger 7 waiting in ticket queue
+[Time: 00:00:51] Passenger 7 acquired a ticket
+[Time: 00:00:51] Passenger 7 joined the ride queue
+[Time: 00:00:51] Passenger 1 finished exploring, heading to ticket booth
+[Time: 00:00:51] Passenger 1 waiting in ticket queue
+[Time: 00:00:51] Passenger 1 acquired a ticket
+[Time: 00:00:51] Passenger 7 boarded Car 2
+[Time: 00:00:51] Passenger 1 joined the ride queue
+[Time: 00:00:51] Passenger 1 boarded Car 2
+[Time: 00:00:52] Car 2 is full with 4 passengers
+[Time: 00:00:52] Car 2 departed for its run
+[Time: 00:00:54] Passenger 4 entered the park
+[Time: 00:00:54] Passenger 10 finished exploring, heading to ticket booth
+[Time: 00:00:54] Passenger 10 waiting in ticket queue
+[Time: 00:00:54] Passenger 10 acquired a ticket
+[Time: 00:00:54] Passenger 10 joined the ride queue
+[Time: 00:00:54] Car 1 invoked load()
+[Time: 00:00:54] Passenger 10 boarded Car 1
+[Time: 00:00:55] Passenger 3 entered the park
+
+[Monitor] System State at 00:00:56
+Ticket Queue: []
+Ride Queue: [Passenger 10]
+Car 1 Status: LOADING (1/4 passengers)
+Car 2 Status: RUNNING (4/4 passengers)
+Passengers in park: 10 (5 exploring, 1 in queues, 4 on rides)
+
+[Time: 00:00:56] Passenger 8 entered the park
+[Time: 00:00:56] Passenger 2 finished exploring, heading to ticket booth
+[Time: 00:00:56] Passenger 2 waiting in ticket queue
+[Time: 00:00:56] Passenger 2 acquired a ticket
+[Time: 00:00:56] Passenger 2 joined the ride queue
+[Time: 00:00:56] Passenger 2 boarded Car 1
+[Time: 00:00:57] Car 2 finished its run
+[Time: 00:00:57] Car 2 invoked unload()
+[Time: 00:00:57] Passenger 6 deboarded Car 2
+[Time: 00:00:57] Passenger 1 deboarded Car 2
+[Time: 00:00:57] Passenger 7 deboarded Car 2
+[Time: 00:00:57] Passenger 5 entered the park
+[Time: 00:00:57] Passenger 4 is exploring the park...
+[Time: 00:00:57] Passenger 9 deboarded Car 2
+[Time: 00:00:58] Passenger 1 entered the park
+[Time: 00:00:58] Passenger 7 entered the park
+[Time: 00:00:59] Passenger 3 is exploring the park...
+[Time: 00:00:59] Passenger 8 is exploring the park...
+[Time: 00:01:00] Passenger 1 is exploring the park...
+[Time: 00:01:00] Passenger 5 is exploring the park...
+[Monitor] Simulation time ended.
+
+[Monitor] System State at 00:01:01
+Ticket Queue: []
+Ride Queue: [Passenger 10, Passenger 2]
+Car 1 Status: LOADING (2/4 passengers)
+Car 2 Status: WAITING (0/4 passengers)
+Passengers in park: 10 (8 exploring, 2 in queues, 0 on rides)
+
+Please allow a few moments for threads to finish...
+
+[Monitor] FINAL STATISTICS:
+Total simulation time: 00:01:00
+Total passengers served: 26
+Total rides completed: 7
+Average wait time in ticket queue: 0.0 seconds
+Average wait time in ride queue: 0.0 seconds
+Average car utilization: 93% (3.7/4 passengers per ride)
+==1594293==
+==1594293== HEAP SUMMARY:
+==1594293==     in use at exit: 0 bytes in 0 blocks
+==1594293==   total heap usage: 16 allocs, 16 frees, 12,272 bytes allocated
+==1594293==
+==1594293== All heap blocks were freed -- no leaks are possible
+==1594293==
+==1594293== For lists of detected and suppressed errors, rerun with: -s
+==1594293== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
